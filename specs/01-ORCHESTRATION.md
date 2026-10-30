@@ -23,8 +23,8 @@
 | 10 | `Triage` + `Triage model` | agent 3.1 | `00-DESIGN.md` 3.2절 JSON. 입력: clean_question, dept, role, attempt, context |
 | 11 | `Parse triage` | code 2 | JSON 읽기, 못 읽으면 `type other`; `access_levels`에서 `needs_manager_docs`와 role 비교 → `권한 없음` 플래그 |
 | 12 | `Route by type` | switch | `clinical`→13a · `recall`→13b · `missing && attempt<3`→`Ask more` · `missing && attempt>=3`→이관(attempt_limit) · 그 외→14 |
-| 13a | `Clinical notice` | set | route 담당자 이관, reason out_of_scope, category pharmacy, 답 = "약사님 판단 영역" 1줄 + scope-and-escalation 근거 (search를 `query: "봇이 답하지 않는 것"`으로 한 번 호출해 sources 채움) |
-| 13b | `Recall urgent` | set | priority high, reason urgent, category quality → 14로 가서 근거(recall-procedure)+접수 상태도 받음 |
+| 13a | `Clinical notice` | set | route 담당자 이관, reason out_of_scope, category store, 답 = "약사님 판단 영역" 1줄 + scope-and-escalation 근거 (search를 `query: "봇이 답하지 않는 것"`으로 한 번 호출해 sources 채움) |
+| 13b | `Recall urgent` | set | priority high, reason urgent, category store → 14로 가서 근거(recall-procedure)+접수 상태도 받음 |
 | 14 | `Search knowledge` | httpRequest `POST http://localhost:5678/webhook/team3-search` body `{query, access_levels, top_k:4, type}` timeout 6000 neverError | 병렬 갈래 A |
 | 15 | `Get ticket status` | httpRequest `GET /tickets/{{ticket_id}}?requester={{user}}` timeout 4000 neverError, `ticket_id` 없으면 Code `Skip ticket`가 빈 값 | 병렬 갈래 B. 403 → `권한 없음` 플래그 |
 | 16 | `Merge evidence` | merge v3 numInputs 2 → `Build context` code | 점수 정렬·SCORE_MIN 미만 제거·중복 제거·번호 붙이기 `[1]..`, 접수 상태 문장화(연락처 제거) |
