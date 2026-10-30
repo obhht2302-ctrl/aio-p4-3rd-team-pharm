@@ -3,6 +3,9 @@
 > 과제 본질 한 문장: **팜플러스 매뉴얼 8개를 쓰고, 권한별 메모리 키 2개에 색인하고, 질문을 받아 점수 붙은 근거 조각을 돌려주는 검색 모듈 + 청킹 비교 숫자.** 계약은 `../00-DESIGN.md` 3.1·4·6절.
 > 규모 상한: 문서 8개(각 ## 절 3~4개, 절당 150~400자, 전체 ~2,500자/문서 이하), 워크플로우 2개(각 노드 ≤12), 비교 실험 2가지(절 단위 vs 300자+오버랩 50). RAG 설계서 30점이 이 역할의 산출물.
 
+> **✏️ 이 역할에서 팀원이 정하는 것**: 문서 8개의 제목·절·내용·개수(6개 이상이면), 청킹 방식·top_k·SCORE_MIN(재서), 메모리 키 이름, 비교 실험 질문 12개.
+> **🔒 바꾸면 안 되는 것**: 문서 6개 이상·절 3개+, 가짜 데이터·실제 매뉴얼 복사 금지, 검색 **전** 권한 필터, search 웹훅이 돌려주는 칸(3.1절), `mgr-` 접두 = manager. (전체 구분은 `../00-DESIGN.md` 0절)
+
 ## 0. 시작 전
 - 읽을 것: `00-DESIGN.md` 4·6절, 샘 `05-RAG-DESIGN-GUIDE.md`, `templates/RAG-ARCHITECTURE-TEMPLATE.md`, `Last3Mon/71/AGENTS.md` 5절 + `71/reference/lab01-example2-index.json`·`-search.json`, 조사 원문 `reference/bootcamp_p4_topics/약국_도메인조사_raw_1030.md`(사실 근거).
 - 데이터 API 단위 프로젝트 판이 `knowledge/`를 `GET /docs`·`GET /docs/<name>`으로 내어 준다(키트 확인). 안 되면 index 워크플로우 `Read knowledge` Code 노드에 문서 텍스트를 넣는 대체 경로를 두되, 원본은 항상 `knowledge/*.md`.

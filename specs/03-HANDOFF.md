@@ -3,6 +3,9 @@
 > 과제 본질 한 문장: **메인이 "넘겨"라고 하면 티켓을 멱등하게 만들고 알림을 보내며, 외부가 멈춰도 요청을 잃지 않고(DLQ) 200으로 답하는 이관 모듈 + 예상 못 한 오류의 마지막 그물.** 계약은 `../00-DESIGN.md` 3.1절. 가산 Jira·Slack 실연동은 **태웅 담당**(10/27 틀: `reference/bootcamp_p4_framework/`의 team3-ticket·team3-alert, Credential `jiraAio3Cloud001`·`slackAio3Bot0001`) — 이 역할은 연습용(데이터 API) 경로를 완성하고 `mode` 스위치 자리만 둔다.
 > 규모 상한: handoff 노드 ≤14, errors 노드 ≤5. 고장 시나리오 4개(WF-04·09·10·11)와 Error Workflow 동작이 완료 기준. 설계서 5~7절(연동·페이로드·오류 처리 표)이 산출물.
 
+> **✏️ 이 역할에서 팀원이 정하는 것**: 노드 이름, 알림 문구·억제 규칙(10분), DLQ item 요약 모양, mode 스위치 위치, 재시도 횟수·timeout(단 support 8초 안).
+> **🔒 바꾸면 안 되는 것**: handoff 웹훅 주고받는 칸(3.1절), `key = request_id` 멱등, 실패해도 200, 401·403 재시도 금지, `team3Errors00001`, Jira·Slack 실연동은 태웅. (전체 구분은 `../00-DESIGN.md` 0절)
+
 ## 0. 시작 전
 - 읽을 것: `00-DESIGN.md` 3.1절, 샘 `06-RELIABILITY-AND-SECURITY.md`, `Last3Mon/76/AGENTS.md` 2~5절(데이터 API 76판 엔드포인트, 재시도·멱등 키·Error Trigger·DLQ·알림 검증 노드), `76/my-work/error-handler.json`·`intake.json`(있으면).
 - 단위 프로젝트 판 데이터 API의 `X-Api-Key`(키트 확인) → Credential `dataApiKey`를 HTTP Request마다.

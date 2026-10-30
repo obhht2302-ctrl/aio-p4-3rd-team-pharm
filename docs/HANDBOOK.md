@@ -11,6 +11,8 @@
 | 시험·품질 | `specs/04-TESTING.md` | `cases/*.json` 확정·`runs/`·실행 결과서 |
 | 리드·통합 | `specs/05-LEAD.md` | `docs/TOPIC.md`·헌장·daily·README·`data/*.json`, 병합·동결·발표 |
 
+**고정과 팀 결정의 경계는 `00-DESIGN.md` 0절**에 표로 있다. 🔒는 샘 계약·평가라 못 바꾸고, ✏️는 전부 회의에서 바꿔도 된다. 이 묶음은 초안이지 지시가 아니다.
+
 이미 들어 있는 초안: `data/users.json`(5명) · `data/records.json`(4건) · `cases/common.json`(14+3) · `cases/team.json`(6) · `requests/`(시연 5 + bench 1 + 501자). 비어 있는 폴더 `knowledge/`·`workflows/`·`docs/`는 각 역할이 채운다.
 
 아직 모르는 것(80일차 1교시 확인): 샘 VM 구성, 단위 프로젝트 판 데이터 API의 정확한 칸 이름·`X-Api-Key`·`/logs`, 키트 `flow.py`의 판정 키. `00-DESIGN.md`에 "키트 확인"으로 표시해 뒀다.
