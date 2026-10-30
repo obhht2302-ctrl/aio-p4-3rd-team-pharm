@@ -148,11 +148,11 @@ WF-01 바코드 미등록(자동 답변·barcode-payment) · WF-02 "프로그램
 - 데이터 API: n8n 안 `http://data-api:8800`, 터미널 `http://localhost:8800`. 단위 프로젝트 판 = `Last3Mon/80/data-api`(키트 확인). 76일차 판 엔드포인트는 그대로 있다고 가정: `/employees/<name>`, `/docs`, `/docs/<name>`, `/tickets/<id>?requester=`, `POST /tickets`(key 멱등), `/tickets-created`, `POST /dlq`, `/dlq`, `POST /alerts`, `/alerts`, `/cache/<key>`, `POST /logs`(키트 확인: 76판엔 `/audit`), `/admin/fault`, `/health`.
 - 나가는 호출 `X-Api-Key`(단위 프로젝트 판, 키트 확인) → HTTP Request Header Auth Credential `dataApiKey`.
 - 도구: `uv run ~/aio-01d4-stu/Last3Mon/80/tools/flow.py {doctor,check,push,call,test,bench,ops,fault,llm,gate}`; Header Auth 걸면 `FLOW_WEBHOOK_KEY=<팀 키>`.
-- **샘 VM `aio-t3`** (10/30 17:25 CC가 직접 접속해 확인): 3팀 공용 머신. 접속 = `ssh aio-t3` (샘이 맥 `~/.ssh/config`에 넣어 준 항목: `isitsoft.kr` 포트 `35622`, 유저 `toor`, 비번은 샘이 준 것 — 이 레포엔 안 적음). n8n 웹 = **`http://isitsoft.kr:35678`** (http만, 35678→VM 5678 NAT, 터널 불필요. 샘 포트 규칙 `<팀번호>5678` — 25678은 2팀). 10/30 기준 owner 계정 미생성(처음 들어가는 사람이 owner가 되므로 팀장이 만들고 팀원 초대).
+- **샘 VM `aio-t3`** (10/30 17:25 CC가 직접 접속해 확인): 3팀 공용 머신. 접속 = `ssh aio-t3` (샘이 맥 `~/.ssh/config`에 넣어 준 항목: `isitsoft.kr` 포트 `35622`, 유저 `toor`, 비번은 샘이 준 것 — 이 레포엔 안 적음). n8n 웹 = **`https://aio-t3.isitsoft.kr:5678`** (샘 리버스 프록시, 10/30 17:40 공개. 구 주소 `http://isitsoft.kr:35678`도 됨 — 샘 포트 규칙 `<팀번호>5678`). 터널 불필요, 주소만 알면 팀원 누구나 열림. 10/30 기준 owner 계정 미생성(처음 들어가는 사람이 owner). n8n 커뮤니티판은 사용자 초대는 돼도 워크플로우 공유는 유료(멤버는 자기 것만 보임) → 수업 때처럼 **owner 계정 하나를 팀이 공유**. 워크플로우 반영은 각자 `flow.py push`(API 키)라 UI 계정과 무관.
   - 깔린 것: n8n 2.42.6 get-n8n 스택(`~/n8n/day65-n8n/compose.yml` — n8n·runners·sandbox·searxng), docker compose v5.6, uv, claude·codex CLI(`~/.local/bin`). **데이터 API 없음** → `Last3Mon/80/data-api`를 VM에 따로 올려야 하고, n8n 안 주소 `http://data-api:8800`이 되려면 같은 compose 네트워크에 붙여야 함(80일차 키트 확인). node 없음(n8n은 컨테이너).
   - 자원: 4 vCPU · RAM 2.6GB(컨테이너 5개가 ~530MB) · 디스크 61GB. 컨테이너 더 올릴 땐 `docker stats` 먼저.
   - 계정 `toor` 하나를 팀 전체가 공유(sudo 가능) → 개인 API 키·토큰·.env 올리지 말 것. OpenAI Credential은 n8n UI에서 팀이 합의해 한 번만.
-  - push·test: `N8N_URL=http://isitsoft.kr:35678 uv run tools/flow.py push ...` (76판 flow.py가 `N8N_URL` env를 읽음 — 80판도 같은지 확인). 76판 `push`는 끝에 n8n 컨테이너를 `docker restart`하므로 공용 VM에선 팀원이 쓰는 중인지 보고 할 것. 각자 노트북 n8n 전제의 "저장소로 나누기"는 회귀 시험용으로 그대로 유효.
+  - push·test: `N8N_URL=https://aio-t3.isitsoft.kr:5678 uv run tools/flow.py push ...` (76판 flow.py가 `N8N_URL` env를 읽음 — 80판도 같은지 확인). 76판 `push`는 끝에 n8n 컨테이너를 `docker restart`하므로 공용 VM에선 팀원이 쓰는 중인지 보고 할 것. 각자 노트북 n8n 전제의 "저장소로 나누기"는 회귀 시험용으로 그대로 유효.
 
 ## 10. 일정과 완료 표시 (샘 01 문서)
 - 80(목): 10:30 제안서 승인 → 헌장·저장소 → 데이터 만들기 → 골격(400·차단 통과) → 색인 → 도구 노드 → 8교시 설계 리뷰(옮긴 cases/common.json 확인)
