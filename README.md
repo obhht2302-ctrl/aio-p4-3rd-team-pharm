@@ -9,7 +9,7 @@
 |---|---|
 | 문의 웹훅 | `POST /webhook/team3-support` (Header `X-Team-Key`) |
 | 하위 웹훅 | `team3-index` · `team3-search` · `team3-handoff` |
-| n8n | <80일차 확인: 샘 VM 주소 또는 `http://localhost:5678`> |
+| n8n | 샘 VM(3팀 공용) `http://isitsoft.kr:35678` · 로컬 회귀용 `http://localhost:5678` — 상세 00-DESIGN 9절 |
 
 ## 바로 실행
 ```bash
