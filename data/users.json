@@ -1,0 +1,7 @@
+[
+  {"name": "김하늘", "dept": "A점", "role": "pharmacist", "access_levels": ["all"], "contact": {"phone": "010-0000-1001", "email": "haneul.kim@example.com"}},
+  {"name": "박도윤", "dept": "B점", "role": "pharmacist", "access_levels": ["all"], "contact": {"phone": "010-0000-1002", "email": "doyun.park@example.com"}},
+  {"name": "윤서아", "dept": "C점", "role": "pharmacist", "access_levels": ["all"], "contact": {"phone": "010-0000-1003", "email": "seoa.yoon@example.com"}},
+  {"name": "이서준", "dept": "A점", "role": "manager", "access_levels": ["all", "manager"], "contact": {"phone": "010-0000-1004", "email": "seojun.lee@example.com"}},
+  {"name": "정민재", "dept": "본사", "role": "it_ops", "access_levels": ["all", "manager"], "contact": {"phone": "010-0000-1005", "email": "minjae.jung@example.com"}}
+]

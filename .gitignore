@@ -1,0 +1,9 @@
+.env
+.env.*
+*.key
+node_modules/
+__pycache__/
+.DS_Store
+.venv/
+# n8n 내보내기 임시
+*.n8n.bak
