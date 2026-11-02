@@ -81,7 +81,7 @@ uv run tools/flow.py call team3-search ~/aio-p4-3rd-team-pharm/requests/search-s
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 문서 검수, `team3-index` · `team3-search` 만들기, 질문 세트 | 없음 (본체 없이 단독으로 됨) | 본체가 보낼 요청 = `search.json`의 `request` (= `requests/search-closing.json`, `flow.py call team3-search`), 응답 모양 = `response` | 다영이 본체 `Support settings` 노드의 `SEARCH` 값을 `real`로 바꾸면 끝. 문서가 바뀌면 build → 재색인만 |
-| ⏳ **진짜를 기다려야 하는 것** | 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 저장소 맨 위 폴더에서 `git pull` → `python3 tools/packs.py build`. 문서 **원본은 `packs/<팩>/knowledge/`**, `knowledge/`는 빌드 결과입니다 (빌드하면 덮어써져서 거기서 고치면 사라짐).
 - 문서 10개: 공통 `scope-and-escalation` · `request-records-guide` · `mgr-owner-rules`(약국장 전용), 회수 `recall-first-response` · `recall-customer-guide`, 마감 `closing-checklist` · `closing-cash-mismatch`, 어르신 `senior-cold-sleep-stomach` · `senior-pain-joint` · `senior-safety-signals`.

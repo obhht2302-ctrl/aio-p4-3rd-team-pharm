@@ -64,7 +64,7 @@ uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/team.json -v
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 입력 검사 · 캐시 · 차단 · 분류 · `Type policy` · 보완 질문 · 접수 조회 · 출력 필터 (data-api만 있으면 됨) | `team3-search` (영민) · `team3-handoff` (병훈) | 가짜 웹훅 `team3-search-stub` · `team3-handoff-stub` (`workflows/stubs/`, `search.json`의 `response` · `handoff.json`의 `response_ok`를 그대로 돌려줌) | `Support settings` 노드의 `SEARCH` · `HANDOFF`를 `stub` → `real` (부르는 주소가 `team3-search-stub` → `team3-search`로 바뀜) |
-| ⏳ **진짜를 기다려야 하는 것** | 공통 14유형 전체 통과 · `--repeat 3` (`SEARCH` · `HANDOFF`를 `real`로 바꾼 뒤). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | 공통 14유형 전체 통과 · `--repeat 3` (`SEARCH` · `HANDOFF`를 `real`로 바꾼 뒤). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 1. `git pull` → `python3 tools/packs.py build` (내 파일이 있으면 `Type policy` 표가 자동으로 채워짐).
 2. 읽을 것: `00-DESIGN.md` 2 · 3 · 4절, `AGENTS.md`, `config/type-policy.json` (지금 켜진 유형 표).

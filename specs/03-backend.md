@@ -64,7 +64,7 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | `team3-handoff` · `team3-errors` (data-api만 있으면 됨), `api/` (pytest) | 없음 (본체 · 화면 없이 단독으로 됨) | 본체가 보낼 요청 = `handoff.json`의 `request`, 화면 · n8n이 보낼 요청 = `api.json` | 다영이 `HANDOFF=real`, 태웅이 `NEXT_PUBLIC_API_MODE=real` |
-| ⏳ **진짜를 기다려야 하는 것** | 공통 WF-04 · 09 · 10 · 11 (본체와 붙인 뒤). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | 공통 WF-04 · 09 · 10 · 11 (본체와 붙인 뒤). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 **가짜로 시작할 때 쓰는 파일** (모양은 전부 `contracts/examples/`가 기준):
 

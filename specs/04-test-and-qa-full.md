@@ -70,7 +70,7 @@ uv run tools/flow.py llm down              # n8n의 OpenAI Credential을 일부�
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 시나리오 · 기대값 검토, 시험 실행 스크립트, 결과서 틀, 지식 문서 · 데이터 검수 | 다영 본체 골격, 태웅 화면 | 가짜 본체 `team3-support-stub` (`workflows/stubs/`, `support.json`의 `responses`를 그대로 돌려줌 — 판정 칸 확인용, 결과서엔 안 씀), 화면 QA는 가짜 응답 모드로 먼저 | 골격이 올라오면 공통 실행 (400 · 차단은 골격만으로 통과), `SEARCH` · `HANDOFF`가 `real`이 되면 전체 |
-| ⏳ **진짜를 기다려야 하는 것** | 공통 14유형 전체 통과 · LLM 3회 반복 · `bench` (본체 + 하위 연결 뒤), **실행 결과서 숫자** (11/5 VM 배포 뒤 실제로 잰 값만 — 노트북 · 가짜로 잰 숫자는 결과서에 쓰지 않음). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | 공통 14유형 전체 통과 · LLM 3회 반복 · `bench` (본체 + 하위 연결 뒤), **실행 결과서 숫자** (11/5 VM 배포 뒤 실제로 잰 값만 — 노트북 · 가짜로 잰 숫자는 결과서에 쓰지 않음). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 읽을 것: `00-DESIGN.md` 7절, 샘 `07-TESTING-GUIDE.md` · `03-SCENARIOS-AND-DATA.md` 4 · 5절 · `templates/EXECUTION-RESULT-TEMPLATE.md`.
 - 시나리오 원본: 공통 = `cases/common.json` (직접 고침, 바꾸면 리드가 `packs.py lock`), 팀 = `packs/<팩>/cases.json` (빌드하면 `cases/team.json`). `cases/team.json`을 직접 고치면 다음 build 때 사라집니다.

@@ -60,7 +60,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 화면 (06), Jira · Slack 틀 고치기, 팩 도구, VM 계획, 제안서 · 헌장 | 병훈 API, 모두의 워크플로우 (병합 · VM 배포) | 화면 = `api.json` (가짜 응답 모드) | 화면 `NEXT_PUBLIC_API_MODE=real`, 병합은 단독 시험이 통과한 파일부터 |
-| ⏳ **진짜를 기다려야 하는 것** | VM 첫 배포 (11/5 키트 확인 뒤), 전체 회귀. | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | VM 첫 배포 (11/5 키트 확인 뒤), 전체 회귀. | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 읽을 것: 샘 `01-SCHEDULE-AND-TEAMS.md` · `02-ENVIRONMENT-AND-SERVICES.md` · `08-SUBMISSION.md` · `09-AGENT-WORKING-RULES.md` · `11-TOPIC-GUIDE.md`, `00-DESIGN.md` 전체.
 

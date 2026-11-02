@@ -81,7 +81,7 @@ uv run tools/flow.py call team3-search ~/aio-p4-3rd-team-pharm/requests/search-s
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 문서 검수, `team3-index` · `team3-search` 만들기, 질문 세트 | 없음 (본체 없이 단독으로 됨) | 본체가 보낼 요청 = `search.json`의 `request` (= `requests/search-closing.json`, `flow.py call team3-search`), 응답 모양 = `response` | 다영이 본체 `Support settings` 노드의 `SEARCH` 값을 `real`로 바꾸면 끝. 문서가 바뀌면 build → 재색인만 |
-| ⏳ **진짜를 기다려야 하는 것** | 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 1. `git pull` → `python3 tools/packs.py build` → `knowledge/`에 문서 10개가 생깁니다.
 2. 읽을 것: `00-DESIGN.md` 4 · 6절, 샘 `05-RAG-DESIGN-GUIDE.md`, `templates/RAG-ARCHITECTURE-TEMPLATE.md`, `Last3Mon/71/AGENTS.md` 5절 (검증된 노드).
@@ -216,7 +216,7 @@ echo '{"query":"마감 차액 승인 기준","access_levels":["all"]}' > /tmp/q2
 | 증상 | 할 일 |
 | --- | --- |
 | `/docs`가 샘 문서 8개를 줌 | 샘 data-api가 켜져 있음 → 끄고 `infra/compose.team3.yml`의 data-api를 켬 |
-| 검색이 늘 빔 | push 뒤 재색인 안 함, 또는 index · search의 memoryKey 글자가 다름 |
+| 검색 결과가 항상 비어 있음 | push 뒤 재색인 안 함, 또는 index · search의 memoryKey 글자가 다름 |
 | `Store owner`가 안 돌아 owner 키가 비어 있음 | `mgr-owner-rules`가 빌드돼 `knowledge/`에 있는지, `By access` 조건 |
 | hit@3가 낮음 | 청크 앞에 `제목 › 절` 붙였는지, 절 제목을 질문에서 쓰는 말로 |
 

@@ -63,7 +63,7 @@ cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 화면 3개 · 역할 막기 · 디자인 | 병훈 `api/` (뼈대는 이미 메모리 저장소로 돎) | `api.json` → `web/lib/contract-examples.json` (`packs.py build`가 복사) → `lib/mock.ts` | `NEXT_PUBLIC_API_MODE=mock` → `real` (+ `NEXT_PUBLIC_API_BASE`) |
-| ⏳ **진짜를 기다려야 하는 것** | 실제 API와 한 바퀴 (질문 → 이관 → 약사 화면 → 손님 안내 연습 기록). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
+| ⏳ **진짜 부품이 붙어야 할 수 있는 것** | 실제 API와 한 바퀴 (질문 → 이관 → 약사 화면 → 손님 안내 연습 기록). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 뼈대: `web/` (Next.js 16.4.3 · React 19.2.0 · TypeScript, `output: "export"`). 파일만 있고 **설치는 안 함**: `cd web && npm install && npm run dev` (http://localhost:3000), 빌드 `npm run build` → `web/out/`.
 - API는 `cd api && uv run --with fastapi --with uvicorn --with httpx uvicorn app.main:app --port 8000` (`api/README.md`).
