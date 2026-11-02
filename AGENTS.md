@@ -19,6 +19,7 @@ CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 �
 | data-api | n8n 안 `http://data-api:8800`, 터미널 `http://localhost:8800`. 지금 기준은 77일차 판, 80일차 판이 나오면 맞춤 (키트 확인) |
 | 팀 웹훅 인증 | Header Auth Credential `team3WebhookKey` (머리글 `X-Team-Key`) |
 | data-api 나가는 호출 | Credential `dataApiKey` (`X-Api-Key`, 80일차 판에서 요구 — 키트 확인) |
+| FastAPI 부르는 호출 | Credential `team3ApiKey` (`X-Api-Key`). 팀 Credential은 `bash tools/setup.sh`가 `infra/.env`에서 등록 |
 | 도구 | 샘 `tools/flow.py` (check · push · call · test · bench · fault · llm · ops · doctor). **push는 n8n을 재시작**하므로 push 뒤 `team3-index`를 다시 부른다 |
 | 팩 도구 | `python3 tools/packs.py build` → `knowledge/` · `data/` · `cases/team.json` · `config/type-policy.json` 생성, `check`로 샘 기준 확인 |
 

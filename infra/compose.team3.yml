@@ -1,5 +1,5 @@
 # 3팀 조합 C 뒷단 한 벌: data-api(샘 77판 server.py + 우리 data · knowledge) · api(FastAPI) · web(nginx, web/out) · db(PostgreSQL, 선택)
-#   cp infra/.env.example infra/.env   (값 채우기, 커밋 금지)
+#   bash tools/setup.sh   (infra/.env 만들기 · n8n Credential · data-api — 키는 infra/.env 에만, 커밋 금지)
 #   python3 tools/packs.py build && (cd web && npm run build)
 #   docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api web
 #   PostgreSQL까지: ... --profile db up -d   (PgStore가 생긴 뒤)
@@ -17,7 +17,7 @@ services:
     ports:
       - "${BIND_HOST:-127.0.0.1}:${DATA_API_PORT:-8800}:8800"
     volumes:
-      - ${SAM_DATA_API:?infra/.env 에 샘 data-api server.py 경로}:/app/server.py:ro
+      - ${SAM_DATA_API:-../../aio-01d4-stu/Last3Mon/77/data-api/server.py}:/app/server.py:ro
       - ../data/employees.json:/srv/team3-data/employees.json:ro
       - ../data/tickets.json:/srv/team3-data/tickets.json:ro
       - ../data/faq.json:/srv/team3-data/faq.json:ro
@@ -32,6 +32,8 @@ services:
     env_file: .env
     environment:
       - TEAM3_REPO=/srv/repo
+      - TEAM3_API_KEY=${TEAM3_KEY:-}
+      - N8N_WEBHOOK_KEY=${TEAM3_KEY:-}
     volumes:
       - ../data:/srv/repo/data:ro
       - ../config:/srv/repo/config:ro

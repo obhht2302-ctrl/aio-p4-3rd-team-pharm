@@ -10,12 +10,11 @@
 ## 노트북에서
 
 ```bash
-# 0) 샘 data-api가 켜져 있으면 끈다 (이름 data-api · 포트 8800이 겹침)
-cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
 # 1) 우리 파일 만들기
 cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py build && python3 tools/packs.py check
-cp infra/.env.example infra/.env      # SAM_DATA_API 경로 · 키 값 채우기 (커밋 금지)
-# 2) 띄우기 (화면은 web/에서 npm run build 를 먼저 해야 out/ 이 생김)
+# 2) 팀 설정: infra/.env · n8n Credential · data-api (샘 data-api는 알아서 멈춤) — README '시작 전 준비' 4번
+bash tools/setup.sh
+# 3) api까지 띄우기 (화면은 web/에서 npm run build 를 먼저 해야 out/ 이 생김)
 docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api
 curl -s localhost:8800/docs | head -c 300   # 우리 문서 10개가 나와야 함
 curl -s localhost:8000/health

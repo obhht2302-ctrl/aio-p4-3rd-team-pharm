@@ -25,13 +25,13 @@ cd ~/aio-01d4-stu && git pull
 # 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
 cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start
 
-# 4) data-api 켜기 — 샘 77판 server.py에 우리 문서 · 데이터를 붙인 것 (샘 77 data-api는 먼저 끔)
-cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
-cd ~/aio-p4-3rd-team-pharm && cp -n infra/.env.example infra/.env    # 처음 한 번: infra/.env의 SAM_DATA_API를 내 홈 경로로 고침
-docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api
+# 4) 팀 설정 한 번에 — infra/.env 만들기 · n8n Credential 등록 · data-api 켜기 (샘 data-api는 알아서 멈춤)
+cd ~/aio-p4-3rd-team-pharm && bash tools/setup.sh
+#    처음엔 infra/.env만 만들고 멈춰요 → 맨 위 TEAM3_KEY= (와 OPENAI_API_KEY=) 뒤에 디코로 받은 값을 붙여 넣고 같은 줄을 한 번 더
+#    infra/.env는 git에 안 올라가요. 키는 이 파일에만 두고 레포 · 문서에 쓰지 않기
 
-# 5) 팀 웹훅 키 — 리드(태웅)에게 디코 DM으로 받아 터미널에서만 (파일 · 레포에 쓰지 않음, 새 터미널마다 다시)
-export FLOW_WEBHOOK_KEY=받은값
+# 5) 확인 — n8n 화면 Credentials에 team3WebhookKey · team3ApiKey가 보이고, 아래에 우리 문서 10개가 나오면 끝
+curl -s localhost:8800/docs | head -c 300
 
 # 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
 cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
@@ -48,11 +48,12 @@ git push -u origin rag/search        # GitHub 레포 화면의 'Compare & pull r
 
 | n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
 | --- | --- |
-| `OpenAI (.env)` | 수업 때 이미 있음. 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` |
-| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 5)의 팀 웹훅 키) |
+| `OpenAI (.env)` | 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large`. `infra/.env`에 우리 조 키를 넣으면 setup.sh가 그 키로 등록 (비우면 수업 때 것 그대로) |
+| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 팀 키). setup.sh가 등록 |
+| `team3ApiKey` | n8n이 FastAPI(`POST /tickets` · `/alerts`)를 부를 때 머리글 `X-Api-Key` (값 = 팀 키). setup.sh가 등록 |
 | `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
-- 77판 `flow.py`는 `FLOW_WEBHOOK_KEY`를 보내지 않아요 (80일차 키트판부터 보냄 — 키트 확인). 그래서 키트가 나오기 전 노트북 시험은 웹훅 노드 Authentication을 `None`으로 두고 하고, 키트판이 나오면 Header Auth(`team3WebhookKey`)로 바꿉니다. 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
+- 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둡니다. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 합니다 (리드가 알려 줌, 키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
 
 처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
 
@@ -194,7 +195,7 @@ return [{ json: out }];
 ## 4. 완료 기준
 
 ```bash
-cd ~/aio-01d4-stu/Last3Mon/77 && export FLOW_WEBHOOK_KEY=받은값
+cd ~/aio-01d4-stu/Last3Mon/77
 uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json                     # 오류 0
 uv run tools/flow.py push  ~/aio-p4-3rd-team-pharm/workflows/team3-support.json && uv run tools/flow.py call team3-index ~/aio-p4-3rd-team-pharm/requests/empty.json
 uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/common.json --webhook team3-support -v      # 14유형 (20케이스) 전부 PASS
