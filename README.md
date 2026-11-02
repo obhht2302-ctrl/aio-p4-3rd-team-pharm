@@ -102,6 +102,7 @@ packs/            기능(팩)별 원본: 문서 · 시나리오 · 데이터, ac
 tools/packs.py    팩으로 아래 4개 폴더를 만드는 도구 (build · check · selftest)
 knowledge/ data/ cases/team.json config/   ← 빌드 결과 (직접 고치지 말고 packs/에서)
 cases/common.json 공통 시나리오 14개 (11/5 14:00 점검 뒤 고정)
+contracts/examples/ 연결선마다 요청 · 응답 예시 — 모든 가짜(Stub · mock · pytest)가 이것을 씀
 workflows/        n8n 워크플로우 JSON (한 사람 = 한 파일)
 api/ web/ infra/  조합 C: FastAPI · Next.js 화면 · compose
 requests/ runs/   시연·bench 요청 · 시험 보고서

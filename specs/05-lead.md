@@ -41,7 +41,7 @@
 | 노드 이름을 영어로 맞출지 결정 (지금 한국어) | 설계서 노드 이름 = JSON 이름이면 둘 다 됨 |
 
 - 11/5 전: VM용 Jira 토큰을 **짧은 만료로 새로 발급** (공용 VM의 n8n Credential은 꺼낼 수 있음), 11/10 회수. Slack 봇이 `#support-alerts`에 들어 있는지 확인.
-- 키 · 토큰은 n8n Credential에만. JSON · 문서 · 캡처에 0.
+- 키 · 토큰은 n8n Credential에만. JSON · 문서 · 캡처에 0. 공공데이터 API 키(회수 Service05 · e약은요 · 허가정보 Service08 · DUR 2종, 11/2 승인)도 개인 키라 저장소에 쓰지 않습니다 — 팀원은 각자 신청.
 
 ## 3. 저장소 · 병합
 

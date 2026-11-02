@@ -59,7 +59,7 @@
 ```
 
 - `route` ∈ `자동 답변` · `보완 질문` · `담당자 이관` · `권한 없음` · `차단`. `ticket` = `{"ticket_id", "priority", "duplicate"}` 또는 `null`.
-- `reason` (이관 · 실패의 까닭): `no_evidence` · `low_confidence` · `urgent` · `needs_person` · `risk_signal` · `attempt_limit` · `tickets_down` · `tickets_slow` · `llm_down` · `not_your_record` · `role_not_allowed`.
+- `reason` (이관 · 실패의 까닭): `no_evidence` · `low_confidence` · `urgent` · `needs_person` · `risk_signal` · `attempt_limit` · `tickets_down` · `tickets_slow` · `llm_down` · `not_your_record` · `role_not_allowed` · `brain_down` (화면 API가 n8n에 못 닿음).
 - 잘못된 입력 → HTTP 400 `{"error": "invalid request", "codes": [...]}`, `codes` ∈ `request_id_required` · `question_required` · `too_long` · `unknown_user` (73일차와 같음, 키트 확인).
 
 ## 3. 구조
@@ -129,7 +129,7 @@
 
 ### 3.5 회수 흐름 (팩 고유)
 
-1. **공표 수신 (연습)**: `flow.py call team3-handoff requests/recall-announce.json` — 가짜 식약처 회수 공표를 `type: recall`, `priority: high` 이관으로 넣음 → data-api 티켓 · 알림 → 약사 화면 긴급 티켓 · Slack. 운영이라면 식약처 회수 정보를 주기적으로 읽는 Schedule Trigger.
+1. **공표 수신 (연습)**: `flow.py call team3-handoff requests/recall-announce.json` — 가짜 식약처 회수 공표를 `type: recall`, `priority: high` 이관으로 넣음 → data-api 티켓 · 알림 → 약사 화면 긴급 티켓 · Slack. 운영이라면 식약처 회수 · 판매중지 API (`1471000/MdcinRtrvlSleStpgeInfoService05/getMdcinRtrvlSleStpgelList05`, 11/2 호출 확인)를 주기적으로 읽는 Schedule Trigger (키는 저장소에 쓰지 않음).
 2. **직원 문의**: "OTC-03 회수라던데 진열돼 있어요" → `recall` (`evidence_handoff`) → 첫 조치(진열대에서 빼서 구분 보관) 답 + 약사 긴급 이관 (WF-12).
 3. **약사 승인 → 손님 안내 (연습)**: 약사 화면(`/admin`)의 회수 공표 알림에서 티켓을 열고 "손님 안내 보내기" → `POST /api/admin/tickets/{id}/recall-notice` → 그 제품을 산 가짜 손님 중 `recall_consent: true`인 사람만 안내문 기록(`notices`), **발송 없음**. 응답의 연락처는 가림.
 
@@ -182,6 +182,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | `senior-pain-joint` | senior | all | 열 · 통증 약 · 관절 소염진통제 · 어르신 주의 · 출처와 기준일 (성분 6개) | T-32 · T-33 |
 | `senior-safety-signals` | senior | all | 바로 약사 · 119 · 같이 먹어도 되나 묻기 전에 · AI 안내의 한계 | T-33 · T-34 |
 
+- 공공 API 주소 · 버전 (11/2 호출 확인)은 `specs/02-rag-full.md` 1절 표. 키는 저장소에 쓰지 않고, 팀원은 각자 같은 ID로 활용신청하거나 이미 만든 마크다운을 씁니다.
 - 형식: `# 제목` + `## 절` 3~4개, 절당 150~400자, 한국어, 전부 가짜 (어르신 문서만 공공 약 정보 — e약은요 · DUR 파일 — 를 옮기고 문서마다 데이터 이름 · 기준일 · 라이선스, 원문 대조는 RAG 담당 검수 때). 근거 없는 숫자 금지 (마감 문서의 사실은 `조사_약국마감_1102.md`: 냉장고 온도 기록은 약국의 법 의무가 아니라 **우리 약국 규칙**, 청구 전송은 일일 마감이 아니라 **월간 업무**). 머리에 "검수 전 초안" 한 줄 — 검수하면 지움.
 - 꺼진 팩: `stockout-first-response` · `billing-explain`은 목차 초안만.
 
