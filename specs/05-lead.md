@@ -33,6 +33,15 @@ export FLOW_WEBHOOK_KEY=받은값
 
 # 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
 cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+
+# 7) 내 작업은 내 브랜치에서 하고 PR로 올림 (main에 바로 push하지 않음, 합치는 건 리드)
+cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
+git switch -c rag/search             # 브랜치 이름 = 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+#   … 고치고 flow.py check · 단독 시험 통과 …
+git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
+git commit -m "search: 단독 시험 3/3"
+git push -u origin rag/search        # GitHub 레포 화면의 'Compare & pull request' → PR 설명에 시험 결과 → 리드가 보고 합침
+#   합쳐진 뒤 다음 작업은 다시 7)의 첫 줄(main으로 가서 pull)부터 새 브랜치로
 ```
 
 | n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
@@ -84,13 +93,14 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 | Slack 메시지에 연락처 · 약 이름 + 손님 정보를 넣지 않음 | 개인정보 · 건강 정보 |
 | 노드 이름을 영어로 맞출지 결정 (지금 한국어) | 설계서 노드 이름 = JSON 이름이면 둘 다 됨 |
 
-- 11/5 전: VM용 Jira 토큰을 **짧은 만료로 새로 발급** (공용 VM의 n8n Credential은 꺼낼 수 있음), 11/10 회수. Slack 봇이 `#support-alerts`에 들어 있는지 확인.
-- 키 · 토큰은 n8n Credential에만. JSON · 문서 · 캡처에 0. 공공데이터 API 키(회수 Service05 · e약은요 · 허가정보 Service08 · DUR 2종, 11/2 승인)도 개인 키라 저장소에 쓰지 않습니다 — 팀원은 각자 신청.
+- 11/5 전: Slack 봇이 `#support-alerts`에 들어 있는지 확인. VM의 Jira Credential은 팀플용으로 만든 계정 토큰을 그대로 씁니다.
+- 키 · 토큰은 n8n Credential에만. JSON · 문서 · 캡처에 0. 공공데이터 API 키(회수 Service05 · e약은요 · 허가정보 Service08 · DUR 2종, 11/2 승인)도 개인 키라 저장소 · VM에 쓰지 않습니다 — 필요한 사람(RAG 원문 대조)은 각자 신청.
 
 ## 3. 저장소 · 병합
 
 - 저장소: GitHub `twlaude/aio-p4-3rd-team-pharm` (비공개, 팀원 collaborator). 강사 초대는 11/5 저장소 위치를 샘에게 물은 뒤 (덱은 과정 GitLab을 예로 듦, 키트 확인).
-- 병합 규칙 (헌장 4절): 한 사람 = 한 파일, `git pull` → 내 파일만 → `flow.py check` → push → 공통 시나리오 → 커밋 메시지에 통과 수 ("handoff DLQ · common 9/14"). 깨뜨린 사람이 고칩니다.
+- 병합 규칙 (헌장 4절): 각자 `역할/내용` 브랜치 → PR → 리드가 diff를 보고 합침 (그 사람 파일만 바뀌었는지, PR 설명에 `flow.py check` · 단독 시험 결과가 있는지). 합친 뒤 main `git pull` → 공통 시나리오. 깨뜨린 사람이 고칩니다.
+- GitHub 무료 비공개 레포라 main 보호 규칙은 걸 수 없습니다. 약속으로 지키고, main에 바로 올라온 커밋이 보이면 그 사람에게 알립니다.
 - 계약을 바꿔야 하면 `00-DESIGN.md`를 먼저 고치고 관련 명세 담당에게 알립니다.
 
 ## 4. VM 배포 (팀장만)

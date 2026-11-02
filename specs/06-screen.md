@@ -33,6 +33,15 @@ export FLOW_WEBHOOK_KEY=받은값
 
 # 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
 cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+
+# 7) 내 작업은 내 브랜치에서 하고 PR로 올림 (main에 바로 push하지 않음, 합치는 건 리드)
+cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
+git switch -c rag/search             # 브랜치 이름 = 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+#   … 고치고 flow.py check · 단독 시험 통과 …
+git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
+git commit -m "search: 단독 시험 3/3"
+git push -u origin rag/search        # GitHub 레포 화면의 'Compare & pull request' → PR 설명에 시험 결과 → 리드가 보고 합침
+#   합쳐진 뒤 다음 작업은 다시 7)의 첫 줄(main으로 가서 pull)부터 새 브랜치로
 ```
 
 | n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |

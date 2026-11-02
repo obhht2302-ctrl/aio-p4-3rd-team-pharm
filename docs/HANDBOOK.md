@@ -19,15 +19,17 @@
 ## 2. 하루 순서
 
 ```bash
-cd ~/aio-p4-3rd-team-pharm && git pull    # 늘 먼저
+cd ~/aio-p4-3rd-team-pharm && git switch main && git pull    # 늘 먼저
+git switch -c <역할>/<내용>                                    # 예: rag/search (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
 python3 tools/packs.py build && python3 tools/packs.py check   # 팩이 바뀌었으면
 # 내 명세의 "에이전트 요청문"을 복사해 codex 또는 claude에 붙여 넣기
-# 에이전트가 끝나면: flow.py check → push → 공통 시나리오 → 커밋
+# 에이전트가 끝나면: flow.py check → push → 단독 시험 (돌릴 수 있으면 공통 시나리오) → 커밋
 git add <내 파일만> && git commit -m "feat: <한 일> · common N/14"
-git push
+git push -u origin <역할>/<내용>    # GitHub 레포 화면의 'Compare & pull request'로 PR → 리드가 보고 합침
 ```
 
-- 커밋 메시지에 공통 시나리오 통과 수를 적습니다 (샘 09 문서 3절).
+- main에는 바로 push하지 않습니다. 합쳐진 뒤 다음 작업은 다시 첫 줄부터 새 브랜치로.
+- 커밋 메시지 · PR 설명에 시험 결과와 공통 시나리오 통과 수를 적습니다 (샘 09 문서 3절).
 - **내 파일만** 고칩니다. 남의 파일을 고쳐야 하면 그 사람에게 먼저 말합니다.
 - 계약(요청 · 응답 칸, route 값, 하위 웹훅 주고받는 칸)을 바꿔야 하면 리드에게 → `00-DESIGN.md`부터 고칩니다.
 
