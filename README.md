@@ -35,11 +35,11 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 
 | 역할 | 사람 | 명세 |
 | --- | --- | --- |
-| 리드 · 통합 | 태웅 | [`specs/05-lead.md`](specs/05-lead.md) |
-| 오케스트레이션 | 다영 | [`specs/01-orchestration.md`](specs/01-orchestration.md) |
+| 리드 · 통합 + 화면(`web/`) | 태웅 | [`specs/05-lead.md`](specs/05-lead.md) · [`specs/06-screen.md`](specs/06-screen.md) |
+| 오케스트레이션 (+ 화면 QA 같이) | 다영 | [`specs/01-orchestration.md`](specs/01-orchestration.md) |
 | RAG | 영민 | [`specs/02-rag.md`](specs/02-rag.md) |
 | 연동 · 안정성 + 뒷단 | 병훈 | [`specs/03-backend.md`](specs/03-backend.md) |
-| 시험 · 품질 + 화면 | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/04-screen-and-test.md`](specs/04-screen-and-test.md) |
+| 시험 · 품질 + 화면 QA | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/04-test-and-qa.md`](specs/04-test-and-qa.md) |
 
 ## 바로 실행 (노트북)
 
