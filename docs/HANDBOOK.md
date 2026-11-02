@@ -10,7 +10,7 @@
 | 오케스트레이션 | 다영 | [`specs/01-orchestration.md`](../specs/01-orchestration.md) | `workflows/team3-support.json` (본체), 설계서 2~4절 | ★★★ |
 | RAG | 영민 | [`specs/02-rag.md`](../specs/02-rag.md) | 지식 문서 검수, `team3-index` · `team3-search`, RAG 설계서 | ★★☆ |
 | 연동 · 안정성 + 뒷단 | 병훈 | [`specs/03-backend.md`](../specs/03-backend.md) | `team3-handoff` · `team3-errors`, `api/` (FastAPI · DB), 설계서 5~7절 | ★★★ |
-| 시험 · 품질 + 화면 | 해든 (태웅이 같이 봄) | [`specs/04-screen-and-test.md`](../specs/04-screen-and-test.md) | `web/` 화면 3개, `cases/` · `runs/`, 실행 결과서 | ★★☆ |
+| 시험 · 품질 + 화면 | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/04-screen-and-test.md`](../specs/04-screen-and-test.md) | `web/` 화면 3개, `cases/` · `runs/`, 실행 결과서 | ★★☆ |
 
 작업 마감은 **11/5(목)** 입니다. 수업이 시작되는 11/5 1교시에 샘 80일차 키트를 보고 "키트 확인" 표시가 붙은 곳만 맞춥니다.
 
