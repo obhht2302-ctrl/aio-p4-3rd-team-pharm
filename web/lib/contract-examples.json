@@ -1,0 +1,261 @@
+{
+ "_note": "FastAPI (specs/03-backend.md 3절). 화면 가짜 응답(web/lib/mock.ts)과 pytest 가 이 값을 쓴다. packs.py build 가 web/lib/contract-examples.json 으로 복사.",
+ "headers": {
+  "X-Entry-Code": "<입장 코드>",
+  "X-User": "%EC%9D%B4%EC%84%9C%EC%A4%80",
+  "X-Api-Key": "<TEAM3_API_KEY>",
+  "_note": "X-User 는 고른 사용자 이름을 encodeURIComponent 로 바꾼 값 (예: 이서준). HTTP 머리글은 ASCII만 됨."
+ },
+ "GET /health": {
+  "response": {
+   "status": "ok",
+   "store": "memory"
+  }
+ },
+ "GET /api/users": {
+  "response": {
+   "items": [
+    {
+     "name": "김하늘",
+     "role": "staff"
+    },
+    {
+     "name": "이서준",
+     "role": "pharmacist"
+    },
+    {
+     "name": "정민재",
+     "role": "owner"
+    },
+    {
+     "name": "최영순",
+     "role": "patient"
+    }
+   ]
+  }
+ },
+ "GET /api/types": {
+  "response": {
+   "items": [
+    {
+     "type": "record_status",
+     "label": "내 접수 건 확인",
+     "examples": [
+      "R-1001 지금 어떻게 됐어요?"
+     ]
+    },
+    {
+     "type": "recall",
+     "label": "회수 공지가 떴어요",
+     "examples": [
+      "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요."
+     ]
+    },
+    {
+     "type": "closing",
+     "label": "혼자 하는 첫 마감",
+     "examples": [
+      "마감 때 계산대 현금은 어떤 순서로 맞춰요?"
+     ]
+    },
+    {
+     "type": "senior",
+     "label": "어르신 약 질문",
+     "examples": [
+      "콧물 감기약을 먹으면 왜 졸려요?",
+      "관절약은 어르신이 조심할 게 있나요?"
+     ]
+    }
+   ]
+  }
+ },
+ "POST /api/ask": {
+  "request": {
+   "user": "김하늘",
+   "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+   "attempt": 1,
+   "context": ""
+  },
+  "response": {
+   "request_id": "wf01",
+   "route": "자동 답변",
+   "answer": "준비금 10만 원을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 해요 [1].",
+   "sources": [
+    {
+     "doc": "closing-checklist",
+     "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+     "score": 0.61
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "security": {
+    "blocked_by": "",
+    "reason": "",
+    "masked": 0
+   },
+   "reason": "",
+   "timings": {
+    "total_ms": 2840
+   }
+  }
+ },
+ "GET /api/my-requests?user=김하늘": {
+  "response": {
+   "items": [
+    {
+     "request_id": "web-0001",
+     "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+     "route": "자동 답변",
+     "ticket": null,
+     "created_at": "2026-11-04T18:02:11+09:00"
+    },
+    {
+     "request_id": "web-0002",
+     "question": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+     "route": "담당자 이관",
+     "ticket": {
+      "ticket_id": "T-2003",
+      "priority": "high",
+      "duplicate": false,
+      "status": "접수됨"
+     },
+     "created_at": "2026-11-04T18:05:40+09:00"
+    }
+   ]
+  }
+ },
+ "GET /api/admin/tickets": {
+  "response": {
+   "items": [
+    {
+     "ticket_id": "T-2003",
+     "key": "web-0002",
+     "title": "OTC-03 회수 제품 진열 중",
+     "requester": "김하늘",
+     "category": "recall",
+     "priority": "high",
+     "status": "접수됨",
+     "product": "OTC-03",
+     "created_at": "2026-11-04T18:05:41+09:00"
+    },
+    {
+     "ticket_id": "T-2004",
+     "key": "wf03",
+     "title": "직원 휴게실 정수기 고장",
+     "requester": "윤서아",
+     "category": "other",
+     "priority": "normal",
+     "status": "접수됨",
+     "product": "",
+     "created_at": "2026-11-04T18:07:02+09:00"
+    }
+   ]
+  }
+ },
+ "PATCH /api/admin/tickets/{id}": {
+  "request": {
+   "status": "처리 중",
+   "note": "진열대 3병 회수 상자로 옮김"
+  },
+  "response": {
+   "ticket_id": "T-2003",
+   "status": "처리 중",
+   "note": "진열대 3병 회수 상자로 옮김"
+  }
+ },
+ "GET /api/admin/alerts": {
+  "response": {
+   "items": [
+    {
+     "workflow": "team3-handoff",
+     "severity": "high",
+     "reason": "urgent",
+     "message": "[회수 공표 · 연습] OTC-03 어린이 감기 시럽 (가짜)",
+     "ticket_id": "T-2003",
+     "at": "2026-11-04T18:05:41+09:00"
+    }
+   ]
+  }
+ },
+ "POST /api/admin/tickets/{id}/recall-notice": {
+  "response": {
+   "ticket_id": "T-2003",
+   "count": 2,
+   "mode": "practice",
+   "notices": [
+    {
+     "customer_id": "C-001",
+     "phone": "010-****-2001",
+     "status": "practice_logged"
+    },
+    {
+     "customer_id": "C-004",
+     "phone": "010-****-1201",
+     "status": "practice_logged"
+    }
+   ],
+   "message": "[가짜약국] 구매하신 의약품 안전 안내가 있습니다. 약국으로 연락 주세요."
+  }
+ },
+ "POST /tickets": {
+  "request": {
+   "key": "wf12",
+   "title": "OTC-03 회수 제품 진열 중",
+   "requester": "김하늘",
+   "category": "recall",
+   "priority": "high",
+   "product": "OTC-03",
+   "ticket_id": "T-2003"
+  },
+  "response": {
+   "ticket_id": "T-2003",
+   "duplicate": false
+  },
+  "response_duplicate": {
+   "ticket_id": "T-2003",
+   "duplicate": true
+  },
+  "_note": "ticket_id 는 선택: handoff 가 data-api 에서 받은 번호를 넘기면 그 번호를 그대로 쓴다 (화면과 응답의 번호를 같게)."
+ },
+ "POST /alerts": {
+  "request": {
+   "workflow": "team3-handoff",
+   "node": "Alert",
+   "message": "[회수 공표 · 연습] OTC-03 어린이 감기 시럽 (가짜)",
+   "severity": "high",
+   "reason": "urgent",
+   "ticket_id": "T-2003"
+  },
+  "response": {
+   "stored": 1,
+   "count": 1
+  }
+ },
+ "GET /stock/{name}": {
+  "response_off": {
+   "error": "stockout pack off"
+  },
+  "response_on": {
+   "product": "OTC-02",
+   "qty": 0,
+   "next_in": "2026-11-06 오전 (가짜)"
+  }
+ },
+ "errors": {
+  "401": {
+   "error": "입장 코드가 맞지 않아요"
+  },
+  "403": {
+   "error": "이 화면은 약사 · 약국장만 볼 수 있어요"
+  },
+  "404": {
+   "error": "없는 티켓이에요"
+  }
+ }
+}

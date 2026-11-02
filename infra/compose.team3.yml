@@ -1,0 +1,69 @@
+# 3팀 조합 C 뒷단 한 벌: data-api(샘 77판 server.py + 우리 data · knowledge) · api(FastAPI) · web(nginx, web/out) · db(PostgreSQL, 선택)
+#   cp infra/.env.example infra/.env   (값 채우기, 커밋 금지)
+#   python3 tools/packs.py build && (cd web && npm run build)
+#   docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api web
+#   PostgreSQL까지: ... --profile db up -d   (PgStore가 생긴 뒤)
+# n8n은 샘 65일차 설치(~/day65-n8n)를 그대로 쓰고, 같은 네트워크(day65-n8n_default)에 붙는다.
+name: team3-pharm
+
+services:
+  data-api:
+    image: python:3.12-slim
+    command: python /app/server.py
+    environment:
+      - DATA_DIR=/srv/team3-data
+      - PYTHONUNBUFFERED=1
+      - TZ=KST-9
+    ports:
+      - "${BIND_HOST:-127.0.0.1}:${DATA_API_PORT:-8800}:8800"
+    volumes:
+      - ${SAM_DATA_API:?infra/.env 에 샘 data-api server.py 경로}:/app/server.py:ro
+      - ../data/employees.json:/srv/team3-data/employees.json:ro
+      - ../data/tickets.json:/srv/team3-data/tickets.json:ro
+      - ../data/faq.json:/srv/team3-data/faq.json:ro
+      - ../knowledge:/srv/team3-data/docs:ro
+    networks: [n8n]
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+    env_file: .env
+    environment:
+      - TEAM3_REPO=/srv/repo
+    volumes:
+      - ../data:/srv/repo/data:ro
+      - ../config:/srv/repo/config:ro
+    ports:
+      - "${BIND_HOST:-127.0.0.1}:${API_PORT:-8000}:8000"
+    networks: [n8n]
+    restart: unless-stopped
+
+  web:
+    image: nginx:1.27-alpine
+    volumes:
+      - ../web/out:/usr/share/nginx/html:ro
+    ports:
+      - "${BIND_HOST:-127.0.0.1}:${WEB_PORT:-3000}:80"
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    profiles: ["db"]
+    environment:
+      - POSTGRES_DB=team3
+      - POSTGRES_USER=team3
+      - POSTGRES_PASSWORD=${DB_PASSWORD:?infra/.env 에 DB_PASSWORD}
+    volumes:
+      - team3-db:/var/lib/postgresql/data
+    networks: [n8n]
+    restart: unless-stopped
+
+networks:
+  n8n:
+    external: true
+    name: ${N8N_NETWORK:-day65-n8n_default}
+
+volumes:
+  team3-db: {}

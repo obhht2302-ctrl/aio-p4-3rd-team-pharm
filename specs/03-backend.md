@@ -36,7 +36,7 @@
 
 1. data-api `POST /tickets` `{key: request_id, title, requester: user, category: type, priority}` → 실패 (5xx · timeout)면 `POST /dlq` (`item.id = request_id`, 개인정보 없이) + `POST /alerts` (`reason: tickets_down`, `severity: high`), `ticket: null`.
 2. 성공이고 `priority: high`면 `POST /alerts` (`reason: urgent`). 보통 이관은 알림 없음.
-3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST /tickets` (약사 화면), `mode = real`이면 Execute Workflow `team3Alert000001` (Slack, 1 · 2에서 알림 보냈을 때), `team3Ticket00001` (Jira, `tickets_down`일 때만).
+3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST http://api:8000/tickets` (약사 화면, data-api가 준 `ticket_id` · `product`를 같이 넘김, 머리글 `X-Api-Key`), `mode = real`이면 Execute Workflow `team3Alert000001` (Slack, 1 · 2에서 알림 보냈을 때), `team3Ticket00001` (Jira, `tickets_down`일 때만).
 4. 401 · 403은 재시도하지 않고 바로 DLQ + 알림 (`reason: auth_failed`).
 
 **병훈님이 정함**:
@@ -64,11 +64,11 @@
 | `GET /health` | 모두 | — | `{"status":"ok","store":"memory"|"postgres"}` |
 | `POST /api/ask` | 화면 `/` | 머리글 `X-Entry-Code`, 본문 `{user, question, attempt?, context?}` | 계약 응답 그대로 (n8n `team3-support` 호출, `request_id`는 API가 만듦). n8n이 멈추면 `route: 담당자 이관`, `reason: brain_down` |
 | `GET /api/my-requests?user=` | 화면 `/my` | `X-Entry-Code` | `{"items": [{request_id, question, route, ticket, created_at}]}` 그 사용자 것만 |
-| `GET /api/admin/tickets?status=` | 화면 `/admin` | `X-Entry-Code`, `X-User` (약사 · 약국장만, 아니면 403) | `{"items": [{ticket_id, key, title, requester, category, priority, status, created_at}]}` |
+| `GET /api/admin/tickets?status=` | 화면 `/admin` | `X-Entry-Code`, `X-User` (이름을 `encodeURIComponent` 한 값, 약사 · 약국장만, 아니면 403) | `{"items": [{ticket_id, key, title, requester, category, priority, status, created_at}]}` |
 | `PATCH /api/admin/tickets/{id}` | 화면 `/admin` | `{status?, note?}` | 바뀐 티켓 |
 | `GET /api/admin/alerts` | 화면 `/admin` | 약사 · 약국장 | `{"items": [...]}` 회수 공표 · 긴급 알림 |
 | `POST /api/admin/tickets/{id}/recall-notice` | 화면 `/admin` (약사만) | — | `{"notices": [{customer_id, phone(가림), status: "practice_logged"}], "count"}` |
-| `POST /tickets` | n8n handoff | 머리글 `X-Api-Key`, data-api와 같은 본문 | 201 `{ticket_id, duplicate: false}` / 같은 `key`면 200 `duplicate: true` |
+| `POST /tickets` | n8n handoff | 머리글 `X-Api-Key`, data-api와 같은 본문 (+ 선택 `ticket_id`: data-api가 준 번호를 그대로 씀, `product`) | 201 `{ticket_id, duplicate: false}` / 같은 `key`면 200 `duplicate: true` |
 | `POST /alerts` | n8n handoff | `X-Api-Key`, data-api와 같은 본문 | `{"stored": 1, "count"}` |
 | `GET /api/types` | 화면 | — | `config/type-policy.json`의 `{type, label, examples}` 목록 |
 | `GET /api/users` | 화면 (사용자 고르기) | — | `{"items": [{name, role}]}` (연락처 없음) |
@@ -93,7 +93,7 @@
 ## 4. 완료 기준
 
 ```bash
-cd api && uv run --with fastapi --with httpx --with pytest python -m pytest -q          # 뼈대 시험 + 내가 더한 시험 통과
+cd api && uv run --python 3.12 --with fastapi --with httpx --with pytest python -m pytest -q          # 뼈대 시험 + 내가 더한 시험 통과
 uv run tools/flow.py check workflows/team3-handoff.json && uv run tools/flow.py check workflows/team3-errors.json
 uv run tools/flow.py call team3-handoff requests/handoff-sample.json      # 201 티켓, 같은 요청 다시 → duplicate: true
 uv run tools/flow.py call team3-handoff requests/recall-announce.json     # high → 알림 1, 약사 화면에 회수 티켓

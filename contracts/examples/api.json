@@ -2,8 +2,9 @@
  "_note": "FastAPI (specs/03-backend.md 3절). 화면 가짜 응답(web/lib/mock.ts)과 pytest 가 이 값을 쓴다. packs.py build 가 web/lib/contract-examples.json 으로 복사.",
  "headers": {
   "X-Entry-Code": "<입장 코드>",
-  "X-User": "이서준",
-  "X-Api-Key": "<TEAM3_API_KEY>"
+  "X-User": "%EC%9D%B4%EC%84%9C%EC%A4%80",
+  "X-Api-Key": "<TEAM3_API_KEY>",
+  "_note": "X-User 는 고른 사용자 이름을 encodeURIComponent 로 바꾼 값 (예: 이서준). HTTP 머리글은 ASCII만 됨."
  },
  "GET /health": {
   "response": {
@@ -209,7 +210,8 @@
    "requester": "김하늘",
    "category": "recall",
    "priority": "high",
-   "product": "OTC-03"
+   "product": "OTC-03",
+   "ticket_id": "T-2003"
   },
   "response": {
    "ticket_id": "T-2003",
@@ -218,7 +220,8 @@
   "response_duplicate": {
    "ticket_id": "T-2003",
    "duplicate": true
-  }
+  },
+  "_note": "ticket_id 는 선택: handoff 가 data-api 에서 받은 번호를 넘기면 그 번호를 그대로 쓴다 (화면과 응답의 번호를 같게)."
  },
  "POST /alerts": {
   "request": {

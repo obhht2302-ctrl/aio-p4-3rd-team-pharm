@@ -29,7 +29,7 @@
 | `/my` 내 문의 | 고른 사용자 | 내 질문 목록 (시각 · `route` · 티켓 번호 · 이관 건 상태) | `GET /api/my-requests?user=` |
 | `/admin` 약사 · 약국장 | `role`이 `pharmacist` · `owner` | 위: 회수 공표 · 긴급 알림 → 아래: 이관 티켓 목록 (긴급 먼저) · 상태 바꾸기 · 회수 티켓이면 **"손님 안내 보내기"** (약사만) → 결과: 동의한 손님 수, 가린 번호, "연습 기록 · 실제 발송 없음" | `GET /api/admin/alerts` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /api/admin/tickets/{id}/recall-notice` |
 
-- 로그인 대신 **사용자 선택 + 입장 코드**. 고른 사용자와 코드는 `sessionStorage`에 (새로고침해도 유지, try/catch). 모든 요청에 `X-Entry-Code` · `X-User` 머리글.
+- 로그인 대신 **사용자 선택 + 입장 코드**. 고른 사용자와 코드는 `sessionStorage`에 (새로고침해도 유지, try/catch). 모든 요청에 `X-Entry-Code` · `X-User` 머리글 (`X-User`는 `encodeURIComponent(이름)` — 머리글은 ASCII만 됨).
 - `/admin` 막기: 화면에서 `role`이 약사 · 약국장이 아니면 안내 문장만 보이고 목록을 부르지 않음. **API도 403으로 한 번 더 막음** (주소를 직접 쳐도).
 - 보완 질문(`route: 보완 질문`)이면 답 아래에 "이어서 답하기" 칸 → 같은 질문 + `context` + `attempt + 1`로 다시 보냄 (API가 새 `request_id`를 만듦).
 - 어르신 답: `answer`에 AI 고지가 들어 있음 (본체가 붙임). 화면은 그대로 보여 주고 지우지 않습니다.

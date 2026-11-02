@@ -1,0 +1,8 @@
+{
+  "name": "team3-pharm-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {"dev": "next dev", "build": "next build", "check": "tsc --noEmit"},
+  "dependencies": {"next": "16.4.3", "react": "19.2.0", "react-dom": "19.2.0"},
+  "devDependencies": {"typescript": "^5", "@types/node": "^24", "@types/react": "^19", "@types/react-dom": "^19"}
+}

@@ -1,5 +1,6 @@
 .env
 .env.*
+!.env.example
 *.key
 node_modules/
 __pycache__/
@@ -7,3 +8,6 @@ __pycache__/
 .venv/
 # n8n 내보내기 임시
 *.n8n.bak
+.pytest_cache/
+web/.next/
+web/out/
