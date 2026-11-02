@@ -1,0 +1,19 @@
+{
+ "stock": [
+  {
+   "product": "OTC-02",
+   "qty": 0,
+   "next_in": "2026-11-06 오전 (가짜)"
+  },
+  {
+   "product": "OTC-04",
+   "qty": 12,
+   "next_in": ""
+  },
+  {
+   "product": "OTC-05",
+   "qty": 3,
+   "next_in": "2026-11-07 (가짜)"
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+ "cases": [
+  {
+   "name": "T-07 약국장 전용 문서 (지나치게 막지 않음)",
+   "body": {
+    "request_id": "t07",
+    "user": "정민재",
+    "question": "마감 차액은 얼마까지 승인 없이 처리해요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "자동 답변"
+    },
+    "contains": {
+     "sources": [
+      "mgr-owner-rules"
+     ]
+    }
+   }
+  }
+ ]
+}

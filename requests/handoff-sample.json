@@ -1,0 +1,10 @@
+{
+ "request_id": "handoff-sample-01",
+ "user": "윤서아",
+ "type": "other",
+ "title": "직원 휴게실 정수기 고장",
+ "assignee": "owner",
+ "priority": "normal",
+ "reason": "no_evidence",
+ "summary": ""
+}

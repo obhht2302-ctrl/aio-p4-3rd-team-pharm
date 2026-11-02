@@ -1,0 +1,54 @@
+[
+ {
+  "customer_id": "C-001",
+  "name": "서민호",
+  "phone": "010-0000-2001",
+  "recall_consent": true,
+  "purchases": [
+   {
+    "product": "OTC-03",
+    "date": "2026-11-01",
+    "via": "멤버십"
+   }
+  ]
+ },
+ {
+  "customer_id": "C-002",
+  "name": "강유나",
+  "phone": "010-0000-2002",
+  "recall_consent": false,
+  "purchases": [
+   {
+    "product": "OTC-03",
+    "date": "2026-11-02",
+    "via": "멤버십"
+   }
+  ]
+ },
+ {
+  "customer_id": "C-003",
+  "name": "배지후",
+  "phone": "010-0000-2003",
+  "recall_consent": true,
+  "purchases": [
+   {
+    "product": "OTC-01",
+    "date": "2026-11-02",
+    "via": "멤버십"
+   }
+  ]
+ },
+ {
+  "customer_id": "C-004",
+  "name": "최영순",
+  "phone": "010-0000-1201",
+  "recall_consent": true,
+  "purchases": [
+   {
+    "product": "OTC-03",
+    "date": "2026-10-30",
+    "via": "멤버십"
+   }
+  ]
+ }
+]

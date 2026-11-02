@@ -1,0 +1,35 @@
+{
+ "cases": [
+  {
+   "name": "T-11 품절 · 입고 예정 (정상)",
+   "body": {
+    "request_id": "t11",
+    "user": "김하늘",
+    "question": "OTC-02 언제 들어와요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "자동 답변"
+    },
+    "contains": {
+     "sources": [
+      "stockout-first-response"
+     ]
+    }
+   }
+  },
+  {
+   "name": "T-12 품절 · 대체약은 약사",
+   "body": {
+    "request_id": "t12",
+    "user": "박도윤",
+    "question": "OTC-02가 없는데 다른 약으로 바꿔 드려도 돼요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "담당자 이관"
+    }
+   }
+  }
+ ]
+}

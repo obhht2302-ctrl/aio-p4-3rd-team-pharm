@@ -1,0 +1,88 @@
+[
+ {
+  "name": "김하늘",
+  "dept": "매장",
+  "role": "staff",
+  "access_levels": [
+   "all"
+  ],
+  "contact": {
+   "phone": "010-0000-1101",
+   "email": "haneul.kim@example.com"
+  }
+ },
+ {
+  "name": "박도윤",
+  "dept": "매장",
+  "role": "staff",
+  "access_levels": [
+   "all"
+  ],
+  "contact": {
+   "phone": "010-0000-1102",
+   "email": "doyun.park@example.com"
+  }
+ },
+ {
+  "name": "윤서아",
+  "dept": "매장",
+  "role": "staff",
+  "access_levels": [
+   "all"
+  ],
+  "contact": {
+   "phone": "010-0000-1103",
+   "email": "seoa.yoon@example.com"
+  }
+ },
+ {
+  "name": "이서준",
+  "dept": "조제실",
+  "role": "pharmacist",
+  "access_levels": [
+   "all"
+  ],
+  "duty": "당일 책임 약사",
+  "contact": {
+   "phone": "010-0000-1104",
+   "email": "seojun.lee@example.com"
+  }
+ },
+ {
+  "name": "정민재",
+  "dept": "약국장",
+  "role": "owner",
+  "access_levels": [
+   "all",
+   "owner"
+  ],
+  "contact": {
+   "phone": "010-0000-1105",
+   "email": "minjae.jung@example.com"
+  }
+ },
+ {
+  "name": "최영순",
+  "dept": "손님",
+  "role": "patient",
+  "access_levels": [
+   "all"
+  ],
+  "contact": {
+   "phone": "010-0000-1201",
+   "email": "youngsoon.choi@example.com"
+  }
+ },
+ {
+  "name": "한기철",
+  "dept": "손님",
+  "role": "patient",
+  "access_levels": [
+   "all"
+  ],
+  "contact": {
+   "phone": "010-0000-1202",
+   "email": "gicheol.han@example.com"
+  }
+ }
+]

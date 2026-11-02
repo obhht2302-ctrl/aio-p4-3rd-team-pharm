@@ -1,0 +1,35 @@
+{
+ "cases": [
+  {
+   "name": "T-21 금액 · 경우별 설명 (정상)",
+   "body": {
+    "request_id": "t21",
+    "user": "윤서아",
+    "question": "같은 약인데 지난번보다 금액이 달라요. 손님한테 뭐라고 설명해요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "자동 답변"
+    },
+    "contains": {
+     "sources": [
+      "billing-explain"
+     ]
+    }
+   }
+  },
+  {
+   "name": "T-22 금액 · 환불은 약사",
+   "body": {
+    "request_id": "t22",
+    "user": "김하늘",
+    "question": "손님이 더 낸 것 같다고 돌려 달래요"
+   },
+   "expect": {
+    "equals": {
+     "route": "담당자 이관"
+    }
+   }
+  }
+ ]
+}

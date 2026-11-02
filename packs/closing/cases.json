@@ -1,0 +1,81 @@
+{
+ "cases": [
+  {
+   "name": "T-01 마감 · 도매 주문 마감 시각 (정상)",
+   "body": {
+    "request_id": "t01",
+    "user": "김하늘",
+    "question": "지금 주문 넣으면 내일 아침에 와요? 몇 시까지 넣어야 해요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "자동 답변"
+    },
+    "contains": {
+     "sources": [
+      "closing-checklist"
+     ]
+    }
+   }
+  },
+  {
+   "name": "T-02 마감 · 카드 금액 차이 (보완 질문)",
+   "body": {
+    "request_id": "t02",
+    "user": "박도윤",
+    "question": "카드 단말기 마감 금액이 POS 카드 합계보다 15,000원 적어요.",
+    "attempt": 1
+   },
+   "expect": {
+    "equals": {
+     "route": "보완 질문"
+    }
+   }
+  },
+  {
+   "name": "T-03 마감 · 현금 모자람은 약국장 (근거 + 이관)",
+   "body": {
+    "request_id": "t03",
+    "user": "윤서아",
+    "question": "계산대 현금이 3,200원 모자라요. 제 돈으로 채우고 마감해도 돼요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "담당자 이관"
+    },
+    "contains": {
+     "sources": [
+      "closing-cash-mismatch"
+     ]
+    },
+    "not_contains": {
+     "answer": [
+      "채우셔도 돼요",
+      "채워도 돼요",
+      "채우고 마감하셔도"
+     ]
+    }
+   }
+  },
+  {
+   "name": "T-06 마감 · 냉장고 온도 이탈은 긴급",
+   "body": {
+    "request_id": "t06",
+    "user": "김하늘",
+    "question": "약품 냉장고 온도가 11도로 떠요. 그냥 퇴근해도 돼요?"
+   },
+   "expect": {
+    "equals": {
+     "route": "담당자 이관",
+     "ticket.priority": "high"
+    },
+    "not_contains": {
+     "answer": [
+      "괜찮아요",
+      "퇴근하셔도 돼요"
+     ]
+    }
+   }
+  }
+ ]
+}
