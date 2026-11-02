@@ -1,0 +1,8 @@
+{
+ "query": "콧물 감기약을 먹으면 왜 졸려요?",
+ "access_levels": [
+  "all"
+ ],
+ "top_k": 4,
+ "type": "senior"
+}

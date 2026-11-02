@@ -1,0 +1,12 @@
+{
+ "request_id": "wf04",
+ "user": "김하늘",
+ "type": "other",
+ "title": "매장 공유기 고장으로 카드 단말기 안 됨",
+ "assignee": "owner",
+ "priority": "normal",
+ "reason": "no_evidence",
+ "summary": "",
+ "mode": "practice",
+ "simulate": "tickets_down"
+}

@@ -1,0 +1,8 @@
+{
+ "query": "마감 차액은 얼마까지 승인 없이 처리해요?",
+ "access_levels": [
+  "all"
+ ],
+ "top_k": 4,
+ "type": "closing"
+}

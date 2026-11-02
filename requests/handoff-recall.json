@@ -1,0 +1,12 @@
+{
+ "request_id": "wf12",
+ "user": "김하늘",
+ "type": "recall",
+ "title": "OTC-03 회수 제품 진열 중",
+ "assignee": "pharmacist",
+ "priority": "high",
+ "reason": "urgent",
+ "summary": "[1] 진열대에서 바로 빼기",
+ "product": "OTC-03",
+ "mode": "practice"
+}
