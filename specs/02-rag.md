@@ -12,11 +12,13 @@
 
 ## 0. 시작 전
 
-**순서와 기다림** — 계약이 먼저 고정돼 있으니 오늘부터 바로 시작하고, 아직 없는 남의 부품은 가짜로 대신합니다.
+**가짜 먼저, 준비되면 바꿔 끼우기** — 계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
 
-| 바로 할 수 있는 것 | 남의 것이 있어야 하는 것 | 그동안 가짜로 대신하는 법 | 연결하는 날 (목표) |
+| 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
-| 지식 문서 초안 검수, `team3-index` · `team3-search` 만들기, 질문 세트 · 비교 실험 (data-api가 우리 `knowledge/`를 주면 됨) | 본체 `team3-support` (다영) — 없어도 됨 | `flow.py call team3-search <요청 파일>`로 단독 시험. 검수 끝난 문서는 build → 재색인만 하면 됨 | 11/3 단독 통과 → 11/4 다영 본체에 연결 |
+| 문서 검수, `team3-index` · `team3-search` 만들기, 질문 세트 | 없음 (본체 없이 단독으로 됨) | 본체가 보낼 요청 = `search.json`의 `request` (`flow.py call team3-search`), 응답 모양 = `response` | 다영이 `SEARCH=real`로 바꾸면 끝. 문서가 바뀌면 build → 재색인만 |
+
+⏳ **진짜를 기다려야 하는 것**: 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼).
 
 - `git pull` → `python3 tools/packs.py build`. 문서 **원본은 `packs/<팩>/knowledge/`**, `knowledge/`는 빌드 결과입니다.
 - 읽을 것: `00-DESIGN.md` 4 · 6절, 샘 `05-RAG-DESIGN-GUIDE.md`, `templates/RAG-ARCHITECTURE-TEMPLATE.md`, `Last3Mon/71/AGENTS.md` 5절.

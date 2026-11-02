@@ -11,11 +11,13 @@
 
 ## 0. 시작 전
 
-**순서와 기다림** — 계약이 먼저 고정돼 있으니 오늘부터 바로 시작하고, 아직 없는 남의 부품은 가짜로 대신합니다.
+**가짜 먼저, 준비되면 바꿔 끼우기** — 계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
 
-| 바로 할 수 있는 것 | 남의 것이 있어야 하는 것 | 그동안 가짜로 대신하는 법 | 연결하는 날 (목표) |
+| 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
-| `team3-handoff` · `team3-errors` (data-api 77판만 있으면 됨), `api/` (pytest) | 본체 (다영) — 없어도 됨, 화면 (태웅) — API 모양이 고정이라 없어도 됨 | `flow.py call team3-handoff requests/handoff-sample.json` · `recall-announce.json`으로 단독 시험, API는 pytest · curl | 11/3 단독 통과 → 11/4 본체 연결 · 화면↔API 연결 |
+| `team3-handoff` · `team3-errors` (data-api만 있으면 됨), `api/` (pytest) | 없음 (본체 · 화면 없이 단독으로 됨) | 본체가 보낼 요청 = `handoff.json`의 `request`, 화면 · n8n이 보낼 요청 = `api.json` | 다영이 `HANDOFF=real`, 태웅이 `NEXT_PUBLIC_API_MODE=real` |
+
+⏳ **진짜를 기다려야 하는 것**: 공통 WF-04 · 09 · 10 · 11 (본체와 붙인 뒤).
 
 - `git pull`. 읽을 것: `00-DESIGN.md` 3 · 4 · 9절, 샘 `06-RELIABILITY-AND-SECURITY.md`, `02-ENVIRONMENT-AND-SERVICES.md` 2절 (조합 C 어댑터), `Last3Mon/76/AGENTS.md` 2~5절.
 - 가져다 쓸 실습: `76/reference/lab02-example2-intake.json` (재시도 · 멱등 키 · DLQ · 알림), `76/reference/lab02-example2-error-handler.json` (Error Trigger), `76/reference/lab02-example1-dlq.json`, `72/reference/lab03-example3-ticket-down.json`.
@@ -34,7 +36,7 @@
 
 1. data-api `POST /tickets` `{key: request_id, title, requester: user, category: type, priority}` → 실패 (5xx · timeout)면 `POST /dlq` (`item.id = request_id`, 개인정보 없이) + `POST /alerts` (`reason: tickets_down`, `severity: high`), `ticket: null`.
 2. 성공이고 `priority: high`면 `POST /alerts` (`reason: urgent`). 보통 이관은 알림 없음.
-3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST /tickets` (약사 화면), `mode = real`이면 `team3-alert` (Slack, 1 · 2에서 알림 보냈을 때), `team3-ticket` (Jira, `tickets_down`일 때만).
+3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST /tickets` (약사 화면), `mode = real`이면 Execute Workflow `team3Alert000001` (Slack, 1 · 2에서 알림 보냈을 때), `team3Ticket00001` (Jira, `tickets_down`일 때만).
 4. 401 · 403은 재시도하지 않고 바로 DLQ + 알림 (`reason: auth_failed`).
 
 **병훈님이 정함**:
@@ -55,7 +57,7 @@
 
 ## 3. `api/` FastAPI (조합 C 뒷단)
 
-**고정 — 경로와 모양** (화면 · n8n이 이 모양을 봄, `web/`은 리드가 만듦):
+**고정 — 경로와 모양** (화면 · n8n이 이 모양을 봄, `web/`은 리드가 만듦). 예시 요청 · 응답은 `contracts/examples/api.json`이고 pytest도 그 파일을 씁니다:
 
 | 경로 | 누가 부르나 | 요청 | 응답 |
 | --- | --- | --- | --- |
@@ -69,6 +71,7 @@
 | `POST /tickets` | n8n handoff | 머리글 `X-Api-Key`, data-api와 같은 본문 | 201 `{ticket_id, duplicate: false}` / 같은 `key`면 200 `duplicate: true` |
 | `POST /alerts` | n8n handoff | `X-Api-Key`, data-api와 같은 본문 | `{"stored": 1, "count"}` |
 | `GET /api/types` | 화면 | — | `config/type-policy.json`의 `{type, label, examples}` 목록 |
+| `GET /api/users` | 화면 (사용자 고르기) | — | `{"items": [{name, role}]}` (연락처 없음) |
 | `GET /stock/{name}` | (품절 팩 자리) | — | 품절 팩이 꺼져 있으면 404 `{"error":"stockout pack off"}` |
 
 - 역할은 `data/users.json`의 `role`로 판단 (질문 · 요청 본문의 말로 판단하지 않음). 운영이라면 SSO라고 설계서에 적습니다.

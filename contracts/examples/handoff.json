@@ -1,0 +1,59 @@
+{
+ "_note": "support → team3-handoff (00-DESIGN.md 3.3 · 3.4절). 늘 HTTP 200. Stub handoff 는 response_ok 를 돌려준다.",
+ "request": {
+  "request_id": "wf12",
+  "user": "김하늘",
+  "type": "recall",
+  "title": "OTC-03 회수 제품 진열 중",
+  "assignee": "pharmacist",
+  "priority": "high",
+  "reason": "urgent",
+  "summary": "[1] 진열대에서 바로 빼기",
+  "product": "OTC-03",
+  "mode": "practice"
+ },
+ "response_ok": {
+  "ticket": {
+   "ticket_id": "T-2003",
+   "priority": "high",
+   "duplicate": false
+  },
+  "reason": "",
+  "dlq": false,
+  "alert": true,
+  "extras": {
+   "screen": "ok",
+   "slack": "skipped",
+   "jira": "skipped"
+  },
+  "handoff_ms": 412
+ },
+ "response_duplicate": {
+  "ticket": {
+   "ticket_id": "T-2003",
+   "priority": "high",
+   "duplicate": true
+  },
+  "reason": "",
+  "dlq": false,
+  "alert": false,
+  "extras": {
+   "screen": "skipped",
+   "slack": "skipped",
+   "jira": "skipped"
+  },
+  "handoff_ms": 95
+ },
+ "response_tickets_down": {
+  "ticket": null,
+  "reason": "tickets_down",
+  "dlq": true,
+  "alert": true,
+  "extras": {
+   "screen": "skipped",
+   "slack": "skipped",
+   "jira": "skipped"
+  },
+  "handoff_ms": 2950
+ }
+}

@@ -1,0 +1,308 @@
+{
+  "id": "team3Alert000001",
+  "name": "team3-alert",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodes": [
+    {
+      "id": "00000001-3a3a-4000-8000-000000000000",
+      "name": "호출됨",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "00000002-3a3a-4000-8000-000000000000",
+      "name": "설정",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "mode",
+              "value": "={{ $json.mode || 'real' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1",
+              "name": "channelId",
+              "value": "C0CC7NU83D1",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "severity",
+              "value": "={{ $json.severity || 'info' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "00000003-3a3a-4000-8000-000000000000",
+      "name": "실제/연습 전환",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c0",
+              "leftValue": "={{ $json.mode }}",
+              "rightValue": "real",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "00000004-3a3a-4000-8000-000000000000",
+      "name": "Slack 알림",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        660,
+        -100
+      ],
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.channelId }}"
+        },
+        "messageType": "text",
+        "text": "={{ ({critical: '🔴', error: '🔴', warning: '🟠'}[$json.severity] || '🔵') + ' *[' + $json.severity + ']* ' + $json.workflow + ' › ' + $json.node + '\\n' + $json.message }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "slackAio3Bot0001",
+          "name": "Slack aio team3 (support-bot)"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "00000005-3a3a-4000-8000-000000000000",
+      "name": "연습용 알림",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://data-api:8800/alerts",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ workflow: $('설정').item.json.workflow, node: $('설정').item.json.node, message: $('설정').item.json.message, severity: $('설정').item.json.severity }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "00000006-3a3a-4000-8000-000000000000",
+      "name": "결과(Slack)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        -100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "ok",
+              "value": "={{ true }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f1",
+              "name": "mode",
+              "value": "real",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "fallback",
+              "value": "={{ false }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f3",
+              "name": "ts",
+              "value": "={{ $json.ts || $json.message?.ts }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      }
+    },
+    {
+      "id": "00000007-3a3a-4000-8000-000000000000",
+      "name": "결과(연습용)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "ok",
+              "value": "={{ !$json.error }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f1",
+              "name": "mode",
+              "value": "practice",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "fallback",
+              "value": "={{ $('설정').item.json.mode === 'real' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f3",
+              "name": "error",
+              "value": "={{ $json.error ? ($json.error.message || String($json.error)) : null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "호출됨": {
+      "main": [
+        [
+          {
+            "node": "설정",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "설정": {
+      "main": [
+        [
+          {
+            "node": "실제/연습 전환",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "실제/연습 전환": {
+      "main": [
+        [
+          {
+            "node": "Slack 알림",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "연습용 알림",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack 알림": {
+      "main": [
+        [
+          {
+            "node": "결과(Slack)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "연습용 알림",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "연습용 알림": {
+      "main": [
+        [
+          {
+            "node": "결과(연습용)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

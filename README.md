@@ -49,13 +49,15 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 
 | 사람 | 바로 할 수 있는 것 | 기다리는 것 | 그동안 가짜로 |
 | --- | --- | --- | --- |
-| 다영 | 검사 · 분류 · Type policy · 보완 질문 · 접수 조회 | 영민 search · 병훈 handoff | Code 노드 `Stub search` · `Stub handoff` |
+| 다영 | 검사 · 분류 · Type policy · 보완 질문 · 접수 조회 | 영민 search · 병훈 handoff | `Stub search` · `Stub handoff` (`contracts/examples/search.json` · `handoff.json`) |
 | 영민 | 문서 검수 · index · search · 비교 실험 | 없음 | `flow.py call team3-search`로 단독 시험 |
 | 병훈 | handoff · errors · api | 없음 | `flow.py call team3-handoff`, pytest |
 | 해든 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수 | 다영 골격(공통 첫 실행) · 전체 연결 · 태웅 화면(QA) | 400 · 차단은 골격만으로 통과 |
-| 태웅 | 화면 (가짜 응답으로), Jira · Slack 틀, 팩 도구, VM 준비 | 병훈 API | API 모양대로 가짜 응답 |
+| 태웅 | 화면 (가짜 응답으로), Jira · Slack 틀, 팩 도구, VM 준비 | 병훈 API | `contracts/examples/api.json` 가짜 응답 |
 
-**연결 순서** (날짜는 목표, 11/5 목요일 완료 기준): ① 11/3 각자 단독 시험 통과 → ② 11/4 본체에 search · handoff 연결 → 해든 공통 시나리오 첫 실행 → ③ 11/4 화면 ↔ API 연결 → ④ 11/5 키트 맞춤 · VM 첫 배포.
+**가짜 먼저, 준비되면 바꿔 끼우기** (완료 목표는 11/5 목요일 하나): ① 각자 `contracts/examples/`의 가짜로 단독 시험 통과 → ② 영민 search가 준비되면 다영 본체 `SEARCH=real` → ③ 병훈 handoff가 준비되면 `HANDOFF=real` → 해든 공통 시나리오 실행 → ④ 병훈 API가 준비되면 화면 `NEXT_PUBLIC_API_MODE=real` → ⑤ 11/5 키트 맞춤 · VM 첫 배포. 스위치는 본체 `Support settings` 노드와 화면 환경 변수 한 곳씩뿐입니다.
+
+⏳ **진짜를 기다려야 하는 것** (가짜로는 못 함): RAG 청킹 비교 · hit@k · 점수 기준 (문서 검수 뒤), 공통 14유형 전체 통과 · LLM 3회 반복 · bench (본체 + 하위 연결 뒤), 실행 결과서 숫자 (샘 일정대로 11/6~11/9 VM에서 다시 잼 — 미리 잰 숫자는 결과서에 쓰지 않음).
 
 ## 바로 실행 (노트북)
 

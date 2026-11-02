@@ -1,0 +1,316 @@
+{
+  "id": "team3Ticket00001",
+  "name": "team3-ticket",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodes": [
+    {
+      "id": "00000001-3a3a-4000-8000-000000000000",
+      "name": "호출됨",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "00000002-3a3a-4000-8000-000000000000",
+      "name": "설정",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "mode",
+              "value": "={{ $json.mode || 'real' }}",
+              "type": "string"
+            },
+            {
+              "id": "f1",
+              "name": "serviceDeskId",
+              "value": "2",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "requestTypeId",
+              "value": "={{ $json.requestTypeId || '9' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "00000003-3a3a-4000-8000-000000000000",
+      "name": "실제/연습 전환",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c0",
+              "leftValue": "={{ $json.mode }}",
+              "rightValue": "real",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "00000004-3a3a-4000-8000-000000000000",
+      "name": "Jira 요청 생성",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        -100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://aio3-servicedesk.atlassian.net/rest/servicedeskapi/request",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ serviceDeskId: $json.serviceDeskId, requestTypeId: $json.requestTypeId, requestFieldValues: { summary: $json.title, description: ($json.description || '') + '\\n\\n요청자: ' + $json.requester + ' / 분류: ' + $json.category + ' / 우선순위: ' + $json.priority + ' / 키: ' + $json.key } }) }}",
+        "options": {
+          "timeout": 10000
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "jiraSoftwareCloudApi"
+      },
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "jiraAio3Cloud001",
+          "name": "Jira Cloud (aio3-servicedesk)"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "00000005-3a3a-4000-8000-000000000000",
+      "name": "연습용 티켓 생성",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://data-api:8800/tickets",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ key: $('설정').item.json.key, title: $('설정').item.json.title, requester: $('설정').item.json.requester, category: $('설정').item.json.category, priority: $('설정').item.json.priority }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 1000
+    },
+    {
+      "id": "00000006-3a3a-4000-8000-000000000000",
+      "name": "결과(Jira)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        -100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "ok",
+              "value": "={{ true }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f1",
+              "name": "mode",
+              "value": "real",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "fallback",
+              "value": "={{ false }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f3",
+              "name": "ticketKey",
+              "value": "={{ $json.issueKey }}",
+              "type": "string"
+            },
+            {
+              "id": "f4",
+              "name": "url",
+              "value": "={{ $json._links.web }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      }
+    },
+    {
+      "id": "00000007-3a3a-4000-8000-000000000000",
+      "name": "결과(연습용)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        100
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0",
+              "name": "ok",
+              "value": "={{ !$json.error }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f1",
+              "name": "mode",
+              "value": "practice",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "fallback",
+              "value": "={{ $('설정').item.json.mode === 'real' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "f3",
+              "name": "ticketKey",
+              "value": "={{ $json.error ? null : ($json.key || $('설정').item.json.key) }}",
+              "type": "string"
+            },
+            {
+              "id": "f4",
+              "name": "error",
+              "value": "={{ $json.error ? ($json.error.message || String($json.error)) : null }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "호출됨": {
+      "main": [
+        [
+          {
+            "node": "설정",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "설정": {
+      "main": [
+        [
+          {
+            "node": "실제/연습 전환",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "실제/연습 전환": {
+      "main": [
+        [
+          {
+            "node": "Jira 요청 생성",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "연습용 티켓 생성",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira 요청 생성": {
+      "main": [
+        [
+          {
+            "node": "결과(Jira)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "연습용 티켓 생성",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "연습용 티켓 생성": {
+      "main": [
+        [
+          {
+            "node": "결과(연습용)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

@@ -12,11 +12,13 @@
 
 ## 0. 시작 전
 
-**순서와 기다림** — 계약이 먼저 고정돼 있으니 오늘부터 바로 시작하고, 아직 없는 남의 부품은 가짜로 대신합니다.
+**가짜 먼저, 준비되면 바꿔 끼우기** — 계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
 
-| 바로 할 수 있는 것 | 남의 것이 있어야 하는 것 | 그동안 가짜로 대신하는 법 | 연결하는 날 (목표) |
+| 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
-| 입력 검사 · 캐시 · 차단 · 분류 · `Type policy` · 보완 질문 · 접수 조회 · 출력 필터 (data-api 77판만 있으면 됨) → WF-02 · 02b · 06 · 07 · 08 · 11 · 13 | 검색 `team3-search` (영민), 이관 `team3-handoff` (병훈) | Code 노드 `Stub search` (3.3절 `evidence` 모양) · `Stub handoff` (`ticket` 모양)를 그 자리에 두고, 진짜가 올라오면 HTTP Request `Search knowledge` · `Handoff`로 바꿈. 뒤 노드는 이름 대신 들어온 값(`$json`)으로 읽게 해 두면 바꿔도 안 깨짐 | 11/3 단독 통과 → 11/4 search · handoff 연결 |
+| 입력 검사 · 캐시 · 차단 · 분류 · `Type policy` · 보완 질문 · 접수 조회 · 출력 필터 (data-api만 있으면 됨) | `team3-search` (영민) · `team3-handoff` (병훈) | `Stub search` = `search.json`의 `response`, `Stub handoff` = `handoff.json`의 `response_ok` | `Support settings` 노드의 `SEARCH` · `HANDOFF`를 `stub` → `real` |
+
+⏳ **진짜를 기다려야 하는 것**: 공통 14유형 전체 통과 · `--repeat 3` (`SEARCH` · `HANDOFF`를 `real`로 바꾼 뒤).
 
 - `git pull` → `python3 tools/packs.py build`. 읽을 것: `00-DESIGN.md` 2 · 3 · 4절, `config/type-policy.json`, `AGENTS.md`.
 - 가져다 쓸 실습: 72 `baseline-helpdesk` (뼈대) · 72 `lab02-example2-cache` (중복) · 72 `lab03-example2-llm-fallback` (LLM 멈춤) · 73 입력 검사 · 본인 건 · 출력 필터 · 71 근거 답변. 하위 웹훅이 없으면 위 표처럼 `Stub search` · `Stub handoff`로 가짜를 둡니다.
@@ -34,6 +36,8 @@
 | 노드 이름 | 왜 고정 |
 | --- | --- |
 | `Support webhook` | 계약 입구 |
+| `Support settings` | **스위치 한 곳**: `SEARCH` · `HANDOFF` = `stub` \| `real` |
+| `Stub search` · `Stub handoff` | `contracts/examples/search.json` · `handoff.json`의 응답을 그대로 돌려주는 가짜 |
 | `Validate input` · `Reject invalid` | 400 `codes` (WF-13), LLM 앞 |
 | `Injection rules` | 차단 (WF-08), LLM 앞 |
 | `Triage` | Agent 1 (분류) |

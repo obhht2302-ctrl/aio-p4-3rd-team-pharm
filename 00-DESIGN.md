@@ -73,10 +73,11 @@
 | `team3-search` | `POST /webhook/team3-search` | 권한 맞는 키만 검색해 근거 조각 반환 | RAG |
 | `team3-handoff` | `POST /webhook/team3-handoff` | 티켓 · 알림 · DLQ (data-api 먼저) + 화면 · Slack · Jira 덧붙임 | 연동 · 안정성 + 뒷단 |
 | `team3-errors` | Error Trigger (`id: team3Errors00001`) | 예상 못 한 오류 → 알림 + DLQ (+ Jira) | 연동 · 안정성 + 뒷단 |
-| `team3-ticket` | Execute Workflow Trigger | Jira 장애 티켓 한 방향 (실패하면 연습용) | 리드 |
-| `team3-alert` | Execute Workflow Trigger | Slack `#support-alerts` (실패하면 연습용) | 리드 |
+| `team3-ticket` | Execute Workflow Trigger (`id: team3Ticket00001`) | Jira 장애 티켓 한 방향 (덧붙임 전용) | 리드 |
+| `team3-alert` | Execute Workflow Trigger (`id: team3Alert000001`) | Slack `#support-alerts` (덧붙임 전용) | 리드 |
 
 - 하위 웹훅은 HTTP Request로 `http://localhost:5678/webhook/<path>`를 부릅니다 (70일차 모듈 방식, timeout과 오류 출력 필수). 하위가 멈추면 본체가 정해진 답을 합니다.
+- **가짜 먼저, 준비되면 바꿔 끼우기**: 연결선마다 요청 · 응답 예시가 `contracts/examples/`에 한 벌 있고, 모든 가짜(본체 `Stub search` · `Stub handoff`, 화면 가짜 응답, pytest)가 그 파일을 씁니다. 스위치는 본체 `Support settings`의 `SEARCH` · `HANDOFF` (`stub` | `real`)와 화면 `NEXT_PUBLIC_API_MODE` (`mock` | `real`)뿐. 계약이 바뀌면 이 문서와 `contracts/examples/`부터 고칩니다.
 - 모든 워크플로우 `settings.errorWorkflow = "team3Errors00001"`.
 
 ### 3.2 처리 방식 4개와 Type policy
@@ -239,7 +240,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | data-api | 77판 `server.py` + **우리 `data/` · `knowledge/`** (`infra/compose.team3.yml`이 띄움, 이름 `data-api` · 포트 8800이라 샘 data-api는 끄고 씀) |
 | 조합 C | `api/` FastAPI (:8000, 기본 메모리 저장소, `DATABASE_URL`이면 PostgreSQL), `web/` Next.js(React) 정적 내보내기 → nginx (:3000). 빌드는 VM 밖에서 |
 | 화면 3개 (한 앱) | `/` 질문하기 (직원 · 환자 공용, 로그인 대신 사용자 선택 + 입장 코드, 환자에겐 어르신 약 질문 예시 버튼) · `/my` 내 문의 (내 질문 · 이관 건 상태) · `/admin` 약사 · 약국장 (이관 티켓 처리, 회수 공표 알림 → 약사 "손님 안내 보내기" 승인 → 연습용 기록만). 선택한 사용자의 `role`로 `/admin`을 막고 API도 한 번 더 막음 |
-| API | 샘 덱 6개 `POST /api/ask` · `GET /api/my-requests` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /tickets` · `POST /alerts` + 우리 4개 `GET /api/types` · `GET /stock/{name}` (품절 팩 자리) · `GET /api/admin/alerts` (회수 공표 · 긴급 알림 목록) · `POST /api/admin/tickets/{id}/recall-notice` (약사 승인 → 손님 안내 연습 기록) |
+| API | 샘 덱 6개 `POST /api/ask` · `GET /api/my-requests` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /tickets` · `POST /alerts` + 우리 5개 `GET /api/types` · `GET /api/users` (사용자 고르기, 연락처 없음) · `GET /stock/{name}` (품절 팩 자리) · `GET /api/admin/alerts` (회수 공표 · 긴급 알림 목록) · `POST /api/admin/tickets/{id}/recall-notice` (약사 승인 → 손님 안내 연습 기록) |
 | 도구 | 샘 `flow.py` (77판: `range` 판정 있음, push 때 n8n 재시작 → 재색인 필요) |
 
 **키트 확인 (11/5 1교시, 리드)**: ① 80판 data-api가 팀 `data/`를 읽는 방법과 파일 이름 (`users.json`? `employees.json`?) ② `X-Api-Key` 요구 경로 ③ `/logs` vs `/audit` ④ 80판 `flow.py`의 `FLOW_WEBHOOK_KEY` · `range` · push 재시작 ⑤ 키트 `cases/common.json` 판정 칸 (WF-05 · 07 · 10 · 12의 키) ⑥ 400 `codes` 이름 ⑦ VM에 data-api를 어떻게 올리나 ⑧ 저장소 위치 (GitHub 비공개 그대로 되나).

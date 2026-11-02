@@ -1,0 +1,38 @@
+{
+ "_note": "support → team3-search (00-DESIGN.md 3.3절). Stub search 는 response 를 그대로 돌려준다.",
+ "request": {
+  "query": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+  "access_levels": [
+   "all"
+  ],
+  "top_k": 4,
+  "type": "closing"
+ },
+ "response": {
+  "evidence": [
+   {
+    "doc": "closing-checklist",
+    "title": "혼자 하는 첫 마감 순서",
+    "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+    "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요.",
+    "score": 0.61,
+    "access_level": "all"
+   },
+   {
+    "doc": "closing-cash-mismatch",
+    "title": "마감 때 돈이 안 맞을 때",
+    "section": "1. 먼저 다시 세기",
+    "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요.",
+    "score": 0.52,
+    "access_level": "all"
+   }
+  ],
+  "kb_version": "pharm_kb_v1",
+  "search_ms": 420
+ },
+ "response_empty": {
+  "evidence": [],
+  "kb_version": "pharm_kb_v1",
+  "search_ms": 380
+ }
+}
