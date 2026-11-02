@@ -1,18 +1,48 @@
-# 3팀 단위 프로젝트 · 창고형 약국 약사 지원 봇 — 설계·명세 묶음 (10/30 CC 초안)
+# 팀원 안내서 · 처음 받았을 때
 
-이 폴더가 그대로 팀 저장소 루트가 되게 만들었다. **`00-DESIGN.md`가 기준**이고 역할마다 `specs/0N-*.md` 하나를 읽고 끝의 "코덱스 요청문"을 CLI 에이전트에 붙여 넣으면 자기 몫을 처음부터 끝까지 만들 수 있게 썼다.
+이 저장소는 **각자 자기 명세 md 하나를 CLI 에이전트(codex · claude)에 던지면 맡은 몫을 끝까지 만들 수 있게** 짜 두었습니다. 아래 순서대로 하면 됩니다.
 
-| 읽는 사람 | 읽을 파일 | 만드는 것 |
-|---|---|---|
-| 모두 | `00-DESIGN.md` 1~3절, `AGENTS.md` | — |
-| 오케스트레이션 | `specs/01-ORCHESTRATION.md` | `workflows/team3-support.json`, 설계서 2~4절 |
-| RAG | `specs/02-RAG.md` | `knowledge/*.md` 8개, `workflows/team3-index.json`·`team3-search.json`, RAG 설계서 |
-| 연동·안정성 | `specs/03-HANDOFF.md` | `workflows/team3-handoff.json`·`team3-errors.json`, 설계서 5~7절 (Jira·Slack 가산은 태웅) |
-| 시험·품질 | `specs/04-TESTING.md` | `cases/*.json` 확정·`runs/`·실행 결과서 |
-| 리드·통합 | `specs/05-LEAD.md` | `docs/TOPIC.md`·헌장·daily·README·`data/*.json`, 병합·동결·발표 |
+## 1. 내 명세 찾기
 
-**고정과 팀 결정의 경계는 `00-DESIGN.md` 0절**에 표로 있다. 🔒는 샘 계약·평가라 못 바꾸고, ✏️는 전부 회의에서 바꿔도 된다. 이 묶음은 초안이지 지시가 아니다.
+| 역할 | 맡은 사람 | 명세 | 만드는 것 | 별 |
+| --- | --- | --- | --- | --- |
+| 리드 · 통합 | 태웅 | [`specs/05-lead.md`](../specs/05-lead.md) | 계약, 팩 도구, Jira · Slack, VM 배포, 제안서 · 헌장 | ★★★ |
+| 오케스트레이션 | 다영 | [`specs/01-orchestration.md`](../specs/01-orchestration.md) | `workflows/team3-support.json` (본체), 설계서 2~4절 | ★★★ |
+| RAG | 영민 | [`specs/02-rag.md`](../specs/02-rag.md) | 지식 문서 검수, `team3-index` · `team3-search`, RAG 설계서 | ★★☆ |
+| 연동 · 안정성 + 뒷단 | 병훈 | [`specs/03-backend.md`](../specs/03-backend.md) | `team3-handoff` · `team3-errors`, `api/` (FastAPI · DB), 설계서 5~7절 | ★★★ |
+| 시험 · 품질 + 화면 | 해든 (태웅이 같이 봄) | [`specs/04-screen-and-test.md`](../specs/04-screen-and-test.md) | `web/` 화면 3개, `cases/` · `runs/`, 실행 결과서 | ★★☆ |
 
-이미 들어 있는 초안: `data/users.json`(5명) · `data/records.json`(4건) · `cases/common.json`(14+3) · `cases/team.json`(6) · `requests/`(시연 5 + bench 1 + 501자). 비어 있는 폴더 `knowledge/`·`workflows/`·`docs/`는 각 역할이 채운다.
+작업 마감은 **11/5(목)** 입니다. 수업이 시작되는 11/5 1교시에 샘 80일차 키트를 보고 "키트 확인" 표시가 붙은 곳만 맞춥니다.
 
-아직 모르는 것(80일차 1교시 확인): 샘 VM 구성, 단위 프로젝트 판 데이터 API의 정확한 칸 이름·`X-Api-Key`·`/logs`, 키트 `flow.py`의 판정 키. `00-DESIGN.md`에 "키트 확인"으로 표시해 뒀다.
+## 2. 하루 순서
+
+```bash
+git pull                                   # 늘 먼저
+python3 tools/packs.py build && python3 tools/packs.py check   # 팩이 바뀌었으면
+# 내 명세의 "에이전트 요청문"을 복사해 codex 또는 claude에 붙여 넣기
+# 에이전트가 끝나면: flow.py check → push → 공통 시나리오 → 커밋
+git add <내 파일만> && git commit -m "feat: <한 일> · common N/14"
+git push
+```
+
+- 커밋 메시지에 공통 시나리오 통과 수를 적습니다 (샘 09 문서 3절).
+- **내 파일만** 고칩니다. 남의 파일을 고쳐야 하면 그 사람에게 먼저 말합니다.
+- 계약(요청 · 응답 칸, route 값, 하위 웹훅 주고받는 칸)을 바꿔야 하면 리드에게 → `00-DESIGN.md`부터 고칩니다.
+
+## 3. 처음 듣는 말
+
+| 말 | 뜻 |
+| --- | --- |
+| 팩 (pack) | 기능 하나를 켜고 끄는 **파일 묶음** (문서 + 처리 규칙 한 줄 + 시나리오). 사람의 일을 나누는 말이 아님 |
+| 처리 방식 4개 | 자동 답변 · 근거 + 이관 · 이관만 · 접수 조회. 본체는 유형 이름이 아니라 이 4개로 갈라짐 |
+| `Type policy` | 유형마다 처리 방식 · 넘길 사람 · 위험 신호를 적은 표. 본체 워크플로우의 Code 노드 하나 (원본 `config/type-policy.json`) |
+| 이관 | 사람에게 넘김 = 티켓 생성. 응답 `route: 담당자 이관` |
+| data-api | 샘이 주는 연습용 가짜 회사 서버. 티켓 · 알림 · DLQ가 여기 기록돼야 공통 시나리오가 통과 |
+| DLQ | 처리 못 한 요청을 잃지 않게 넣어 두는 대기열 |
+| 키트 확인 | 샘 80일차 키트(11/5 공개 예정)를 보고 맞출 곳 |
+
+## 4. 막혔을 때
+
+- 30분 막히면 팀 채널에, 1시간이면 강사에게 (헌장 4절).
+- 같은 곳을 에이전트가 3번 고쳐도 안 되면 멈추고, 요청을 더 작게 나누거나 64~79일차 `reference/`에서 그 부분만 가져옵니다.
+- 시나리오 기대 결과(`cases/*.json`)는 통과시키려고 바꾸지 않습니다. 틀렸다고 생각되면 해든 · 태웅에게.
