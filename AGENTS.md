@@ -32,7 +32,7 @@ CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 �
 
 ## 5. 파일 규칙
 
-- 워크플로우 파일 하나 = 워크플로우 하나. `"settings": {"executionOrder": "v1", "errorWorkflow": "team3Errors00001"}`.
+- 워크플로우 파일 하나 = 워크플로우 하나. `"settings": {"executionOrder": "v1", "errorWorkflow": "team3Errors00001"}` (가짜 `workflows/stubs/`는 `errorWorkflow` 없음).
 - 맨 위 `id`는 세 파일만: `team3-errors.json` = `team3Errors00001` (Error Workflow), `team3-ticket.json` = `team3Ticket00001` · `team3-alert.json` = `team3Alert000001` (Execute Workflow로 부름). 다른 파일은 id를 쓰지 않는다 (push가 파일 이름으로 정함).
 - `knowledge/` · `data/` · `cases/team.json` · `config/`는 **빌드 결과**다. 고칠 땐 `packs/<팩>/`의 원본을 고치고 `python3 tools/packs.py build`.
 - 키 · 토큰 · 연락처를 JSON · 문서 · 지시문에 쓰지 않는다. Credential id만. 화면 코드(`web/`)에 웹훅 키를 넣지 않는다.

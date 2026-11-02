@@ -77,8 +77,8 @@
 | `team3-alert` | Execute Workflow Trigger (`id: team3Alert000001`) | Slack `#support-alerts` (덧붙임 전용) | 리드 |
 
 - 하위 웹훅은 HTTP Request로 `http://localhost:5678/webhook/<path>`를 부릅니다 (70일차 모듈 방식, timeout과 오류 출력 필수). 하위가 멈추면 본체가 정해진 답을 합니다.
-- **가짜 먼저, 준비되면 바꿔 끼우기**: 연결선마다 요청 · 응답 예시가 `contracts/examples/`에 한 벌 있고, 모든 가짜(본체 `Stub search` · `Stub handoff`, 화면 가짜 응답, pytest)가 그 파일을 씁니다. 스위치는 본체 `Support settings`의 `SEARCH` · `HANDOFF` (`stub` | `real`)와 화면 `NEXT_PUBLIC_API_MODE` (`mock` | `real`)뿐. 계약이 바뀌면 이 문서와 `contracts/examples/`부터 고칩니다.
-- 모든 워크플로우 `settings.errorWorkflow = "team3Errors00001"`.
+- **가짜 먼저, 준비되면 바꿔 끼우기**: 연결선마다 요청 · 응답 예시가 `contracts/examples/`에 한 벌 있고, 모든 가짜(가짜 웹훅 `workflows/stubs/` 3개 — `team3-search-stub` · `team3-handoff-stub` · `team3-support-stub`, 화면 가짜 응답, pytest)가 그 파일을 씁니다. 본체는 `SEARCH` · `HANDOFF`가 `stub`이면 `-stub` 주소를 부릅니다. 스위치는 본체 `Support settings`의 `SEARCH` · `HANDOFF` (`stub` | `real`)와 화면 `NEXT_PUBLIC_API_MODE` (`mock` | `real`)뿐. 계약이 바뀌면 이 문서와 `contracts/examples/`부터 고칩니다.
+- 모든 워크플로우 `settings.errorWorkflow = "team3Errors00001"` (가짜 `workflows/stubs/`는 제외).
 
 ### 3.2 처리 방식 4개와 Type policy
 
@@ -259,6 +259,8 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | 11/9 (월) 12:00 | 마지막으로 팩을 끌 수 있는 때 (RAG 숫자 다시 재기) |
 | 11/9 14:50 | **제출 마감** (기본 브랜치 마지막 커밋) |
 | 11/9 15:00~ | 최종 발표 팀당 20분 + 질의 5분 (순서 따로 공지) · 17:00 평가 시험 25문항 |
+
+**일정 (팀 확정)**: 11/5(목) 개발 완료 → 그날 VM 배포 · 실제 측정 (공통 시나리오 전체, 3회 반복, bench) / 11/6(금) 발표 준비 날: 실행 결과서 · 설계서 숫자 채우기와 발표 자료, 샘 기능 동결 (8교시) / 11/9(월)은 발표만 (시간이 거의 없어 문서 작업은 계획하지 않음).
 
 ## 11. 평가에서 잃기 쉬운 것 (샘 00 문서 5절)
 

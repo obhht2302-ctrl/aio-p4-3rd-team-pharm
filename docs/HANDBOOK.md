@@ -1,6 +1,6 @@
 # 팀원 안내서 · 처음 받았을 때
 
-이 저장소는 **각자 자기 명세 md 하나를 CLI 에이전트(codex · claude)에 던지면 맡은 몫을 끝까지 만들 수 있게** 짜 두었습니다. 아래 순서대로 하면 됩니다.
+이 저장소는 **각자 자기 명세 md 하나를 CLI 에이전트(codex · claude)에 던지면 맡은 몫을 끝까지 만들 수 있게** 짜 두었습니다. 아래 순서대로 하면 됩니다. 레포 받기 · n8n · data-api 켜기는 [README '시작 전 준비'](../README.md#시작-전-준비-readme--모든-명세에-같은-내용)에 있습니다.
 
 ## 1. 내 명세 찾기
 
@@ -19,7 +19,7 @@
 ## 2. 하루 순서
 
 ```bash
-git pull                                   # 늘 먼저
+cd ~/aio-p4-3rd-team-pharm && git pull    # 늘 먼저
 python3 tools/packs.py build && python3 tools/packs.py check   # 팩이 바뀌었으면
 # 내 명세의 "에이전트 요청문"을 복사해 codex 또는 claude에 붙여 넣기
 # 에이전트가 끝나면: flow.py check → push → 공통 시나리오 → 커밋
@@ -33,17 +33,7 @@ git push
 
 ## 3. 처음 듣는 말
 
-| 말 | 뜻 |
-| --- | --- |
-| 팩 (pack) | 기능 하나를 켜고 끄는 **파일 묶음** (문서 + 처리 규칙 한 줄 + 시나리오). 사람의 일을 나누는 말이 아님 |
-| 처리 방식 4개 | 자동 답변 · 근거 + 이관 · 이관만 · 접수 조회. 본체는 유형 이름이 아니라 이 4개로 갈라짐 |
-| `Type policy` | 유형마다 처리 방식 · 넘길 사람 · 위험 신호를 적은 표. 본체 워크플로우의 Code 노드 하나 (원본 `config/type-policy.json`) |
-| 이관 | 사람에게 넘김 = 티켓 생성. 응답 `route: 담당자 이관` |
-| data-api | 샘이 주는 연습용 가짜 회사 서버. 티켓 · 알림 · DLQ가 여기 기록돼야 공통 시나리오가 통과 |
-| DLQ | 처리 못 한 요청을 잃지 않게 넣어 두는 대기열 |
-| 키트 확인 | 샘 80일차 키트(11/5 공개 예정)를 보고 맞출 곳 |
-| 가짜 (Stub · mock) | 남의 부품이 아직 없을 때 쓰는 대역. 모양은 `contracts/examples/`의 예시 그대로 |
-| 스위치 | 가짜 → 진짜로 바꿔 끼우는 곳. 본체 `Support settings`의 `SEARCH` · `HANDOFF` (`stub` / `real`), 화면 `NEXT_PUBLIC_API_MODE` (`mock` / `real`) |
+[README 용어 표](../README.md#용어) 하나에 모아 두었습니다 (계약 · 처리 방식 · `Type policy` · 가짜와 스위치 · 팩 · data-api · DLQ · `fault` · 키트 확인 …).
 
 ## 4. 막혔을 때
 

@@ -13,7 +13,7 @@
 # 0) 샘 data-api가 켜져 있으면 끈다 (이름 data-api · 포트 8800이 겹침)
 cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
 # 1) 우리 파일 만들기
-cd <이 저장소> && python3 tools/packs.py build && python3 tools/packs.py check
+cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py build && python3 tools/packs.py check
 cp infra/.env.example infra/.env      # SAM_DATA_API 경로 · 키 값 채우기 (커밋 금지)
 # 2) 띄우기 (화면은 web/에서 npm run build 를 먼저 해야 out/ 이 생김)
 docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api

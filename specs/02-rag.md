@@ -7,9 +7,9 @@
 - 이 판은 **뼈대 + 설계 + 직접 정할 칸**입니다. 고정 칸(검색이 돌려주는 모양 · 권한 나누기 · 완료 기준)은 완전체본과 같고, 노드 구성 · 청킹 · 수치는 직접 정해 설계서에 적습니다.
 
 > **처음 읽는 분께** — 이 저장소는 가상 약국의 업무 문의를 n8n 워크플로우로 답하는 3팀 프로젝트예요. 이 명세는 **RAG 담당(영민)** 몫입니다. RAG(검색 증강 생성)는 "질문과 가까운 문서 조각을 먼저 찾아서 그 조각을 근거로 답하게 하는 방식"이고, 이 역할은 그중 **문서를 조각내 저장하고(색인) 찾아 주는(검색) 부분**을 맡습니다. 답을 만드는 본체는 **다영(오케스트레이션 담당)**이 만들고, 우리 검색을 웹훅으로 부릅니다.
-> 명령은 모두 **이 저장소 맨 위 폴더**에서 칩니다 (`flow.py`만 샘 실습 폴더 `~/aio-01d4-stu/Last3Mon/77`에서 — 80일차 키트가 나오면 `Last3Mon/80`). 저장소는 GitHub `twlaude/aio-p4-3rd-team-pharm` (비공개, 초대 수락 후 `git clone`). n8n은 수업 65일차에 설치한 노트북 n8n(`cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start` → `http://localhost:5678`), data-api(연습용 가짜 회사 서버)는 [`infra/README.md`](../infra/README.md)대로 띄웁니다.
+> 명령은 모두 **레포 맨 위 폴더 `~/aio-p4-3rd-team-pharm`**에서 칩니다 (`flow.py`만 샘 키트 폴더에서). 레포 받기 · n8n · data-api 켜기는 아래 0절 '시작 전 준비'에 있어요.
 
-**처음 나오는 말**
+**처음 나오는 말** (RAG에서만 쓰는 말. 나머지는 [README 용어 표](../README.md#용어))
 
 | 말 | 뜻 |
 | --- | --- |
@@ -21,7 +21,6 @@
 | 메모리 키 | n8n 메모리 벡터 저장소의 이름. 권한별로 둘: 모두용 · 약국장용 |
 | `access_level` · `mgr-` | 문서 권한. 파일 이름이 `mgr-`로 시작하면 약국장(`owner`)만, 나머지는 `all` |
 | 노드 `type` · `typeVersion` | n8n 노드 종류와 판. 샘 실습에서 돌아간다고 확인된 값만 씀 |
-| 설계판 · 완전체본 | 이 문서 = 뼈대 + 직접 정할 칸, `02-rag-full.md` = 그대로 에이전트에 던지면 끝까지 가는 판 |
 
 | 이 역할이 정하는 것 | 바꾸면 안 되는 것 |
 | --- | --- |
@@ -29,13 +28,60 @@
 
 ## 0. 시작 전
 
-**가짜 먼저, 준비되면 바꿔 끼우기** — 계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
+### 시작 전 준비 (README · 모든 명세에 같은 내용)
+
+```bash
+# 1) 레포 받기 — 처음이면 clone, 이미 있으면 pull. 레포 경로는 어느 문서에서나 ~/aio-p4-3rd-team-pharm
+git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm
+cd ~/aio-p4-3rd-team-pharm && git pull
+
+# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77 (80일차 키트가 나오면 77 → 80)
+cd ~/aio-01d4-stu && git pull
+
+# 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
+cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start
+
+# 4) data-api 켜기 — 샘 77판 server.py에 우리 문서 · 데이터를 붙인 것 (샘 77 data-api는 먼저 끔)
+cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
+cd ~/aio-p4-3rd-team-pharm && cp -n infra/.env.example infra/.env    # 처음 한 번: infra/.env의 SAM_DATA_API를 내 홈 경로로 고침
+docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api
+
+# 5) 팀 웹훅 키 — 리드(태웅)에게 디코 DM으로 받아 터미널에서만 (파일 · 레포에 쓰지 않음, 새 터미널마다 다시)
+export FLOW_WEBHOOK_KEY=받은값
+
+# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
+cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+```
+
+| n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
+| --- | --- |
+| `OpenAI (.env)` | 수업 때 이미 있음. 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` |
+| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 5)의 팀 웹훅 키) |
+| `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
+
+- 77판 `flow.py`는 `FLOW_WEBHOOK_KEY`를 보내지 않아요 (80일차 키트판부터 보냄 — 키트 확인). 그래서 키트가 나오기 전 노트북 시험은 웹훅 노드 Authentication을 `None`으로 두고 하고, 키트판이 나오면 Header Auth(`team3WebhookKey`)로 바꿉니다. 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
+
+처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
+
+### 혼자 끝까지 확인하는 법
+
+```bash
+cd ~/aio-01d4-stu/Last3Mon/77
+uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/team3-index.json ~/aio-p4-3rd-team-pharm/workflows/team3-search.json
+uv run tools/flow.py call team3-index ~/aio-p4-3rd-team-pharm/requests/empty.json                     # 색인 (push 뒤마다)
+uv run tools/flow.py call team3-search ~/aio-p4-3rd-team-pharm/requests/search-closing.json           # 본체 없이 검색만. 1등 closing-checklist
+uv run tools/flow.py call team3-search ~/aio-p4-3rd-team-pharm/requests/search-staff-owner-doc.json   # 직원 권한 → mgr-owner-rules가 나오면 실패
+uv run tools/flow.py call team3-search ~/aio-p4-3rd-team-pharm/requests/search-senior.json            # 어르신 문서
+```
+
+### 가짜 먼저, 준비되면 바꿔 끼우기
+
+계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
 
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
-| 문서 검수, `team3-index` · `team3-search` 만들기, 질문 세트 | 없음 (본체 없이 단독으로 됨) | 본체가 보낼 요청 = `search.json`의 `request` (`flow.py call team3-search`), 응답 모양 = `response` | 다영이 본체 `Support settings` 노드의 `SEARCH` 값을 `real`로 바꾸면 끝. 문서가 바뀌면 build → 재색인만 |
-
-⏳ **진짜를 기다려야 하는 것**: 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼).
+| 문서 검수, `team3-index` · `team3-search` 만들기, 질문 세트 | 없음 (본체 없이 단독으로 됨) | 본체가 보낼 요청 = `search.json`의 `request` (= `requests/search-closing.json`, `flow.py call team3-search`), 응답 모양 = `response` | 다영이 본체 `Support settings` 노드의 `SEARCH` 값을 `real`로 바꾸면 끝. 문서가 바뀌면 build → 재색인만 |
+| ⏳ **진짜를 기다려야 하는 것** | 청킹 비교 · hit@k · `SCORE_MIN` (문서 검수가 끝난 뒤 잼). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 저장소 맨 위 폴더에서 `git pull` → `python3 tools/packs.py build`. 문서 **원본은 `packs/<팩>/knowledge/`**, `knowledge/`는 빌드 결과입니다 (빌드하면 덮어써져서 거기서 고치면 사라짐).
 - 문서 10개: 공통 `scope-and-escalation` · `request-records-guide` · `mgr-owner-rules`(약국장 전용), 회수 `recall-first-response` · `recall-customer-guide`, 마감 `closing-checklist` · `closing-cash-mismatch`, 어르신 `senior-cold-sleep-stomach` · `senior-pain-joint` · `senior-safety-signals`.
@@ -79,7 +125,7 @@
 
 ## 5. 완료 기준 (완전체본과 같음)
 
-- 샘 실습 폴더에서 `uv run tools/flow.py check <저장소>/workflows/team3-index.json` · `team3-search.json` 오류 0, push 뒤 `call team3-index` → docs 10, owner 청크는 owner 키에만.
+- 샘 실습 폴더에서 `uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-index.json` · `team3-search.json` 오류 0, push 뒤 `call team3-index` → docs 10, owner 청크는 owner 키에만.
 - `call team3-search` `{"query":"마감 때 계산대 현금 순서","access_levels":["all"]}` → 1등 `closing-checklist`. `{"query":"마감 차액 승인 기준","access_levels":["all"]}` → `mgr-owner-rules` 없음, `["all","owner"]`면 있음.
 - 질문 12개 hit@3 ≥ 10/12, `docs/RAG-ARCHITECTURE.md` 1~5절을 잰 값으로, 어르신 문서 출처 · 기준일 채움.
 

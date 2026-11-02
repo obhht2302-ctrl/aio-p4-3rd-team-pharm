@@ -3,7 +3,12 @@
 가상 창고형 약국에서 일하는 직원·약사와 약국을 찾는 어르신이 묻는 것을 n8n 워크플로우가 받아, **약국 문서에 근거가 있으면 답하고, 사람이 정할 일은 약사·약국장에게 넘기는** 업무 지원 자동화입니다.
 
 > 단위 프로젝트 80~82일차 (2026-11-05 목 ~ 11-09 월) · 주제 큰 틀: 노코드·로코드 기반 기업형 지능형 기술 지원 자동화
-> 설계 기준은 [`00-DESIGN.md`](00-DESIGN.md) 하나입니다. 처음이면 [`docs/HANDBOOK.md`](docs/HANDBOOK.md)부터 읽으세요.
+> 처음이면 [`docs/HANDBOOK.md`](docs/HANDBOOK.md)부터 (입문 길잡이: 내 명세 찾기 · 하루 순서), 무엇이 맞는지 헷갈리면 [`00-DESIGN.md`](00-DESIGN.md) (정답 기준 — 다른 문서와 다르면 00-DESIGN이 맞음).
+
+```bash
+git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm   # 처음
+cd ~/aio-p4-3rd-team-pharm && git pull                                                   # 이미 있으면
+```
 
 ## 무엇을 하나 (기능 3개로 시작)
 
@@ -49,29 +54,64 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 
 | 사람 | 바로 할 수 있는 것 | 기다리는 것 | 그동안 가짜로 |
 | --- | --- | --- | --- |
-| 다영 | 검사 · 분류 · Type policy · 보완 질문 · 접수 조회 | 영민 search · 병훈 handoff | `Stub search` · `Stub handoff` (`contracts/examples/search.json` · `handoff.json`) |
-| 영민 | 문서 검수 · index · search · 비교 실험 | 없음 | `flow.py call team3-search`로 단독 시험 |
-| 병훈 | handoff · errors · api | 없음 | `flow.py call team3-handoff`, pytest |
-| 해든 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수 | 다영 골격(공통 첫 실행) · 전체 연결 · 태웅 화면(QA) | 400 · 차단은 골격만으로 통과 |
+| 다영 | 검사 · 분류 · Type policy · 보완 질문 · 접수 조회 | 영민 search · 병훈 handoff | 가짜 웹훅 `team3-search-stub` · `team3-handoff-stub` (`workflows/stubs/`, 값은 `contracts/examples/`) |
+| 영민 | 문서 검수 · index · search · 비교 실험 | 없음 | `flow.py call team3-search requests/search-*.json`으로 단독 시험 |
+| 병훈 | handoff · errors · api | 없음 | `flow.py call team3-handoff requests/handoff-*.json` · `fault tickets error`, pytest |
+| 해든 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수 | 다영 골격(공통 첫 실행) · 전체 연결 · 태웅 화면(QA) | 가짜 본체 `team3-support-stub`으로 시험 · 결과서 표 연습 (결과서엔 안 씀), 400 · 차단은 골격만으로 통과 |
 | 태웅 | 화면 (가짜 응답으로), Jira · Slack 틀, 팩 도구, VM 준비 | 병훈 API | `contracts/examples/api.json` 가짜 응답 |
 
 **가짜 먼저, 준비되면 바꿔 끼우기** (완료 목표는 11/5 목요일 하나): ① 각자 `contracts/examples/`의 가짜로 단독 시험 통과 → ② 영민 search가 준비되면 다영 본체 `SEARCH=real` → ③ 병훈 handoff가 준비되면 `HANDOFF=real` → 해든 공통 시나리오 실행 → ④ 병훈 API가 준비되면 화면 `NEXT_PUBLIC_API_MODE=real` → ⑤ 11/5 키트 맞춤 · VM 첫 배포. 스위치는 본체 `Support settings` 노드와 화면 환경 변수 한 곳씩뿐입니다.
 
-⏳ **진짜를 기다려야 하는 것** (가짜로는 못 함): RAG 청킹 비교 · hit@k · 점수 기준 (문서 검수 뒤), 공통 14유형 전체 통과 · LLM 3회 반복 · bench (본체 + 하위 연결 뒤), 실행 결과서 숫자 (샘 일정대로 11/6~11/9 VM에서 다시 잼 — 미리 잰 숫자는 결과서에 쓰지 않음).
+⏳ **진짜를 기다려야 하는 것** (가짜로는 못 함): RAG 청킹 비교 · hit@k · 점수 기준 (문서 검수 뒤), 공통 14유형 전체 통과 · LLM 3회 반복 · bench (본체 + 하위 연결 뒤), 실행 결과서 숫자 (11/5 VM 배포 뒤 실제로 잰 값만 — 노트북 · 가짜로 잰 숫자는 결과서에 쓰지 않음).
+
+**일정 (팀 확정)**: 11/5(목) 개발 완료 → 그날 VM 배포 · 실제 측정 (공통 시나리오 전체, 3회 반복, bench) / 11/6(금) 발표 준비 날: 실행 결과서 · 설계서 숫자 채우기와 발표 자료, 샘 기능 동결 (8교시) / 11/9(월)은 발표만 (시간이 거의 없어 문서 작업은 계획하지 않음).
+
+## 시작 전 준비 (README · 모든 명세에 같은 내용)
+
+```bash
+# 1) 레포 받기 — 처음이면 clone, 이미 있으면 pull. 레포 경로는 어느 문서에서나 ~/aio-p4-3rd-team-pharm
+git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm
+cd ~/aio-p4-3rd-team-pharm && git pull
+
+# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77 (80일차 키트가 나오면 77 → 80)
+cd ~/aio-01d4-stu && git pull
+
+# 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
+cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start
+
+# 4) data-api 켜기 — 샘 77판 server.py에 우리 문서 · 데이터를 붙인 것 (샘 77 data-api는 먼저 끔)
+cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
+cd ~/aio-p4-3rd-team-pharm && cp -n infra/.env.example infra/.env    # 처음 한 번: infra/.env의 SAM_DATA_API를 내 홈 경로로 고침
+docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api
+
+# 5) 팀 웹훅 키 — 리드(태웅)에게 디코 DM으로 받아 터미널에서만 (파일 · 레포에 쓰지 않음, 새 터미널마다 다시)
+export FLOW_WEBHOOK_KEY=받은값
+
+# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
+cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+```
+
+| n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
+| --- | --- |
+| `OpenAI (.env)` | 수업 때 이미 있음. 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` |
+| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 5)의 팀 웹훅 키) |
+| `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
+
+- 77판 `flow.py`는 `FLOW_WEBHOOK_KEY`를 보내지 않아요 (80일차 키트판부터 보냄 — 키트 확인). 그래서 키트가 나오기 전 노트북 시험은 웹훅 노드 Authentication을 `None`으로 두고 하고, 키트판이 나오면 Header Auth(`team3WebhookKey`)로 바꿉니다. 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
 
 ## 바로 실행 (노트북)
 
 ```bash
 # 1) 우리 팩으로 knowledge/ · data/ · cases/team.json · config/ 만들기
-python3 tools/packs.py build && python3 tools/packs.py check
+cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py build && python3 tools/packs.py check
 
-# 2) 샘 도구로 워크플로우 올리고 시험 (샘 키트 경로는 각자 노트북 기준)
-cd ~/aio-01d4-stu/Last3Mon/77            # 80일차 키트가 나오면 Last3Mon/80
-export FLOW_WEBHOOK_KEY=<팀 키>           # 키 값은 팀장에게
-uv run tools/flow.py push <이 저장소>/workflows/team3-*.json
-uv run tools/flow.py call team3-index <이 저장소>/requests/empty.json
-uv run tools/flow.py test <이 저장소>/cases/common.json --webhook team3-support -v
-uv run tools/flow.py test <이 저장소>/cases/team.json -v
+# 2) 샘 도구로 워크플로우 올리고 시험 (위 '시작 전 준비'를 끝낸 터미널에서)
+cd ~/aio-01d4-stu/Last3Mon/77                               # 80일차 키트가 나오면 Last3Mon/80
+export FLOW_WEBHOOK_KEY=받은값          # 리드에게 디코 DM으로 받은 값, 파일에 쓰지 않음
+uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/team3-*.json
+uv run tools/flow.py call team3-index ~/aio-p4-3rd-team-pharm/requests/empty.json
+uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/common.json --webhook team3-support -v
+uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/team.json -v
 ```
 
 화면·API까지 한 번에 띄우는 법은 [`infra/README.md`](infra/README.md).
@@ -84,6 +124,7 @@ uv run tools/flow.py test <이 저장소>/cases/team.json -v
 | `team3-index` · `team3-search` | RAG |
 | `team3-handoff` · Error Workflow `team3-errors` | 연동 · 안정성 + 뒷단 |
 | `team3-ticket`(Jira) · `team3-alert`(Slack) | 리드 |
+| `team3-search-stub` · `team3-handoff-stub` · `team3-support-stub` | 가짜 (`workflows/stubs/`, 혼자 개발용 — 결과서에 쓰지 않음) |
 
 | Credential 이름 (값은 n8n에만) | 용도 |
 | --- | --- |
@@ -97,13 +138,14 @@ uv run tools/flow.py test <이 저장소>/cases/team.json -v
 ```text
 00-DESIGN.md      설계 기준 (계약 · 구조 · 권한 · 데이터 · 시나리오 · 역할 · 일정)
 AGENTS.md         CLI 코딩 에이전트 규칙 (codex · claude)
-specs/            역할별 명세 5개 — 각자 자기 것 하나만 에이전트에게 던짐
+specs/            역할별 명세 (01 · 02 · 04는 설계판 + 완전체본) — 각자 자기 것 하나만 에이전트에게 던짐
 packs/            기능(팩)별 원본: 문서 · 시나리오 · 데이터, active.json = 켜진 팩
 tools/packs.py    팩으로 아래 4개 폴더를 만드는 도구 (build · check · selftest)
 knowledge/ data/ cases/team.json config/   ← 빌드 결과 (직접 고치지 말고 packs/에서)
 cases/common.json 공통 시나리오 14개 (11/5 14:00 점검 뒤 고정)
 contracts/examples/ 연결선마다 요청 · 응답 예시 — 모든 가짜(Stub · mock · pytest)가 이것을 씀
 workflows/        n8n 워크플로우 JSON (한 사람 = 한 파일)
+workflows/stubs/  가짜 웹훅 3개 (혼자 개발용, contracts/examples 값 그대로)
 api/ web/ infra/  조합 C: FastAPI · Next.js 화면 · compose
 requests/ runs/   시연·bench 요청 · 시험 보고서
 docs/             제안서 · 헌장 · 설계서 2종 · 결과서 · 데일리
@@ -117,3 +159,22 @@ docs/             제안서 · 헌장 · 설계서 2종 · 결과서 · 데일�
 | 검색 결과가 늘 빔 | push 하면 n8n이 재시작돼 색인이 사라짐 → `team3-index`를 다시 부름 |
 | 장애 시나리오 뒤 다른 시나리오가 실패 | `flow.py fault all ok` · `flow.py llm up` |
 | `packs.py check` 실패 | 메시지에 나온 팩의 문서 · 시나리오 수를 채우거나 `packs/active.json`을 되돌림 |
+
+## 용어
+
+| 말 | 뜻 |
+| --- | --- |
+| 계약 | 부품끼리 주고받는 데이터 모양 (요청 · 응답 칸, `route` 값, 하위 웹훅 주고받는 칸, API 모양). `00-DESIGN.md` 2 · 3절, 예시 파일은 `contracts/examples/` |
+| 조합 A · C | 샘 안내의 입구 · 뒷단 구성. A = 팀 웹훅 + data-api (공통 시나리오는 이걸로 판정), C = 웹 화면 + FastAPI (우리가 더하는 것) |
+| 처리 방식 4개 | 자동 답변 (`auto`) · 근거 + 이관 (`evidence_handoff`) · 이관만 (`handoff_only`) · 접수 조회 (`record_status`). 본체는 유형 이름이 아니라 이 4개로 갈라짐 |
+| `Type policy` | 유형마다 처리 방식 · 넘길 사람 · 위험 신호를 적은 표. 본체의 Code 노드 하나, 원본은 `config/type-policy.json` (팩에서 빌드) |
+| 가짜 (stub · mock) | 남의 부품이 아직 없을 때 쓰는 대역. n8n은 가짜 웹훅 `workflows/stubs/` 3개, 화면은 가짜 응답. 값은 전부 `contracts/examples/` 그대로 |
+| 스위치 | 가짜 → 진짜로 바꾸는 곳 두 군데: 본체 `Support settings` 노드의 `SEARCH` · `HANDOFF` (`stub` → `real`), 화면 환경 변수 `NEXT_PUBLIC_API_MODE` (`mock` → `real`) |
+| 설계판 · 완전체본 | `specs/0N-<이름>.md` = 뼈대 + 직접 정할 칸, `-full.md` = 그대로 에이전트에 던지면 끝까지 가는 판 (01 · 02 · 04만 두 벌) |
+| 공통 · 팀 시나리오 · 판정 | 공통 = 샘이 정한 14유형 (`cases/common.json`, WF-01~13), 팀 = 우리 기능 시험 (`cases/team.json`, T-xx). 판정 = 응답에서 확인할 칸과 기대값 (`equals` · `contains` · `range` …) |
+| data-api | 샘이 주는 연습용 가짜 회사 서버 (티켓 · 알림 · DLQ · 직원 · 문서). 공통 시나리오가 여기 남은 기록으로 판정 |
+| DLQ | 처리 못 한 요청을 잃지 않게 넣어 두는 대기열 (나중에 다시 처리) |
+| `fault` · `llm` 명령 | 장애 연습 스위치. `flow.py fault tickets error` = 티켓 API 고장 → `fault all ok`로 되돌림, `flow.py llm down` = OpenAI 키를 일부러 깨뜨림 → `llm up`으로 되돌림 |
+| 팩 (pack) · `active.json` | 기능 하나를 켜고 끄는 파일 묶음 (문서 + `Type policy` 한 줄 + 시나리오), `packs/<이름>/`. 사람의 일을 나누는 말이 아님. 켜진 팩 목록 = `packs/active.json` |
+| 샘 키트 · 키트 확인 | 강사(샘) 실습 폴더 `~/aio-01d4-stu/Last3Mon/77` (`flow.py` · data-api, 80일차 키트가 나오면 `80`). 키트 확인 = 80일차 키트(11/5 공개)를 보고 맞출 곳 |
+| 이관 | 사람에게 넘김 = 티켓 생성, 응답 `route: 담당자 이관` |

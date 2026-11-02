@@ -1,5 +1,5 @@
 {
- "_note": "support → team3-search (00-DESIGN.md 3.3절). Stub search 는 response 를 그대로 돌려준다.",
+ "_note": "support → team3-search (00-DESIGN.md 3.3절). 가짜 웹훅 workflows/stubs/team3-search-stub 은 response 를 그대로 돌려준다.",
  "request": {
   "query": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
   "access_levels": [

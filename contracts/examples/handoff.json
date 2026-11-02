@@ -1,5 +1,5 @@
 {
- "_note": "support → team3-handoff (00-DESIGN.md 3.3 · 3.4절). 늘 HTTP 200. Stub handoff 는 response_ok 를 돌려준다.",
+ "_note": "support → team3-handoff (00-DESIGN.md 3.3 · 3.4절). 늘 HTTP 200. 가짜 웹훅 workflows/stubs/team3-handoff-stub 은 response_ok 를 돌려준다 (simulate 로 나머지).",
  "request": {
   "request_id": "wf12",
   "user": "김하늘",

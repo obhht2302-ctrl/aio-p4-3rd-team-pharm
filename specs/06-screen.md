@@ -10,13 +10,60 @@
 
 ## 0. 시작 전
 
-**가짜 먼저, 준비되면 바꿔 끼우기** — 계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
+### 시작 전 준비 (README · 모든 명세에 같은 내용)
+
+```bash
+# 1) 레포 받기 — 처음이면 clone, 이미 있으면 pull. 레포 경로는 어느 문서에서나 ~/aio-p4-3rd-team-pharm
+git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm
+cd ~/aio-p4-3rd-team-pharm && git pull
+
+# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77 (80일차 키트가 나오면 77 → 80)
+cd ~/aio-01d4-stu && git pull
+
+# 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
+cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start
+
+# 4) data-api 켜기 — 샘 77판 server.py에 우리 문서 · 데이터를 붙인 것 (샘 77 data-api는 먼저 끔)
+cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
+cd ~/aio-p4-3rd-team-pharm && cp -n infra/.env.example infra/.env    # 처음 한 번: infra/.env의 SAM_DATA_API를 내 홈 경로로 고침
+docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api
+
+# 5) 팀 웹훅 키 — 리드(태웅)에게 디코 DM으로 받아 터미널에서만 (파일 · 레포에 쓰지 않음, 새 터미널마다 다시)
+export FLOW_WEBHOOK_KEY=받은값
+
+# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
+cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+```
+
+| n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
+| --- | --- |
+| `OpenAI (.env)` | 수업 때 이미 있음. 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` |
+| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 5)의 팀 웹훅 키) |
+| `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
+
+- 77판 `flow.py`는 `FLOW_WEBHOOK_KEY`를 보내지 않아요 (80일차 키트판부터 보냄 — 키트 확인). 그래서 키트가 나오기 전 노트북 시험은 웹훅 노드 Authentication을 `None`으로 두고 하고, 키트판이 나오면 Header Auth(`team3WebhookKey`)로 바꿉니다. 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
+
+처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
+
+### 혼자 끝까지 확인하는 법
+
+```bash
+cd ~/aio-p4-3rd-team-pharm/web && npm install
+NEXT_PUBLIC_API_MODE=mock npm run dev    # contracts/examples/api.json 가짜 응답으로 화면 3개 → http://localhost:3000
+# 진짜 API로 바꿔 끼우기: 뼈대 API(메모리 저장소) + 가짜 본체 team3-support-stub (다른 터미널)
+cd ~/aio-p4-3rd-team-pharm/api && TEAM3_ENTRY_CODE=dev N8N_WEBHOOK_URL=http://localhost:5678/webhook/team3-support-stub uv run --python 3.12 --with fastapi --with uvicorn --with httpx uvicorn app.main:app --port 8000
+cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE=http://localhost:8000 npm run dev
+```
+- 가짜 본체를 쓰려면 먼저 `cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/stubs/team3-support-stub.json`. 진짜 본체가 오면 `N8N_WEBHOOK_URL`의 `-stub`만 뺍니다.
+
+### 가짜 먼저, 준비되면 바꿔 끼우기
+
+계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
 
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
 | 화면 3개 · 역할 막기 · 디자인 | 병훈 `api/` (뼈대는 이미 메모리 저장소로 돎) | `api.json` → `web/lib/contract-examples.json` (`packs.py build`가 복사) → `lib/mock.ts` | `NEXT_PUBLIC_API_MODE=mock` → `real` (+ `NEXT_PUBLIC_API_BASE`) |
-
-⏳ **진짜를 기다려야 하는 것**: 실제 API와 한 바퀴 (질문 → 이관 → 약사 화면 → 손님 안내 연습 기록).
+| ⏳ **진짜를 기다려야 하는 것** | 실제 API와 한 바퀴 (질문 → 이관 → 약사 화면 → 손님 안내 연습 기록). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 뼈대: `web/` (Next.js 16.4.3 · React 19.2.0 · TypeScript, `output: "export"`). 파일만 있고 **설치는 안 함**: `cd web && npm install && npm run dev` (http://localhost:3000), 빌드 `npm run build` → `web/out/`.
 - API는 `cd api && uv run --with fastapi --with uvicorn --with httpx uvicorn app.main:app --port 8000` (`api/README.md`).

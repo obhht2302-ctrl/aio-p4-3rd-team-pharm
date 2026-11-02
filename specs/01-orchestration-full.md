@@ -12,18 +12,64 @@
 
 ## 0. 시작 전
 
-**가짜 먼저, 준비되면 바꿔 끼우기** — 계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
+### 시작 전 준비 (README · 모든 명세에 같은 내용)
+
+```bash
+# 1) 레포 받기 — 처음이면 clone, 이미 있으면 pull. 레포 경로는 어느 문서에서나 ~/aio-p4-3rd-team-pharm
+git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm
+cd ~/aio-p4-3rd-team-pharm && git pull
+
+# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77 (80일차 키트가 나오면 77 → 80)
+cd ~/aio-01d4-stu && git pull
+
+# 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
+cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start
+
+# 4) data-api 켜기 — 샘 77판 server.py에 우리 문서 · 데이터를 붙인 것 (샘 77 data-api는 먼저 끔)
+cd ~/aio-01d4-stu/Last3Mon/77/data-api && docker compose down
+cd ~/aio-p4-3rd-team-pharm && cp -n infra/.env.example infra/.env    # 처음 한 번: infra/.env의 SAM_DATA_API를 내 홈 경로로 고침
+docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api
+
+# 5) 팀 웹훅 키 — 리드(태웅)에게 디코 DM으로 받아 터미널에서만 (파일 · 레포에 쓰지 않음, 새 터미널마다 다시)
+export FLOW_WEBHOOK_KEY=받은값
+
+# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
+cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+```
+
+| n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
+| --- | --- |
+| `OpenAI (.env)` | 수업 때 이미 있음. 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` |
+| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 5)의 팀 웹훅 키) |
+| `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
+
+- 77판 `flow.py`는 `FLOW_WEBHOOK_KEY`를 보내지 않아요 (80일차 키트판부터 보냄 — 키트 확인). 그래서 키트가 나오기 전 노트북 시험은 웹훅 노드 Authentication을 `None`으로 두고 하고, 키트판이 나오면 Header Auth(`team3WebhookKey`)로 바꿉니다. 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
+
+처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
+
+### 혼자 끝까지 확인하는 법
+
+```bash
+cd ~/aio-01d4-stu/Last3Mon/77
+uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/stubs/team3-search-stub.json ~/aio-p4-3rd-team-pharm/workflows/stubs/team3-handoff-stub.json ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/common.json --webhook team3-support -v   # Support settings: SEARCH=stub · HANDOFF=stub
+uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/team.json -v
+```
+- 검색 · 이관이 가짜라 `sources` · `ticket` 같은 칸은 `contracts/examples/`의 예시값이 나와요. 검사 · 분류 · 처리 방식 갈림 · 보완 질문 · 접수 조회 · 가림은 이걸로 끝까지 확인됩니다. push는 n8n을 재시작하니 파일을 한 번에 넘깁니다.
+
+### 가짜 먼저, 준비되면 바꿔 끼우기
+
+계약이 먼저 고정돼 있어서 오늘부터 바로 시작합니다. 남의 부품이 없으면 `contracts/examples/`의 예시를 그대로 쓰는 가짜로 대신하고, 진짜가 준비되면 스위치 한 곳만 바꿉니다. 완료 목표는 11/5(목) 하나입니다.
 
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
-| 입력 검사 · 캐시 · 차단 · 분류 · `Type policy` · 보완 질문 · 접수 조회 · 출력 필터 (data-api만 있으면 됨) | `team3-search` (영민) · `team3-handoff` (병훈) | `Stub search` = `search.json`의 `response`, `Stub handoff` = `handoff.json`의 `response_ok` | `Support settings` 노드의 `SEARCH` · `HANDOFF`를 `stub` → `real` |
-
-⏳ **진짜를 기다려야 하는 것**: 공통 14유형 전체 통과 · `--repeat 3` (`SEARCH` · `HANDOFF`를 `real`로 바꾼 뒤).
+| 입력 검사 · 캐시 · 차단 · 분류 · `Type policy` · 보완 질문 · 접수 조회 · 출력 필터 (data-api만 있으면 됨) | `team3-search` (영민) · `team3-handoff` (병훈) | 가짜 웹훅 `team3-search-stub` · `team3-handoff-stub` (`workflows/stubs/`, `search.json`의 `response` · `handoff.json`의 `response_ok`를 그대로 돌려줌) | `Support settings` 노드의 `SEARCH` · `HANDOFF`를 `stub` → `real` (부르는 주소가 `team3-search-stub` → `team3-search`로 바뀜) |
+| ⏳ **진짜를 기다려야 하는 것** | 공통 14유형 전체 통과 · `--repeat 3` (`SEARCH` · `HANDOFF`를 `real`로 바꾼 뒤). | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 1. `git pull` → `python3 tools/packs.py build` (내 파일이 있으면 `Type policy` 표가 자동으로 채워짐).
 2. 읽을 것: `00-DESIGN.md` 2 · 3 · 4절, `AGENTS.md`, `config/type-policy.json` (지금 켜진 유형 표).
 3. 샘 실습에서 가져올 것: `Last3Mon/72/reference/baseline-helpdesk.json` (뼈대), `73/reference/lab01-example2-input.json` (입력 검사) · `lab02-example1-own.json` (본인 건) · `lab03-example1-filter.json` (출력 필터), `72/reference/lab02-example2-cache.json` (중복 캐시), `72/reference/lab03-example2-llm-fallback.json` (LLM 멈춤), `71/reference/lab02-example2-qa.json` (근거 답변). 노드 `type` / `typeVersion`은 각 일차 `AGENTS.md` 5절 그대로.
-4. 하위 워크플로우가 아직 없으면 **가짜로 개발** (아래는 처음 생각한 모양, 지금은 `Support settings` 스위치 + `Stub search` · `Stub handoff` 두 노드를 늘 같이 둡니다): `Search knowledge` 자리에 Code 노드 `Stub search`를 두고 3.3절 모양 `{"evidence":[{"doc":"closing-checklist","title":"혼자 하는 첫 마감 순서","section":"2. 문 닫은 뒤 — 돈 맞추기","text":"…","score":0.61,"access_level":"all"}],"kb_version":"pharm_kb_v1","search_ms":5}`를 돌려주게 합니다. `Handoff` 자리에는 Code 노드 `Stub handoff`로 `{"ticket":{"ticket_id":"T-2001","priority":"normal","duplicate":false},"reason":"","dlq":false,"alert":false}`. 진짜가 push되면 그 자리를 HTTP Request `Search knowledge` · `Handoff`로 바꿉니다. 뒤 노드(`Merge evidence` · `Build result`)는 노드 이름 대신 들어온 값(`$json`)으로 읽게 만들어 두면 바꿔도 안 깨집니다.
+4. 하위 워크플로우가 아직 없으면 **가짜 웹훅으로 개발**: `workflows/stubs/team3-search-stub.json` · `team3-handoff-stub.json`을 push해 두면 `contracts/examples/search.json`의 `response` · `handoff.json`의 `response_ok`를 그대로 돌려줍니다 (요청에 `"simulate":"tickets_down"`이면 티켓 실패 예시). 본체의 `Search knowledge` · `Handoff`는 HTTP Request 하나씩이고, 주소만 `Support settings` 값에 따라 `-stub`이 붙습니다 (18 · 22번 노드). 뒤 노드(`Merge evidence` · `Build result`)는 들어온 값(`$json`)으로 읽게 만들어 두면 진짜로 바꿔도 안 깨집니다.
 
 ## 1. 만드는 것과 계약
 
@@ -36,7 +82,7 @@
 | # | 노드 이름 | 타입 | 하는 일 |
 | --- | --- | --- | --- |
 | 1 | `Support webhook` | webhook v2, `path: team3-support`, `responseMode: responseNode`, Header Auth | 요청 받기 |
-| 1b | `Support settings` | code v2 (**스위치 한 곳**) | `{SEARCH: 'stub', HANDOFF: 'stub', SCORE_MIN: 0.33}` — 진짜가 준비되면 값만 `real`로 |
+| 1b | `Support settings` | code v2 (**스위치 한 곳**) | `{SEARCH: 'stub', HANDOFF: 'stub', SCORE_MIN: 0.33}` — 진짜가 준비되면 값만 `real`로 (n8n 화면에서 이 노드를 열어 이 한 줄만 고침). `SCORE_MIN` = 검색 유사도 점수(0~1, 클수록 가까움)의 하한, 영민이 우리 문서로 잰 값으로 바꿈 |
 | 2 | `Start timer` | code v2 | `{request_id, user, question, attempt(기본 1), context, channel, t0: Date.now()}`, `question`은 앞뒤 공백 · 마크다운(`*`, `` ` ``, `>`) 제거 |
 | 3 | `Check user` | httpRequest 4.2 `GET http://data-api:8800/employees/{{ encodeURIComponent($json.user) }}`, timeout 3000, neverError + fullResponse | `role` · `access_levels` |
 | 4 | `Validate input` | code v2 | `codes`: `request_id_required` (없음 · 64자 넘음) · `question_required` · `too_long` (500자 넘음) · `unknown_user` (404) → `{valid, codes, user, role, access_levels, clean_question, attempt, context, t0}` |
@@ -53,7 +99,7 @@
 | 15 | `Route by mode` | switch 3.2, `plan.route_key` | `deny` → 16 · `clarify` → 17 · `auto` / `evidence_handoff` → 18 · `handoff_only` → 22 · `record_status` → 19 |
 | 16 | `Deny` | set | `route: 권한 없음`, `reason: role_not_allowed` → 24 |
 | 17 | `Clarify` | code | `route: 보완 질문`, 답 = "더 알려 주세요: {missing 목록}" → 24 |
-| 18 | `Search mode?` → `Search knowledge` / `Stub search` | if (`SEARCH == 'real'`) → httpRequest `POST http://localhost:5678/webhook/team3-search` `{query, access_levels, top_k: 4, type}`, timeout 6000, neverError / code (`contracts/examples/search.json`의 `response`를 그대로 붙여 넣음) | 병렬 갈래 A |
+| 18 | `Search knowledge` | httpRequest `POST ={{ 'http://localhost:5678/webhook/team3-search' + ($('Support settings').first().json.SEARCH === 'real' ? '' : '-stub') }}` `{query, access_levels, top_k: 4, type}`, timeout 6000, neverError | 병렬 갈래 A. `stub`이면 가짜 웹훅 `team3-search-stub` |
 | 19 | `Get record` | httpRequest `GET http://data-api:8800/tickets/{{ plan.ticket_id || 'NONE' }}?requester={{ user }}`, timeout 4000, neverError + fullResponse | 병렬 갈래 B (번호 없으면 404 → 없음으로 침). `record_status`는 여기서 20b로 |
 | 20 | `Merge evidence` → `Build context` | merge v3 (`numberInputs: 2`) → code | 점수 내림차순, `SCORE_MIN` 미만 빼기, 같은 `doc+section` 빼기, 유형 `docs`를 앞으로, `[1] …` 번호 붙이기, 접수 상태 한 줄 (연락처는 묻을 때만) |
 | 20b | `Record answer` | code | 200 → 상태 · 담당 · 메모 (질문에 "연락처"가 있으면 연락처도), 403 → `권한 없음` `not_your_record`, 404 → `보완 질문` (번호 확인), 시간 초과 · 5xx → `담당자 이관` `tickets_slow` (티켓 만들지 않음) → 24 |
@@ -61,7 +107,7 @@
 | 21a | `Writer` + `Writer model` | agent 3.1 + lmChatOpenAi, onError → 23 | 번호 붙은 발췌로만 답, `[n]` 인용 (아래 2.2 지시문) |
 | 21b | `Verifier` + `Verifier model` | agent 3.1 + lmChatOpenAi, onError → 23 | `{"grounded","policy_ok","issues"}` |
 | 21c | `Check answer` | code | 검증 JSON 읽기 (못 읽으면 `grounded:false`), 금지 문장 검사 (아래 2.3), `[n]` → `sources`. `auto`인데 실패 → `low_confidence`로 22. `evidence_handoff`인데 실패 → 답을 정해진 첫 조치 문장으로 바꾸고 22 |
-| 22 | `Handoff mode?` → `Handoff` / `Stub handoff` | if (`HANDOFF == 'real'`) → httpRequest `POST http://localhost:5678/webhook/team3-handoff`, 3.3절 본문, timeout 8000, neverError / code (`contracts/examples/handoff.json`의 `response_ok`) | `plan.handoff`인 모든 길 |
+| 22 | `Handoff` | httpRequest `POST ={{ 'http://localhost:5678/webhook/team3-handoff' + ($('Support settings').first().json.HANDOFF === 'real' ? '' : '-stub') }}`, 3.3절 본문, timeout 8000, neverError | `plan.handoff`인 모든 길. `stub`이면 가짜 웹훅 `team3-handoff-stub` |
 | 23 | `LLM down` | set | `reason: llm_down`, `plan.handoff: true`, `assignee: plan.assignee || owner` → 22 (fail-closed, WF-10) |
 | 24 | `Output filter` | code (아래 2.4) | 전화 · 메일 가림, `security.masked` |
 | 25 | `Build result` | code | 계약 응답 조립: `notice` 붙이기, 접수 상태 줄이 답에 없으면 끝에 붙이기 (WF-12), `ticket` (handoff 결과), `agents` (지나간 역할), `timings.total_ms = Date.now() - t0` |
@@ -73,6 +119,8 @@
 - n8n v1 실행 순서는 두 갈래를 차례로 돌립니다 (66일차). 구조는 병렬, 시간은 합이라는 점을 설계서에 적습니다.
 
 ### 2.1 `Type policy` 코드 (그대로 붙여 넣고 시작)
+
+**`/*POLICY*/ … /*END*/` 사이는 손으로 고치지 않기** — `Type policy` Code 노드 안의 이 두 표시 사이에는 유형 표(유형 → 처리 방식 · 넘길 사람 · 위험 신호)가 들어갑니다. 왜: 유형 표를 `packs/` 한 곳에서 관리하려고. 언제: 누가 팩을 켜고 끄거나 팩 내용을 바꾼 뒤 `python3 tools/packs.py build`를 돌리면, `workflows/team3-support.json`이 있을 때 그 사이를 새 표로 자동으로 바꿉니다. 내가 할 일: 그 사이는 건드리지 않고 (고쳐도 다음 build 때 사라짐), 판단 코드는 `/*END*/` 뒤에 씁니다. build 뒤엔 본체를 다시 push.
 
 ```js
 const POLICY = /*POLICY*/{"types":[],"other":{}}/*END*/;   // python3 tools/packs.py build 가 채움
@@ -109,7 +157,7 @@ return [{ json: { ...v, plan } }];
 
 ### 2.3 금지 문장 (`Check answer`, LLM 말고 코드로)
 
-`/(드셔도|먹어도)\s*(괜찮|됩니다|돼요)|채우(셔도|고 마감하셔도)|퇴근하셔도 돼요/` → `policy_ok: false`. 어르신 답에서 이 문장이 나오면 자동 답변으로 내보내지 않습니다.
+`/(드셔도|먹어도)\s*(괜찮|됩니다|돼요)|채우(셔도|고 마감하셔도)|퇴근하셔도 돼요/` → `policy_ok: false`. 어르신 팩에서 봇이 복용 판단을, 마감에서 돈 결정을 하지 않게 막는 코드 검사입니다 (LLM 판단에 맡기지 않음). 어르신 답에서 이 문장이 나오면 자동 답변으로 내보내지 않습니다.
 
 ### 2.4 `Output filter` 코드
 
@@ -137,11 +185,11 @@ return [{ json: out }];
 ## 4. 완료 기준
 
 ```bash
-cd ~/aio-01d4-stu/Last3Mon/77 && export FLOW_WEBHOOK_KEY=<팀 키>
-uv run tools/flow.py check <레포>/workflows/team3-support.json                     # 오류 0
-uv run tools/flow.py push  <레포>/workflows/team3-support.json && uv run tools/flow.py call team3-index <레포>/requests/empty.json
-uv run tools/flow.py test <레포>/cases/common.json --webhook team3-support -v      # 14유형 (20케이스) 전부 PASS
-uv run tools/flow.py test <레포>/cases/team.json -v                                # 팀 11 PASS
+cd ~/aio-01d4-stu/Last3Mon/77 && export FLOW_WEBHOOK_KEY=받은값
+uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json                     # 오류 0
+uv run tools/flow.py push  ~/aio-p4-3rd-team-pharm/workflows/team3-support.json && uv run tools/flow.py call team3-index ~/aio-p4-3rd-team-pharm/requests/empty.json
+uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/common.json --webhook team3-support -v      # 14유형 (20케이스) 전부 PASS
+uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/team.json -v                                # 팀 11 PASS
 ```
 
 - 하위 워크플로우가 가짜일 때 먼저 통과시킬 것: WF-02 · 02b · 06 · 07 · 08 · 11 · 13 (11/5 1차 점검 전).
@@ -170,7 +218,7 @@ uv run tools/flow.py test <레포>/cases/team.json -v                           
 AGENTS.md, 00-DESIGN.md 2·3·4절, specs/01-orchestration-full.md 를 읽고 workflows/team3-support.json 을 만들어 줘.
 노드 이름 · 순서 · 연결은 2절 표 그대로, Type policy 와 Output filter 코드는 2.1 · 2.4 를 그대로 넣어.
 노드 type/typeVersion 은 ~/aio-01d4-stu/Last3Mon/71·72·73·76/AGENTS.md 5절의 검증된 것만. 출발점은 Last3Mon/72/reference/baseline-helpdesk.json.
-Support settings 노드에 SEARCH · HANDOFF 스위치(stub|real)를 두고, Stub search · Stub handoff 는 contracts/examples/search.json · handoff.json 의 응답을 그대로 돌려주게 해. 처음엔 둘 다 stub.
+Support settings 노드에 SEARCH · HANDOFF 스위치(stub|real)를 두고, Search knowledge · Handoff 주소는 stub 이면 team3-search-stub · team3-handoff-stub (workflows/stubs/, 이미 있음), real 이면 team3-search · team3-handoff 로 가게 해. 처음엔 둘 다 stub.
 먼저 입력 · 노드 순서 · 결과 모양을 5줄로 보여 주고, flow.py check 오류 0 까지 고친 뒤 python3 tools/packs.py build 를 돌리고, 사람이 칠 push · test 명령을 알려 줘.
 완료 기준은 4절. cases/*.json 은 고치지 마.
 ```
