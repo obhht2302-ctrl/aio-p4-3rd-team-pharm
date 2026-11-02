@@ -12,7 +12,7 @@
 ```bash
 # 1) 우리 파일 만들기
 cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py build && python3 tools/packs.py check
-# 2) 팀 설정: infra/.env · n8n Credential · data-api (샘 data-api는 알아서 멈춤) — README '시작 전 준비' 4번
+# 2) 팀 설정 (infra/.env, n8n Credential, data-api — 켜져 있던 샘 data-api는 스크립트가 멈춤). README '시작 전 준비' 4번
 bash tools/setup.sh
 # 3) api까지 띄우기 (화면은 web/에서 npm run build 를 먼저 해야 out/ 이 생김)
 docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api

@@ -24,35 +24,37 @@ cd ~/aio-01d4-stu && git pull
 # 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
 cd ~/aio-01d4-stu/Last3Mon/65/n8n && docker compose start
 
-# 4) 팀 설정 한 번에 — infra/.env 만들기 · n8n Credential 등록 · data-api 켜기 (샘 data-api는 알아서 멈춤)
+# 4) 팀 설정 한 번에 — infra/.env 만들기, n8n Credential 등록, data-api 켜기 (켜져 있던 샘 data-api는 스크립트가 멈춤)
 cd ~/aio-p4-3rd-team-pharm && bash tools/setup.sh
-#    처음엔 infra/.env만 만들고 멈춰요 → 맨 위 TEAM3_KEY= (와 OPENAI_API_KEY=) 뒤에 디코로 받은 값을 붙여 넣고 같은 줄을 한 번 더
-#    infra/.env는 git에 안 올라가요. 키는 이 파일에만 두고 레포 · 문서에 쓰지 않기
+#    처음 실행하면 infra/.env 파일만 만들고 멈춰요. 그 파일 맨 위 TEAM3_KEY= 뒤에 디코로 받은 팀 키를 붙여 넣고,
+#    같은 명령을 한 번 더 실행하면 돼요. GPT 키는 수업 때 각자 받은 키(OpenAI (.env))를 그대로 써요.
+#    infra/.env는 git에 올라가지 않아요. 키는 이 파일에만 두고 레포나 문서에는 쓰지 마세요.
 
-# 5) 확인 — n8n 화면 Credentials에 team3WebhookKey · team3ApiKey가 보이고, 아래에 우리 문서 10개가 나오면 끝
+# 5) 확인 — n8n 화면의 Credentials에 team3WebhookKey · team3ApiKey가 보이고, 아래 명령에서 우리 문서 10개가 나오면 끝
 curl -s localhost:8800/docs | head -c 300
 
 # 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
 cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
 
-# 7) 내 작업은 내 브랜치에서 하고 PR로 올림 (main에 바로 push하지 않음, 합치는 건 리드)
+# 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
-git switch -c rag/search             # 브랜치 이름 = 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
 #   … 고치고 flow.py check · 단독 시험 통과 …
 git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
 git commit -m "search: 단독 시험 3/3"
-git push -u origin rag/search        # GitHub 레포 화면의 'Compare & pull request' → PR 설명에 시험 결과 → 리드가 보고 합침
-#   합쳐진 뒤 다음 작업은 다시 7)의 첫 줄(main으로 가서 pull)부터 새 브랜치로
+git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Compare & pull request'를 눌러 PR을 만들고, 설명에 시험 결과를 적어 주세요. 리드가 보고 합쳐요
+#   PR이 합쳐진 뒤 다음 작업은 7)의 첫 줄(main으로 가서 pull)부터 다시 시작해 새 브랜치에서 해요
 ```
 
 | n8n Credential 이름 (값은 n8n에만, 레포 · 문서에 쓰지 않음) | 쓰는 곳 |
 | --- | --- |
-| `OpenAI (.env)` | 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large`. `infra/.env`에 우리 조 키를 넣으면 setup.sh가 그 키로 등록 (비우면 수업 때 것 그대로) |
-| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값 = 팀 키). setup.sh가 등록 |
-| `team3ApiKey` | n8n이 FastAPI(`POST /tickets` · `/alerts`)를 부를 때 머리글 `X-Api-Key` (값 = 팀 키). setup.sh가 등록 |
+| `OpenAI (.env)` | 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` (수업 때 각자 받은 키 그대로, 팀 VM은 리드가 넣음) |
+| `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값은 팀 키) |
+| `team3ApiKey` | n8n이 FastAPI(`POST /tickets` · `/alerts`)를 호출할 때 보내는 머리글 `X-Api-Key` (값은 팀 키) |
 | `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
-- 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둡니다. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 합니다 (리드가 알려 줌, 키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없습니다.
+- `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
+- 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둬요. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고, 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 하면 돼요. 바꿀 때가 되면 리드가 디코로 알려요 (키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없어요.
 
 처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
 
