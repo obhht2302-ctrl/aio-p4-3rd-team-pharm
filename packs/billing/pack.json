@@ -1,0 +1,42 @@
+{
+ "id": "billing",
+ "label": "왜 이 금액이에요? (꺼 둠)",
+ "fixed": false,
+ "docs": [
+  "billing-explain"
+ ],
+ "types": [
+  {
+   "type": "billing",
+   "label": "왜 이 금액이에요?",
+   "mode": "auto",
+   "roles": [
+    "staff",
+    "pharmacist",
+    "owner"
+   ],
+   "assignee": "pharmacist",
+   "priority": "normal",
+   "handoff_rules": [
+    {
+     "any": [
+      "환불",
+      "돌려",
+      "추가 수납",
+      "더 받"
+     ],
+     "assignee": "pharmacist",
+     "priority": "normal",
+     "reason": "needs_person"
+    }
+   ],
+   "notice": "",
+   "docs": [
+    "billing-explain"
+   ],
+   "examples": [
+    "같은 약인데 지난번보다 금액이 달라요"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "id": "recall",
+ "label": "회수 공지가 떴어요",
+ "fixed": true,
+ "docs": [
+  "recall-first-response",
+  "recall-customer-guide"
+ ],
+ "types": [
+  {
+   "type": "recall",
+   "label": "회수 공지가 떴어요",
+   "mode": "evidence_handoff",
+   "roles": [
+    "staff",
+    "pharmacist",
+    "owner"
+   ],
+   "assignee": "pharmacist",
+   "priority": "high",
+   "reason": "urgent",
+   "handoff_rules": [],
+   "notice": "",
+   "docs": [
+    "recall-first-response",
+    "recall-customer-guide"
+   ],
+   "examples": [
+    "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요."
+   ]
+  }
+ ]
+}

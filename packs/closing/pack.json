@@ -1,0 +1,62 @@
+{
+ "id": "closing",
+ "label": "혼자 하는 첫 마감",
+ "fixed": true,
+ "docs": [
+  "closing-checklist",
+  "closing-cash-mismatch"
+ ],
+ "types": [
+  {
+   "type": "closing",
+   "label": "혼자 하는 첫 마감",
+   "mode": "auto",
+   "roles": [
+    "staff",
+    "pharmacist",
+    "owner"
+   ],
+   "assignee": "owner",
+   "priority": "normal",
+   "handoff_rules": [
+    {
+     "any": [
+      "냉장고",
+      "온도",
+      "향정",
+      "도난",
+      "분실"
+     ],
+     "assignee": "pharmacist",
+     "priority": "high",
+     "reason": "urgent"
+    },
+    {
+     "any": [
+      "차액",
+      "모자라",
+      "남아요",
+      "남는",
+      "안 맞아",
+      "채워",
+      "메워"
+     ],
+     "assignee": "owner",
+     "priority": "normal",
+     "reason": "needs_person",
+     "skip_roles": [
+      "owner"
+     ]
+    }
+   ],
+   "notice": "",
+   "docs": [
+    "closing-checklist",
+    "closing-cash-mismatch"
+   ],
+   "examples": [
+    "마감 때 계산대 현금은 어떤 순서로 맞춰요?"
+   ]
+  }
+ ]
+}

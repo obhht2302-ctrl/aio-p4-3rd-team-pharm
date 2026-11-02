@@ -55,8 +55,12 @@ def build(root: Path, active: list[str]) -> dict:
         for name, value in extra.items():
             data.setdefault(name, [] if isinstance(value, list) else {})
             data[name].extend(value) if isinstance(value, list) else data[name].update(value)
-        types += [{**t, "pack": p["id"]} for t in p.get("types", [])]
-        mode = (p.get("types") or [{}])[0].get("mode", "")
+        own = [{**t, "pack": p["id"]} for t in p.get("types", [])]
+        for t in own:  # 단계 스위치 (어르신 SENIOR_MODE): level 한 줄이 mode를 정함
+            if "level" in t:
+                t["mode"] = t["level_modes"][t["level"]]
+        types += own
+        mode = own[0]["mode"] if own else ""
         case_file = p["dir"] / p.get("cases_by_mode", {}).get(mode, "cases.json")
         cases += load(case_file)["cases"] if case_file.exists() else []
     for name, value in data.items():

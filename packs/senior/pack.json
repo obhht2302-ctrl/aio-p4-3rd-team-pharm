@@ -1,0 +1,93 @@
+{
+ "id": "senior",
+ "label": "어르신 약 질문",
+ "fixed": false,
+ "docs": [
+  "senior-cold-sleep-stomach",
+  "senior-pain-joint",
+  "senior-safety-signals"
+ ],
+ "cases_by_mode": {
+  "auto": "cases.json",
+  "evidence_handoff": "cases.pharmacist_approval.json",
+  "handoff_only": "cases.handoff_only.json"
+ },
+ "types": [
+  {
+   "type": "senior",
+   "label": "어르신 약 질문",
+   "level": "patient_direct",
+   "level_modes": {
+    "patient_direct": "auto",
+    "pharmacist_approval": "evidence_handoff",
+    "handoff_only": "handoff_only"
+   },
+   "mode": "auto",
+   "roles": [
+    "patient",
+    "staff",
+    "pharmacist",
+    "owner"
+   ],
+   "assignee": "pharmacist",
+   "priority": "normal",
+   "handoff_rules": [
+    {
+     "any": [
+      "숨이",
+      "숨쉬",
+      "가슴이",
+      "가슴 통증",
+      "의식",
+      "쓰러",
+      "경련",
+      "피를",
+      "출혈",
+      "검은 변",
+      "두드러기",
+      "입술",
+      "얼굴이 부",
+      "임신",
+      "수유",
+      "와파린"
+     ],
+     "assignee": "pharmacist",
+     "priority": "high",
+     "reason": "risk_signal"
+    },
+    {
+     "any": [
+      "같이 먹",
+      "같이 드",
+      "함께 먹",
+      "함께 드",
+      "병용",
+      "끊어도",
+      "더 먹어",
+      "더 드셔",
+      "양을 늘",
+      "내 경우",
+      "제 경우"
+     ],
+     "assignee": "pharmacist",
+     "priority": "normal",
+     "reason": "needs_person",
+     "ask_first": [
+      "약 이름",
+      "지금 드시는 약"
+     ]
+    }
+   ],
+   "notice": "AI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "docs": [
+    "senior-cold-sleep-stomach",
+    "senior-pain-joint",
+    "senior-safety-signals"
+   ],
+   "examples": [
+    "콧물 감기약을 먹으면 왜 졸려요?",
+    "관절약은 어르신이 조심할 게 있나요?"
+   ]
+  }
+ ]
+}

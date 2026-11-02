@@ -1,0 +1,49 @@
+{
+ "id": "_core",
+ "label": "공통 (늘 켬)",
+ "fixed": true,
+ "docs": [
+  "scope-and-escalation",
+  "request-records-guide",
+  "mgr-owner-rules"
+ ],
+ "types": [
+  {
+   "type": "record_status",
+   "label": "내 접수 건 확인",
+   "mode": "record_status",
+   "roles": [
+    "staff",
+    "pharmacist",
+    "owner",
+    "patient"
+   ],
+   "assignee": "owner",
+   "priority": "normal",
+   "handoff_rules": [],
+   "notice": "",
+   "docs": [
+    "request-records-guide"
+   ],
+   "examples": [
+    "R-1001 지금 어떻게 됐어요?"
+   ]
+  }
+ ],
+ "other": {
+  "type": "other",
+  "label": "그 밖 (시설 · 기기 고장, 문서 밖 질문)",
+  "mode": "handoff_only",
+  "roles": [
+   "staff",
+   "pharmacist",
+   "owner",
+   "patient"
+  ],
+  "assignee": "owner",
+  "priority": "normal",
+  "reason": "no_evidence",
+  "handoff_rules": [],
+  "notice": ""
+ }
+}

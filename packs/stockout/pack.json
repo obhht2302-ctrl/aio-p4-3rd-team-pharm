@@ -1,0 +1,41 @@
+{
+ "id": "stockout",
+ "label": "약이 떨어졌을 때 (꺼 둠)",
+ "fixed": false,
+ "docs": [
+  "stockout-first-response"
+ ],
+ "types": [
+  {
+   "type": "stockout",
+   "label": "약이 떨어졌을 때",
+   "mode": "auto",
+   "roles": [
+    "staff",
+    "pharmacist",
+    "owner"
+   ],
+   "assignee": "pharmacist",
+   "priority": "normal",
+   "handoff_rules": [
+    {
+     "any": [
+      "대체",
+      "다른 약",
+      "바꿔"
+     ],
+     "assignee": "pharmacist",
+     "priority": "normal",
+     "reason": "needs_person"
+    }
+   ],
+   "notice": "",
+   "docs": [
+    "stockout-first-response"
+   ],
+   "examples": [
+    "OTC-02 언제 들어와요?"
+   ]
+  }
+ ]
+}
