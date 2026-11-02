@@ -36,10 +36,26 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 | 역할 | 사람 | 명세 |
 | --- | --- | --- |
 | 리드 · 통합 + 화면(`web/`) | 태웅 | [`specs/05-lead.md`](specs/05-lead.md) · [`specs/06-screen.md`](specs/06-screen.md) |
-| 오케스트레이션 (+ 화면 QA 같이) | 다영 | [`specs/01-orchestration.md`](specs/01-orchestration.md) |
-| RAG | 영민 | [`specs/02-rag.md`](specs/02-rag.md) |
+| 오케스트레이션 (+ 화면 QA 같이) | 다영 | [`specs/01-orchestration.md`](specs/01-orchestration.md) · 완전체본 [`-full`](specs/01-orchestration-full.md) |
+| RAG | 영민 | [`specs/02-rag.md`](specs/02-rag.md) · 완전체본 [`-full`](specs/02-rag-full.md) |
 | 연동 · 안정성 + 뒷단 | 병훈 | [`specs/03-backend.md`](specs/03-backend.md) |
-| 시험 · 품질 + 화면 QA | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/04-test-and-qa.md`](specs/04-test-and-qa.md) |
+| 시험 · 품질 + 화면 QA | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/04-test-and-qa.md`](specs/04-test-and-qa.md) · 완전체본 [`-full`](specs/04-test-and-qa-full.md) |
+
+설계판(`0N-<이름>.md`)은 뼈대 + 설계 + 직접 정할 칸, 완전체본(`0N-<이름>-full.md`)은 그대로 에이전트에 던지면 끝까지 가는 판입니다. 01 · 02 · 04는 두 벌, 03 · 05 · 06은 한 벌. 화면 QA 의견은 디코에 올리거나 태웅에게 직접 주세요.
+
+## 누가 누구를 기다리나
+
+계약(요청 · 응답, 하위 웹훅 주고받는 칸, API 모양)이 `00-DESIGN.md`에 먼저 고정돼 있어서 **모두 오늘부터 동시에 시작**하고, 아직 없는 남의 부품은 가짜로 대신합니다.
+
+| 사람 | 바로 할 수 있는 것 | 기다리는 것 | 그동안 가짜로 |
+| --- | --- | --- | --- |
+| 다영 | 검사 · 분류 · Type policy · 보완 질문 · 접수 조회 | 영민 search · 병훈 handoff | Code 노드 `Stub search` · `Stub handoff` |
+| 영민 | 문서 검수 · index · search · 비교 실험 | 없음 | `flow.py call team3-search`로 단독 시험 |
+| 병훈 | handoff · errors · api | 없음 | `flow.py call team3-handoff`, pytest |
+| 해든 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수 | 다영 골격(공통 첫 실행) · 전체 연결 · 태웅 화면(QA) | 400 · 차단은 골격만으로 통과 |
+| 태웅 | 화면 (가짜 응답으로), Jira · Slack 틀, 팩 도구, VM 준비 | 병훈 API | API 모양대로 가짜 응답 |
+
+**연결 순서** (날짜는 목표, 11/5 목요일 완료 기준): ① 11/3 각자 단독 시험 통과 → ② 11/4 본체에 search · handoff 연결 → 해든 공통 시나리오 첫 실행 → ③ 11/4 화면 ↔ API 연결 → ④ 11/5 키트 맞춤 · VM 첫 배포.
 
 ## 바로 실행 (노트북)
 
