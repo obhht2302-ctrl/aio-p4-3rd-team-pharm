@@ -113,7 +113,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 | 1 | VM에서 기본 브랜치 `git pull` → `python3 tools/packs.py build && python3 tools/packs.py check` |
 | 2 | `bash tools/setup.sh` (`infra/.env` · Credential · data-api, VM의 n8n 컨테이너 이름이 다르면 `N8N_CONTAINER=<이름>`, `.env`는 커밋 안 함) → `docker compose -f infra/compose.team3.yml up -d data-api api web` (n8n은 VM에 이미 있음, 네트워크 `day65-n8n_default` — VM 이름이 다르면 `.env`의 `N8N_NETWORK`) |
 | 3 | 화면은 노트북에서 `cd web && npm run build` → `web/out/`을 VM에 복사 (VM 메모리가 작아 빌드는 VM 밖) |
-| 4 | VM n8n에 Credential 만들기 (OpenAI는 샘 안내대로, `team3WebhookKey` · `dataApiKey` · Jira · Slack) |
+| 4 | VM n8n Credential 확인 · 추가: `OpenAI (.env)` · `team3WebhookKey` · `team3ApiKey`는 2번 `setup.sh`가 등록 (OpenAI는 VM `infra/.env`의 `OPENAI_API_KEY` = 리드가 수업 때 받은 키), `dataApiKey` · Jira · Slack은 직접 |
 | 5 | `flow.py push workflows/team3-*.json` → `call team3-index` → `test cases/common.json --webhook team3-support` → 통과 수를 데일리에 |
 
 - VM 주소 · 계정 · 비밀번호는 저장소 · 문서 · 발표 자료에 쓰지 않습니다 (헌장 5절 "팀장에게 물을 것").
