@@ -40,5 +40,6 @@ git push -u origin <역할>/<내용>    # GitHub 레포 화면에서 'Compare & 
 ## 4. 막혔을 때
 
 - 30분 막히면 팀 채널에, 1시간이면 강사에게 (헌장 4절).
+- `flow.py check`의 `must use a course id` 오류는 팀 Credential을 77 · 78판 도구가 몰라서 나는 것 → Credential id를 바꾸지 말고 다른 오류만 0이면 통과.
 - 같은 곳을 에이전트가 3번 고쳐도 안 되면 멈추고, 요청을 더 작게 나누거나 64~79일차 `reference/`에서 그 부분만 가져옵니다.
 - 시나리오 기대 결과(`cases/*.json`)는 통과시키려고 바꾸지 않습니다. 틀렸다고 생각되면 태웅에게.
