@@ -237,7 +237,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | 항목 | 값 |
 | --- | --- |
 | n8n | 2.42.6, 각자 노트북 `~/day65-n8n` (네트워크 `day65-n8n_default`). 팀 VM은 팀장이 배포 (주소 · 비밀번호는 팀장에게, 저장소에 쓰지 않음) |
-| LLM · 임베딩 | `gpt-4.1-mini` · `text-embedding-3-large` (Credential `openAiCourse0001`), 강사 키 공유 → 반복 3회 · `bench -n 5` 상한 |
+| LLM · 임베딩 | `gpt-4.1-mini` · `text-embedding-3-large` (Credential `openAiCourse0001`, 각자 수업 때 받은 키), 반복 3회 · `bench -n 5` 상한 |
 | data-api | 77판 `server.py` + **우리 `data/` · `knowledge/`** (`infra/compose.team3.yml`이 띄움, 이름 `data-api` · 포트 8800이라 샘 data-api는 끄고 씀) |
 | 조합 C | `api/` FastAPI (:8000, 기본 메모리 저장소, `DATABASE_URL`이면 PostgreSQL), `web/` Next.js(React) 정적 내보내기 → nginx (:3000). 빌드는 VM 밖에서 |
 | 화면 3개 (한 앱) | `/` 질문하기 (직원 · 환자 공용, 로그인 대신 사용자 선택 + 입장 코드, 환자에겐 어르신 약 질문 예시 버튼) · `/my` 내 문의 (내 질문 · 이관 건 상태) · `/admin` 약사 · 약국장 (이관 티켓 처리, 회수 공표 알림 → 약사 "손님 안내 보내기" 승인 → 연습용 기록만). 선택한 사용자의 `role`로 `/admin`을 막고 API도 한 번 더 막음 |

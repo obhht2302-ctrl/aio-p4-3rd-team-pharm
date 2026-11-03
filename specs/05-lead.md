@@ -117,7 +117,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 | 5 | `flow.py push workflows/team3-*.json` → `call team3-index` → `test cases/common.json --webhook team3-support` → 통과 수를 데일리에 |
 
 - VM 주소 · 계정 · 비밀번호는 저장소 · 문서 · 발표 자료에 쓰지 않습니다 (헌장 5절 "팀장에게 물을 것").
-- VM은 인터넷에 열려 있어서 화면에 **입장 코드**를 둡니다 (강사 OpenAI 키 보호). 코드는 `.env`와 팀 채널에만.
+- VM은 인터넷에 열려 있어서 화면에 **입장 코드**를 둡니다 (VM에 넣은 OpenAI 키 보호). 코드는 `.env`와 팀 채널에만.
 - 77판 `flow.py push`는 n8n을 재시작합니다 → 팀원이 VM을 쓰는 중인지 보고, 끝나면 재색인.
 
 ## 5. 11/5 (목) 시각표
