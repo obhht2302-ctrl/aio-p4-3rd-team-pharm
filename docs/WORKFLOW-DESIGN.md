@@ -51,7 +51,7 @@ flowchart TD
 
 | 파일 | 웹훅 · 트리거 | 맡은 사람 | 노드 수 |
 | --- | --- | --- | --- |
-| `team3-support.json` | `POST /webhook/team3-support` | 다영 | <측정 후> |
+| `team3-support.json` | `POST /webhook/team3-support` | 다영 | 47 |
 | `team3-index.json` · `team3-search.json` | `team3-index` · `team3-search` | 영민 | 15 · 13 |
 | `team3-handoff.json` · `team3-errors.json` | `team3-handoff` · Error Trigger (`team3Errors00001`) | 병훈 | <측정 후> |
 | `team3-ticket.json` · `team3-alert.json` | Execute Workflow (`team3Ticket00001` · `team3Alert000001`) | 태웅 | <측정 후> |
@@ -71,7 +71,7 @@ flowchart TD
 | 구조 | 어디 (노드) | 목적 | 기준값 · 최대 횟수 | 확인한 시나리오 |
 | --- | --- | --- | --- | --- |
 | 분기 | `Route by mode` | 처리 방식 4개 + 권한 없음 · 보완 질문 | `Type policy` 표 | WF-01 · 02 · 05 · 06 · 12 |
-| 분기 | `Check answer` | 신뢰도 · 금지 문장 | `SCORE_MIN` = <측정 후> | WF-03, T-33 |
+| 분기 | `Build context` → `Evidence?` → `Check answer` | 검색 점수 · 근거 유무 · 금지 문장 | `SCORE_MIN` = 0.37 (영민 실측), `top_k` = 4 | WF-03, T-33 |
 | 병렬 | `Search knowledge` + `Get record` → `Merge evidence` | 근거와 접수 상태를 서로 기다리지 않고 | — (잰 시간: <측정 후>) | WF-12 |
 | 루프 | `attempt` (요청 사이) | 보완 질문 | 최대 3회 (3회째 이관) | WF-02 · 02b, T-32 · 33 |
 | 루프 | HTTP 재시도 | 외부 호출 | <측정 후> (401 · 403 · 404는 재시도 없음) | WF-04 · 11 |
