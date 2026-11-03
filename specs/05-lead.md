@@ -86,7 +86,9 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 ## 2. Jira · Slack (`workflows/team3-ticket.json` · `team3-alert.json`)
 
-지금 JSON은 10/27 틀 그대로입니다 (주제 무관, `id` 고정: `team3Ticket00001` · `team3Alert000001`, Credential `jiraAio3Cloud001` · `slackAio3Bot0001`). 고칠 것:
+11/3 고침 (아래 표 반영, `id` 고정: `team3Ticket00001` · `team3Alert000001`, Credential `jiraAio3Cloud001` · `slackAio3Bot0001`). 노드 이름은 다른 워크플로우처럼 영어: `Ticket called` → `Ticket settings` → `Real?` → `Create Jira request` → `Jira ok` / `Jira failed` (연습이면 `Practice skip`), Slack도 같은 모양 (`Alert called` · `Alert settings` · `Post to Slack` · `Slack ok` · `Slack failed`). 돌려주는 값은 `{ok, mode, error}` (+ `ticketKey` · `url` 또는 `ts`). `flow.py check`의 `must use a course id` 오류 1건은 77판이 수업 OpenAI 키만 알아서 나는 것 (고치기 전 파일도 같음, 80판에서 확인).
+
+고친 것:
 
 | 할 일 | 왜 |
 | --- | --- |
@@ -94,7 +96,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 | `설정` 노드의 `mode` 기본값 `real` → 호출하는 쪽(`team3-handoff`의 `Handoff settings`)이 넘긴 값만 따름 | 실제/연습 스위치를 한 곳으로 |
 | Jira는 장애 티켓만: `team3-handoff`의 `tickets_down`, `team3-errors`의 `unexpected` | 약사 이관 티켓은 우리 화면 (조합 C) |
 | Slack 메시지에 연락처 · 약 이름 + 손님 정보를 넣지 않음 | 개인정보 · 건강 정보 |
-| 노드 이름을 영어로 맞출지 결정 (지금 한국어) | 설계서 노드 이름 = JSON 이름이면 둘 다 됨 |
+| 노드 이름을 영어로 (다른 워크플로우와 같게) | 설계서 노드 이름 = JSON 이름 |
 
 - 11/5 전: Slack 봇이 `#support-alerts`에 들어 있는지 확인. VM의 Jira Credential은 팀플용으로 만든 계정 토큰을 그대로 씁니다.
 - 키 · 토큰은 n8n Credential에만. JSON · 문서 · 캡처에 0. 공공데이터 API 키(회수 Service05 · e약은요 · 허가정보 Service08 · DUR 2종, 11/2 승인)도 개인 키라 저장소 · VM에 쓰지 않습니다 — 필요한 사람(RAG 원문 대조)은 각자 신청.
