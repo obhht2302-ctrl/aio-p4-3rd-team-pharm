@@ -84,6 +84,7 @@
 - 실행 방법: `README.md` "바로 실행"
 - 저장소 · 협업 URL: GitHub `twlaude/aio-p4-3rd-team-pharm` (비공개)
 - 워크플로우 실행 화면: `docs/images/…`
+- 웹 화면 (조합 C, 해든): 화면 3개 캡처 `docs/images/` (375px, 이름 · 연락처 가림) · 화면 QA 결과 `docs/qa/screen-qa.md`
 - 사용한 외부 서비스: 연습용 data-api (기본), 가산 Slack · Jira (시연 때만 `real`)
 - 테스트 계정 또는 인증 방법: Header Auth `team3WebhookKey`, 화면 입장 코드 (값은 쓰지 않음)
 - 시연 순서: ① 정상 `requests/demo-01-closing.json` → ② 보완 질문 `demo-02-clarify.json` → ③ 회수 공표 `recall-announce.json` (handoff) → ④ 직원 회수 문의 `demo-03-recall.json` → ⑤ 장애 `fault tickets error` → `demo-05-fault.json` → `fault all ok` → ⑥ 어르신 `demo-04-senior.json` → ⑦ 약사 화면에서 손님 안내 (연습) · `flow.py ops`로 티켓 · DLQ · 알림

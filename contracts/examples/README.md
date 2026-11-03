@@ -4,8 +4,8 @@
 
 | 파일 | 연결선 | 쓰는 곳 |
 | --- | --- | --- |
-| `support.json` | 밖 → `team3-support` (요청 1, 응답 route별 7, 400) | 해든 판정 확인, 가짜 본체 `team3-support-stub` |
+| `support.json` | 밖 → `team3-support` (요청 1, 응답 route별 7, 400) | 시험 판정 확인 (태웅), 가짜 본체 `team3-support-stub` |
 | `search.json` | `team3-support` → `team3-search` | 가짜 웹훅 `team3-search-stub` (`response`), 영민 단독 시험 (`request` = `requests/search-closing.json`) |
 | `handoff.json` | `team3-support` → `team3-handoff` (성공 · 중복 · tickets_down) | 가짜 웹훅 `team3-handoff-stub` (`response_ok` · `simulate`로 나머지), 병훈 단독 시험 (`request` = `requests/handoff-recall.json`) |
 | `index.json` | `team3-index` | 영민 |
-| `api.json` | 화면 · n8n → FastAPI (경로마다) | 태웅 화면 가짜 응답, 병훈 pytest |
+| `api.json` | 화면 · n8n → FastAPI (경로마다) | 해든 화면 가짜 응답, 병훈 pytest |

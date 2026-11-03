@@ -1,6 +1,6 @@
 # 05 · 리드 · 통합 명세 — 계약 · 팩 도구 · Jira · Slack · VM 배포 · 제안서 · 헌장
 
-- 맡은 사람: 태웅 (팀장) · 별 ★★★ · 화면(`web/`)은 [`06-screen.md`](06-screen.md)
+- 맡은 사람: 태웅 (팀장) · 별 ★★★ · 11/3부터 시험 · 품질 · 실행 결과서도 리드가 맡음 → [`04-test-and-qa-full.md`](04-test-and-qa-full.md). 화면(`web/`)은 해든 → [`06-screen.md`](06-screen.md)
 - 과제 한 문장: **계약과 파일 경계를 지키게 하고, 다섯 명 결과물을 한 n8n에서 돌게 합치고, 11/5 10:50 승인부터 11/9 14:50 제출까지 팀을 끌고 간다.**
 - 산출물: 팀 헌장 · 데일리 3장 · README · 설계서 1절 · 제안서, 발표와 협업 (제안 배점 10).
 
@@ -37,7 +37,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
-git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 web · 태웅 qa)
 #   … 고치고 flow.py check · 단독 시험 통과 …
 git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
 git commit -m "search: 단독 시험 3/3"
@@ -63,7 +63,7 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py check && python3 tools/packs.py selftest   # 팩 · 계약 예시 · 공통 해시
 cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-ticket.json && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-alert.json
 ```
-- 화면은 [`06-screen.md`](06-screen.md) 0절 (가짜 응답 `mock` → `real`). VM 배포는 4절 (11/5 키트 확인 뒤).
+- 시험 · 품질은 [`04-test-and-qa-full.md`](04-test-and-qa-full.md) 그대로. 화면은 해든 몫 ([`06-screen.md`](06-screen.md)), 리드는 다영과 화면 QA를 하고 해든 PR을 합침. VM 배포는 4절 (11/5 키트 확인 뒤).
 
 ### 가짜 먼저, 준비되면 바꿔 끼우기
 
@@ -71,7 +71,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 | 바로 할 수 있는 것 | 남의 것이 필요한 것 | 그동안 쓰는 가짜 (`contracts/examples/`) | 바꿔 끼우는 법 |
 | --- | --- | --- | --- |
-| 화면 (06), Jira · Slack 틀 고치기, 팩 도구, VM 계획, 제안서 · 헌장 | 병훈 API, 모두의 워크플로우 (병합 · VM 배포) | 화면 = `api.json` (가짜 응답 모드) | 화면 `NEXT_PUBLIC_API_MODE=real`, 병합은 단독 시험이 통과한 파일부터 |
+| 시나리오 · 기대값 검토 · 시험 스크립트 · 결과서 틀 (04), Jira · Slack 틀 고치기, 팩 도구, VM 계획, 제안서 · 헌장 | 다영 본체 골격 (공통 첫 실행), 모두의 워크플로우 (병합 · VM 배포) | 가짜 본체 `team3-support-stub` (결과서엔 안 씀) | 공통 실행은 골격이 올라오면, 병합은 단독 시험이 통과한 파일부터 |
 | ⏳ **진짜 부품이 붙어야 할 수 있는 것** | VM 첫 배포 (11/5 키트 확인 뒤), 전체 회귀. | — (가짜로는 못 함) | 연결 뒤 진짜로 잼 |
 
 - 읽을 것: 샘 `01-SCHEDULE-AND-TEAMS.md` · `02-ENVIRONMENT-AND-SERVICES.md` · `08-SUBMISSION.md` · `09-AGENT-WORKING-RULES.md` · `11-TOPIC-GUIDE.md`, `00-DESIGN.md` 전체.
@@ -142,8 +142,8 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 ## 7. 완료 기준
 
-- 11/5 전: Jira · Slack 틀 고침 (덧붙임 전용) + `check` 통과, 화면 (06) 가짜 응답으로 동작, `docs/TOPIC.md` · `TEAM-CHARTER.md` 최종 초안.
-- 11/5: 승인된 제안서, VM에서 WF-08 · 13 통과, 키트 맞춤 커밋, VM 실제 측정 (해든과 공통 전체 · 3회 반복 · bench).
+- 11/5 전: Jira · Slack 틀 고침 (덧붙임 전용) + `check` 통과, 04 먼저 할 것 (시나리오 검토 · `tools/run_tests.sh` · 결과서 틀), `docs/TOPIC.md` · `TEAM-CHARTER.md` 최종 초안.
+- 11/5: 승인된 제안서, VM에서 WF-08 · 13 통과, 키트 맞춤 커밋, VM 실제 측정 (04 명세대로 공통 전체 · 3회 반복 · bench).
 - 11/6(금) 끝까지 (샘 제출 마감은 11/9 14:50): 필수 파일 전부 (`README` · `docs/` 3 산출물 + 헌장 + 데일리 3 · `workflows/` · `cases/` · `runs/` · `knowledge/` · `data/`), `tscan` 0건, 강사가 README대로 다시 돌릴 수 있음.
 
 ## 8. 금지

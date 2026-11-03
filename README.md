@@ -40,13 +40,13 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 
 | 역할 | 사람 | 명세 |
 | --- | --- | --- |
-| 리드 · 통합 + 화면(`web/`) | 태웅 | [`specs/05-lead.md`](specs/05-lead.md) · [`specs/06-screen.md`](specs/06-screen.md) |
+| 리드 · 통합 + 시험 · 품질 | 태웅 | [`specs/05-lead.md`](specs/05-lead.md) · [`specs/04-test-and-qa.md`](specs/04-test-and-qa.md) · 완전체본 [`-full`](specs/04-test-and-qa-full.md) |
 | 오케스트레이션 (+ 화면 QA 같이) | 다영 | [`specs/01-orchestration.md`](specs/01-orchestration.md) · 완전체본 [`-full`](specs/01-orchestration-full.md) |
 | RAG | 영민 | [`specs/02-rag.md`](specs/02-rag.md) · 완전체본 [`-full`](specs/02-rag-full.md) |
 | 연동 · 안정성 + 뒷단 | 병훈 | [`specs/03-backend.md`](specs/03-backend.md) |
-| 시험 · 품질 + 화면 QA | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/04-test-and-qa.md`](specs/04-test-and-qa.md) · 완전체본 [`-full`](specs/04-test-and-qa-full.md) |
+| 화면(`web/`) | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | [`specs/06-screen.md`](specs/06-screen.md) |
 
-설계판(`0N-<이름>.md`)은 뼈대 + 설계 + 직접 정할 칸, 완전체본(`0N-<이름>-full.md`)은 그대로 에이전트에 던지면 끝까지 가는 판입니다. 01 · 02 · 04는 두 벌, 03 · 05 · 06은 한 벌. 화면 QA 의견은 디코에 올리거나 태웅에게 직접 주세요.
+설계판(`0N-<이름>.md`)은 뼈대 + 설계 + 직접 정할 칸, 완전체본(`0N-<이름>-full.md`)은 그대로 에이전트에 던지면 끝까지 가는 판입니다. 01 · 02 · 04는 두 벌, 03 · 05 · 06은 한 벌. 화면 QA 의견은 디코에 올리거나 해든에게 직접 주세요.
 
 ## 누가 누구를 기다리나
 
@@ -57,10 +57,10 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 | 다영 | 검사 · 분류 · Type policy · 보완 질문 · 접수 조회 | 영민 search · 병훈 handoff | 가짜 웹훅 `team3-search-stub` · `team3-handoff-stub` (`workflows/stubs/`, 값은 `contracts/examples/`) |
 | 영민 | 문서 검수 · index · search · 비교 실험 | 없음 | `flow.py call team3-search requests/search-*.json`으로 단독 시험 |
 | 병훈 | handoff · errors · api | 없음 | `flow.py call team3-handoff requests/handoff-*.json` · `fault tickets error`, pytest |
-| 해든 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수 | 다영 골격(공통 첫 실행) · 전체 연결 · 태웅 화면(QA) | 가짜 본체 `team3-support-stub`으로 시험 · 결과서 표 연습 (결과서엔 안 씀), 400 · 차단은 골격만으로 통과 |
-| 태웅 | 화면 (가짜 응답으로), Jira · Slack 틀, 팩 도구, VM 준비 | 병훈 API | `contracts/examples/api.json` 가짜 응답 |
+| 해든 | 화면 3개 · 역할 막기 · 디자인 (가짜 응답으로) | 병훈 API (진짜 연결) | `contracts/examples/api.json` 가짜 응답 (`NEXT_PUBLIC_API_MODE=mock`) |
+| 태웅 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수, Jira · Slack 틀, 팩 도구, VM 준비 | 다영 골격(공통 첫 실행) · 전체 연결 · 해든 화면(QA) | 가짜 본체 `team3-support-stub`으로 시험 · 결과서 표 연습 (결과서엔 안 씀), 400 · 차단은 골격만으로 통과 |
 
-**가짜 먼저, 준비되면 바꿔 끼우기** (완료 목표는 11/5 목요일 하나): ① 각자 `contracts/examples/`의 가짜로 단독 시험 통과 → ② 영민 search가 준비되면 다영 본체 `SEARCH=real` → ③ 병훈 handoff가 준비되면 `HANDOFF=real` → 해든 공통 시나리오 실행 → ④ 병훈 API가 준비되면 화면 `NEXT_PUBLIC_API_MODE=real` → ⑤ 11/5 키트 맞춤 · VM 첫 배포. 스위치는 본체 `Support settings` 노드와 화면 환경 변수 한 곳씩뿐입니다.
+**가짜 먼저, 준비되면 바꿔 끼우기** (완료 목표는 11/5 목요일 하나): ① 각자 `contracts/examples/`의 가짜로 단독 시험 통과 → ② 영민 search가 준비되면 다영 본체 `SEARCH=real` → ③ 병훈 handoff가 준비되면 `HANDOFF=real` → 태웅 공통 시나리오 실행 → ④ 병훈 API가 준비되면 화면 `NEXT_PUBLIC_API_MODE=real` → ⑤ 11/5 키트 맞춤 · VM 첫 배포. 스위치는 본체 `Support settings` 노드와 화면 환경 변수 한 곳씩뿐입니다.
 
 ⏳ **진짜 부품이 붙어야 할 수 있는 것** (가짜로는 못 함): RAG 청킹 비교 · hit@k · 점수 기준 (문서 검수 뒤), 공통 14유형 전체 통과 · LLM 3회 반복 · bench (본체 + 하위 연결 뒤), 실행 결과서 숫자 (11/5 VM 배포 뒤 실제로 잰 값만 — 노트북 · 가짜로 잰 숫자는 결과서에 쓰지 않음).
 
@@ -93,7 +93,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
-git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 web · 태웅 qa)
 #   … 고치고 flow.py check · 단독 시험 통과 …
 git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
 git commit -m "search: 단독 시험 3/3"

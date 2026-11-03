@@ -224,13 +224,13 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 
 | 역할 | 사람 | 명세 | 파일 | 산출물 절 |
 | --- | --- | --- | --- | --- |
-| 리드 · 통합 + 화면 | 태웅 | `specs/05-lead.md` · `specs/06-screen.md` | `00-DESIGN.md` · `AGENTS.md` · `packs/` · `tools/packs.py` · `workflows/team3-ticket.json` · `team3-alert.json` · `infra/` · **`web/`** · `docs/TOPIC.md` · `TEAM-CHARTER.md` · `daily/` | 헌장 · 데일리 · README · 설계서 1절 |
+| 리드 · 통합 + 시험 · 품질 | 태웅 | `specs/05-lead.md` · `specs/04-test-and-qa.md` | `00-DESIGN.md` · `AGENTS.md` · `packs/` · `tools/packs.py` · `workflows/team3-ticket.json` · `team3-alert.json` · `infra/` · `cases/common.json` 확인 · `requests/` · `runs/` · `docs/TOPIC.md` · `TEAM-CHARTER.md` · `daily/` | 헌장 · 데일리 · README · 설계서 1절 · 실행 결과서 (5절 화면은 해든) |
 | 오케스트레이션 (+ 화면 QA 같이) | 다영 | `specs/01-orchestration.md` | `workflows/team3-support.json` | 설계서 2~4절 |
 | RAG | 영민 | `specs/02-rag.md` | `packs/*/knowledge/` 검수, `workflows/team3-index.json` · `team3-search.json`, `docs/rag-eval/` | RAG 설계서 전부 |
 | 연동 · 안정성 + 뒷단 | 병훈 | `specs/03-backend.md` | `workflows/team3-handoff.json` · `team3-errors.json`, `api/` | 설계서 5~7절 |
-| 시험 · 품질 + 화면 QA | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | `specs/04-test-and-qa.md` | `packs/*/cases.json` · `cases/common.json` 확인, `requests/` · `runs/`, `docs/qa/` 화면 QA 의견 | 실행 결과서 전부 |
+| 화면 | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | `specs/06-screen.md` | **`web/`**, `docs/qa/screen-qa.md` 반영 칸 | 실행 결과서 5절 화면 (캡처 · QA 반영) |
 
-- 샘 덱대로면 5명 팀은 연동 담당이 `web/` · `api/`를 같이 맡지만, 필수 WF가 밀리지 않게 `web/`은 리드가 Claude Code로 만들고, 해든 · 다영이 써 보고 고칠 점을 내면(화면 QA) 리드가 모아서 반영합니다.
+- 샘 덱대로면 5명 팀은 연동 담당이 `web/` · `api/`를 같이 맡지만, 우리는 `web/`을 해든이 따로 맡고 (시험 · 품질과 실행 결과서는 리드가 같이 맡음, 11/3), 다영 · 태웅이 써 보고 고칠 점을 내면(화면 QA) 해든이 반영합니다. 화면은 가산이라 문서 · 필수 WF가 밀리면 멈춥니다.
 
 ## 9. 환경
 

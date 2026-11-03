@@ -1,8 +1,10 @@
-# 06 · 화면 명세 (리드용) — `web/` Next.js 화면 3개
+# 06 · 화면 명세 — `web/` Next.js 화면 3개
 
-- 맡은 사람: 태웅 (Claude Code로 만듦) · QA: 해든 · 다영 (의견은 디코 또는 태웅에게 직접) · 마감: 11/5(목)
+- 맡은 사람: 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) · QA: 다영 · 태웅 (의견은 디코 또는 해든에게 직접) · 마감: 11/5(목) · 별 ★★☆
 - 과제 한 문장: **한 앱에 화면 3개 (`/` 질문하기 · `/my` 내 문의 · `/admin` 약사 · 약국장)를 사용자 역할로 나누고, FastAPI(`api/`)만 부르는 정적 웹을 만든다.**
 - 화면은 가산(조합 C)입니다. 공통 시나리오는 팀 웹훅으로 판정하므로 **화면 때문에 문서 · 필수 WF가 밀리면 화면을 멈춥니다.**
+- AI로 만들 땐 맨 끝 [6절 요청문](#6-claude-code--codex-요청문-복붙)을 Claude Code나 Codex에 그대로 붙여 넣으면 돼요 (둘 다 `AGENTS.md`를 읽음). **수업 때 받은 GPT 키로 코딩 에이전트를 돌리지 마세요** — 모든 팀이 같이 쓰는 강사 키예요. 쓰는 AI 한도에 막히면 바로 태웅에게.
+- 준비물: Node.js 20.9 이상 (`node -v`로 확인, Next.js 16 요구). 브랜치는 `web/<내용>` (예: `web/screens`), 다 되면 PR.
 
 | 정하는 것 | 바꾸면 안 되는 것 |
 | --- | --- |
@@ -37,7 +39,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
-git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 web · 태웅 qa)
 #   … 고치고 flow.py check · 단독 시험 통과 …
 git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
 git commit -m "search: 단독 시험 3/3"
@@ -117,13 +119,14 @@ cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE
 
 - `npm run build` 통과 (`web/out/` 생성), 가짜 응답 모드로 화면 3개 동작.
 - API가 준비되면: `NEXT_PUBLIC_API_MODE=real` · `NEXT_PUBLIC_API_BASE=http://localhost:8000`으로 실제 API 연결 → 질문 · 내 문의 · 티켓 상태 바꾸기 · 손님 안내 (연습)까지 한 바퀴.
-- 해든 QA 점검표 (`specs/04-test-and-qa-full.md` 5절) 전부 통과, 받은 의견 반영 여부를 `docs/qa/screen-qa.md`에.
+- 화면 QA 점검표 (`specs/04-test-and-qa-full.md` 5절, 다영 · 태웅이 채움) 전부 통과, 받은 의견 반영 여부를 `docs/qa/screen-qa.md` '반영' 칸에.
+- 실행 결과서 (`docs/EXECUTION-RESULT.md`) 5절 '웹 화면' 줄: 375px 캡처 3장 (`docs/images/`, 가짜 응답, 이름 · 연락처 가림)과 화면 QA 결과. 화면 몫의 문서는 해든이 씁니다.
 
 ## 5. 금지
 
 - 화면 코드에 키 · 웹훅 주소 · 입장 코드 값, 화면에서 n8n 직접 호출 (늘 `api/` 경유), 실제 문자 발송 버튼, 외부 CDN 폰트 · 추적 스크립트.
 
-## 6. Claude Code 요청문 (복붙)
+## 6. Claude Code · Codex 요청문 (복붙)
 
 ```text
 AGENTS.md, specs/06-screen.md, specs/03-backend.md 3절을 읽고 web/ 화면 3개를 완성해 줘.

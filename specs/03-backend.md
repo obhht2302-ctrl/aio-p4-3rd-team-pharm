@@ -38,7 +38,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
-git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 qa · 태웅 web)
+git switch -c rag/search             # 브랜치 이름은 역할/내용 (다영 orch · 영민 rag · 병훈 ops · 해든 web · 태웅 qa)
 #   … 고치고 flow.py check · 단독 시험 통과 …
 git add workflows/team3-search.json  # 내 파일만 (packs/를 고쳤으면 packs.py build 결과도 같이)
 git commit -m "search: 단독 시험 3/3"
@@ -84,7 +84,7 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 | --- | --- |
 | `contracts/examples/handoff.json` | 본체(다영). `request` = 본체가 보낼 요청, `response_ok` · `response_duplicate` · `response_tickets_down` = 내가 돌려줘야 할 응답 3가지 |
 | `requests/handoff-sample.json` · `handoff-recall.json` · `recall-announce.json` | 본체 대신 `flow.py call team3-handoff`로 보내는 요청 (보통 이관 · 긴급 회수 · 회수 공표) |
-| `contracts/examples/api.json` | 화면(태웅) · n8n이 FastAPI에 보내는 요청과 받을 응답 (경로마다). `api/tests/`의 pytest가 이 파일을 씀 |
+| `contracts/examples/api.json` | 화면(해든) · n8n이 FastAPI에 보내는 요청과 받을 응답 (경로마다). `api/tests/`의 pytest가 이 파일을 씀 |
 | `workflows/stubs/team3-handoff-stub.json` | 내 handoff가 나오기 전 다영이 쓰는 가짜 (내가 고칠 것 없음, 진짜도 같은 응답 모양이면 됨) |
 
 - `git pull`. 읽을 것: `00-DESIGN.md` 3 · 4 · 9절, 샘 `06-RELIABILITY-AND-SECURITY.md`, `02-ENVIRONMENT-AND-SERVICES.md` 2절 (조합 C 어댑터), `Last3Mon/76/AGENTS.md` 2~5절.
@@ -127,7 +127,7 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 
 ## 3. `api/` FastAPI (조합 C 뒷단)
 
-**고정 — 경로와 모양** (화면 · n8n이 이 모양을 봄, `web/`은 리드가 만듦). 예시 요청 · 응답은 `contracts/examples/api.json`이고 pytest도 그 파일을 씁니다:
+**고정 — 경로와 모양** (화면 · n8n이 이 모양을 봄, `web/`은 해든이 만듦). 예시 요청 · 응답은 `contracts/examples/api.json`이고 pytest도 그 파일을 씁니다:
 
 | 경로 | 누가 부르나 | 요청 | 응답 |
 | --- | --- | --- | --- |

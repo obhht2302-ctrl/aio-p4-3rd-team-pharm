@@ -6,11 +6,11 @@
 
 | 이름 | 역할 (주 담당) | 함께 보는 역할 | 맡는 파일 |
 | --- | --- | --- | --- |
-| 태웅 | 팀장 (리드 · 통합) + 화면 | 연동 (Jira · Slack) | `team3-ticket.json` · `team3-alert.json`, `web/`, `infra/`, `packs/` · `tools/packs.py`, 병합 · VM 배포 |
+| 태웅 | 팀장 (리드 · 통합) + 시험 · 품질 | 연동 (Jira · Slack) · 데이터 검수 · 화면 QA | `team3-ticket.json` · `team3-alert.json`, `infra/`, `packs/` · `tools/packs.py`, `cases/common.json` 확인 · `runs/` · `docs/EXECUTION-RESULT.md`, 병합 · VM 배포 |
 | 다영 | 오케스트레이션 | 화면 QA | `team3-support.json` |
 | 영민 | RAG | 지식 문서 | `team3-index.json` · `team3-search.json`, `packs/*/knowledge/` 검수 |
 | 병훈 | 연동 · 안정성 + 뒷단 | 보안 | `team3-handoff.json` · `team3-errors.json`, `api/` |
-| 해든 | 시험 · 품질 + 화면 QA | 데이터 검수 | `packs/*/cases.json` · `cases/common.json` 확인, `runs/`, `docs/EXECUTION-RESULT.md` |
+| 해든 | 화면 | 실행 결과서 5절 (화면) | `web/`, `docs/qa/screen-qa.md` 반영 칸 |
 
 ## 2. 목표 (한 문장)
 
@@ -47,7 +47,7 @@
 | 웹훅 경로 | `team3-support` (하위 `team3-index` · `team3-search` · `team3-handoff`) |
 | 팀 VM | 팀장이 관리 (주소 · 비밀번호는 여기에 쓰지 않음, 팀장에게 물을 것) |
 | 회의 시각 | 매일 1교시 처음 10분 |
-| 화면 QA 의견 | 디코 또는 태웅에게 직접 |
+| 화면 QA 의견 | 디코 또는 해든에게 직접 |
 
 ## 6. 바뀐 것
 
@@ -55,3 +55,4 @@
 | --- | --- | --- |
 | 11/2 | 기능 5개 → 3개로 시작 (품절 · 금액은 정의만) | 팀 투표, 팀원 부담 |
 | 11/2 | 화면(`web/`)은 리드, 해든은 시험 · 품질 + 화면 QA | 필수 WF가 밀리지 않게 |
+| 11/3 | 화면(`web/`)은 해든, 시험 · 품질 + 실행 결과서는 리드 (맞교환) | 화면을 해든이 처음부터 끝까지 맡고, 전체 시험은 연결 · 검수하는 리드가 같이 돌림 |
