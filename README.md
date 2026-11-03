@@ -109,7 +109,6 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 | `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
 - `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
-- `flow.py check`가 `credential '…' must use a course id ['openAiCourse0001']` 오류를 내도 **Credential은 그대로 두세요.** 77 · 78일차 `flow.py`가 수업 OpenAI 키만 알아서 팀 Credential(`team3WebhookKey` · `team3ApiKey` · `dataApiKey` · Jira · Slack)을 오류로 보는 거예요. 이 오류 말고 다른 오류가 0이면 통과로 봐요. AI 에이전트가 id를 `openAiCourse0001`로 바꾸려 하면 막아 주세요 (바꾸면 인증이 깨짐). 80일차 키트에서 리드가 다시 확인해요.
 - 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둬요. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고, 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 하면 돼요. 바꿀 때가 되면 리드가 디코로 알려요 (키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없어요.
 
 ## 바로 실행 (노트북)
