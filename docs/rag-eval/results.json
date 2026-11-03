@@ -1,0 +1,1388 @@
+{
+ "date": "2026-11-03",
+ "kb_version": "pharm_kb_v1",
+ "embedding": "text-embedding-3-large",
+ "variants": [
+  {
+   "name": "A",
+   "chunking": "section",
+   "overlap": 0,
+   "indexed_chunks": 39,
+   "chunk_chars": {
+    "min": 183,
+    "median": 230,
+    "max": 420
+   },
+   "index_seconds": 1.9,
+   "hit1": 12,
+   "hit3": 12,
+   "hit4": 12,
+   "n": 12,
+   "leaks": 0,
+   "in_scope_top1": [
+    0.378,
+    0.399,
+    0.439,
+    0.444,
+    0.444,
+    0.468,
+    0.548,
+    0.556,
+    0.579,
+    0.585,
+    0.591,
+    0.641
+   ],
+   "out_scope_top1": [
+    0.213,
+    0.219,
+    0.248,
+    0.293,
+    0.302,
+    0.366
+   ],
+   "search_ms_median": 230.5,
+   "rows": [
+    {
+     "id": "WF-01",
+     "expect": "closing-checklist",
+     "ranked": [
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.591
+      ],
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.584
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.504
+      ],
+      [
+       "closing-checklist",
+       "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+       0.456
+      ]
+     ],
+     "top1_score": 0.591,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 288
+    },
+    {
+     "id": "WF-05",
+     "expect": "closing-cash-mismatch",
+     "ranked": [
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.444
+      ],
+      [
+       "closing-cash-mismatch",
+       "4. 하면 안 되는 것",
+       0.441
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.422
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.409
+      ]
+     ],
+     "top1_score": 0.444,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 504
+    },
+    {
+     "id": "WF-12",
+     "expect": "recall-first-response",
+     "ranked": [
+      [
+       "recall-first-response",
+       "3. 따로 보관하고 개수 세기",
+       0.439
+      ],
+      [
+       "recall-first-response",
+       "2. 진열대에서 바로 빼기",
+       0.381
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.358
+      ],
+      [
+       "closing-checklist",
+       "3. 서류와 약 정리 — 처방전, 향정, 냉",
+       0.345
+      ]
+     ],
+     "top1_score": 0.439,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 319
+    },
+    {
+     "id": "T-01",
+     "expect": "closing-checklist",
+     "ranked": [
+      [
+       "closing-checklist",
+       "1. 문 닫기 30분 전 — 주문 넣고 손님",
+       0.399
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.319
+      ],
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.294
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.282
+      ]
+     ],
+     "top1_score": 0.399,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 231
+    },
+    {
+     "id": "T-03",
+     "expect": "closing-cash-mismatch",
+     "ranked": [
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.548
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.514
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.501
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.457
+      ]
+     ],
+     "top1_score": 0.548,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 194
+    },
+    {
+     "id": "T-04",
+     "expect": "recall-customer-guide",
+     "ranked": [
+      [
+       "recall-customer-guide",
+       "1. 손님 안내는 약국이 하는 선택 서비스",
+       0.444
+      ],
+      [
+       "recall-first-response",
+       "4. 약사에게 알리기",
+       0.422
+      ],
+      [
+       "recall-customer-guide",
+       "3. 안내문은 짧게",
+       0.393
+      ],
+      [
+       "recall-customer-guide",
+       "4. 반품 받기와 기록",
+       0.393
+      ]
+     ],
+     "top1_score": 0.444,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 198
+    },
+    {
+     "id": "T-07",
+     "expect": "mgr-owner-rules",
+     "ranked": [
+      [
+       "mgr-owner-rules",
+       "1. 현금 차액 처리 기준 — 얼마까지 승인",
+       0.468
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.444
+      ],
+      [
+       "closing-cash-mismatch",
+       "4. 하면 안 되는 것",
+       0.441
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.422
+      ]
+     ],
+     "top1_score": 0.468,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 427
+    },
+    {
+     "id": "T-31",
+     "expect": "senior-cold-sleep-stomach",
+     "ranked": [
+      [
+       "senior-cold-sleep-stomach",
+       "2. 감기 · 콧물 약 성분",
+       0.556
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "1. 이 문서는",
+       0.486
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "4. 출처와 기준일",
+       0.451
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "3. 잠 오는 약 · 위장 약 성분",
+       0.401
+      ]
+     ],
+     "top1_score": 0.556,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 212
+    },
+    {
+     "id": "T-33",
+     "expect": "senior-pain-joint",
+     "ranked": [
+      [
+       "senior-pain-joint",
+       "4. 같이 먹어도 되나 — 출처와 기준일",
+       0.641
+      ],
+      [
+       "senior-safety-signals",
+       "2. 같이 먹어도 되나 묻기 전에",
+       0.536
+      ],
+      [
+       "senior-pain-joint",
+       "3. 어르신 주의 (노인주의)",
+       0.458
+      ],
+      [
+       "senior-pain-joint",
+       "2. 관절 · 통증 소염진통제",
+       0.445
+      ]
+     ],
+     "top1_score": 0.641,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 230
+    },
+    {
+     "id": "X-01",
+     "expect": "scope-and-escalation",
+     "ranked": [
+      [
+       "scope-and-escalation",
+       "1. 이 도우미가 답하는 것",
+       0.585
+      ],
+      [
+       "scope-and-escalation",
+       "3. 누구에게 넘기나",
+       0.562
+      ],
+      [
+       "scope-and-escalation",
+       "2. 답하지 않고 사람에게 넘기는 것",
+       0.543
+      ],
+      [
+       "senior-safety-signals",
+       "4. AI 안내의 한계",
+       0.471
+      ]
+     ],
+     "top1_score": 0.585,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 222
+    },
+    {
+     "id": "X-02",
+     "expect": "request-records-guide",
+     "ranked": [
+      [
+       "request-records-guide",
+       "2. 상태의 뜻",
+       0.579
+      ],
+      [
+       "request-records-guide",
+       "3. 내 건만 보이는 까닭",
+       0.438
+      ],
+      [
+       "request-records-guide",
+       "1. 접수 번호 읽기",
+       0.426
+      ],
+      [
+       "request-records-guide",
+       "4. 연락처는 가려서 보여 줘요",
+       0.417
+      ]
+     ],
+     "top1_score": 0.579,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 289
+    },
+    {
+     "id": "X-03",
+     "expect": "senior-safety-signals",
+     "ranked": [
+      [
+       "senior-safety-signals",
+       "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+       0.378
+      ],
+      [
+       "senior-safety-signals",
+       "4. AI 안내의 한계",
+       0.267
+      ],
+      [
+       "senior-safety-signals",
+       "2. 같이 먹어도 되나 묻기 전에",
+       0.249
+      ],
+      [
+       "senior-pain-joint",
+       "4. 같이 먹어도 되나 — 출처와 기준일",
+       0.245
+      ]
+     ],
+     "top1_score": 0.378,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 209
+    }
+   ],
+   "out_of_scope": [
+    {
+     "q": "정수기 필터는 언제 갈아요?",
+     "top1": "senior-cold-sleep-stomach",
+     "top1_score": 0.219
+    },
+    {
+     "q": "공유기가 안 되는데 어떻게 재부팅해요?",
+     "top1": "closing-cash-mismatch",
+     "top1_score": 0.248
+    },
+    {
+     "q": "간판 조명은 몇 시에 켜고 꺼요?",
+     "top1": "closing-checklist",
+     "top1_score": 0.293
+    },
+    {
+     "q": "와이파이 비밀번호가 뭐예요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.213
+    },
+    {
+     "q": "직원 주차 등록은 어떻게 해요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.366
+    },
+    {
+     "q": "휴게실 에어컨은 몇 도로 맞춰요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.302
+    }
+   ]
+  },
+  {
+   "name": "B",
+   "chunking": 300,
+   "overlap": 50,
+   "indexed_chunks": 41,
+   "chunk_chars": {
+    "min": 106,
+    "median": 225,
+    "max": 352
+   },
+   "index_seconds": 2.1,
+   "hit1": 12,
+   "hit3": 12,
+   "hit4": 12,
+   "n": 12,
+   "leaks": 0,
+   "in_scope_top1": [
+    0.379,
+    0.399,
+    0.439,
+    0.444,
+    0.444,
+    0.468,
+    0.548,
+    0.556,
+    0.58,
+    0.585,
+    0.591,
+    0.643
+   ],
+   "out_scope_top1": [
+    0.212,
+    0.223,
+    0.248,
+    0.293,
+    0.301,
+    0.364
+   ],
+   "search_ms_median": 231.5,
+   "rows": [
+    {
+     "id": "WF-01",
+     "expect": "closing-checklist",
+     "ranked": [
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.591
+      ],
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.584
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.504
+      ],
+      [
+       "closing-checklist",
+       "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+       0.456
+      ]
+     ],
+     "top1_score": 0.591,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 307
+    },
+    {
+     "id": "WF-05",
+     "expect": "closing-cash-mismatch",
+     "ranked": [
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.444
+      ],
+      [
+       "closing-cash-mismatch",
+       "4. 하면 안 되는 것",
+       0.441
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.422
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.409
+      ]
+     ],
+     "top1_score": 0.444,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 215
+    },
+    {
+     "id": "WF-12",
+     "expect": "recall-first-response",
+     "ranked": [
+      [
+       "recall-first-response",
+       "3. 따로 보관하고 개수 세기",
+       0.439
+      ],
+      [
+       "recall-first-response",
+       "2. 진열대에서 바로 빼기",
+       0.381
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.358
+      ],
+      [
+       "closing-checklist",
+       "3. 서류와 약 정리 — 처방전, 향정, 냉",
+       0.345
+      ]
+     ],
+     "top1_score": 0.439,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 196
+    },
+    {
+     "id": "T-01",
+     "expect": "closing-checklist",
+     "ranked": [
+      [
+       "closing-checklist",
+       "1. 문 닫기 30분 전 — 주문 넣고 손님",
+       0.399
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.319
+      ],
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.294
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.282
+      ]
+     ],
+     "top1_score": 0.399,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 218
+    },
+    {
+     "id": "T-03",
+     "expect": "closing-cash-mismatch",
+     "ranked": [
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.548
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.514
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.501
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.457
+      ]
+     ],
+     "top1_score": 0.548,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 224
+    },
+    {
+     "id": "T-04",
+     "expect": "recall-customer-guide",
+     "ranked": [
+      [
+       "recall-customer-guide",
+       "1. 손님 안내는 약국이 하는 선택 서비스",
+       0.444
+      ],
+      [
+       "recall-first-response",
+       "4. 약사에게 알리기",
+       0.422
+      ],
+      [
+       "recall-customer-guide",
+       "3. 안내문은 짧게",
+       0.393
+      ],
+      [
+       "recall-customer-guide",
+       "4. 반품 받기와 기록",
+       0.393
+      ]
+     ],
+     "top1_score": 0.444,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 222
+    },
+    {
+     "id": "T-07",
+     "expect": "mgr-owner-rules",
+     "ranked": [
+      [
+       "mgr-owner-rules",
+       "1. 현금 차액 처리 기준 — 얼마까지 승인",
+       0.468
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.444
+      ],
+      [
+       "closing-cash-mismatch",
+       "4. 하면 안 되는 것",
+       0.441
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.422
+      ]
+     ],
+     "top1_score": 0.468,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 491
+    },
+    {
+     "id": "T-31",
+     "expect": "senior-cold-sleep-stomach",
+     "ranked": [
+      [
+       "senior-cold-sleep-stomach",
+       "2. 감기 · 콧물 약 성분",
+       0.556
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "1. 이 문서는",
+       0.486
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "4. 출처와 기준일",
+       0.449
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "3. 잠 오는 약 · 위장 약 성분",
+       0.401
+      ]
+     ],
+     "top1_score": 0.556,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 239
+    },
+    {
+     "id": "T-33",
+     "expect": "senior-pain-joint",
+     "ranked": [
+      [
+       "senior-pain-joint",
+       "4. 같이 먹어도 되나 — 출처와 기준일",
+       0.643
+      ],
+      [
+       "senior-safety-signals",
+       "2. 같이 먹어도 되나 묻기 전에",
+       0.535
+      ],
+      [
+       "senior-pain-joint",
+       "3. 어르신 주의 (노인주의)",
+       0.458
+      ],
+      [
+       "senior-pain-joint",
+       "2. 관절 · 통증 소염진통제",
+       0.445
+      ]
+     ],
+     "top1_score": 0.643,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 212
+    },
+    {
+     "id": "X-01",
+     "expect": "scope-and-escalation",
+     "ranked": [
+      [
+       "scope-and-escalation",
+       "1. 이 도우미가 답하는 것",
+       0.585
+      ],
+      [
+       "scope-and-escalation",
+       "3. 누구에게 넘기나",
+       0.562
+      ],
+      [
+       "scope-and-escalation",
+       "2. 답하지 않고 사람에게 넘기는 것",
+       0.543
+      ],
+      [
+       "senior-safety-signals",
+       "4. AI 안내의 한계",
+       0.475
+      ]
+     ],
+     "top1_score": 0.585,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 328
+    },
+    {
+     "id": "X-02",
+     "expect": "request-records-guide",
+     "ranked": [
+      [
+       "request-records-guide",
+       "2. 상태의 뜻",
+       0.58
+      ],
+      [
+       "request-records-guide",
+       "3. 내 건만 보이는 까닭",
+       0.438
+      ],
+      [
+       "request-records-guide",
+       "1. 접수 번호 읽기",
+       0.423
+      ],
+      [
+       "request-records-guide",
+       "4. 연락처는 가려서 보여 줘요",
+       0.417
+      ]
+     ],
+     "top1_score": 0.58,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 266
+    },
+    {
+     "id": "X-03",
+     "expect": "senior-safety-signals",
+     "ranked": [
+      [
+       "senior-safety-signals",
+       "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+       0.379
+      ],
+      [
+       "senior-safety-signals",
+       "4. AI 안내의 한계",
+       0.266
+      ],
+      [
+       "senior-safety-signals",
+       "2. 같이 먹어도 되나 묻기 전에",
+       0.249
+      ],
+      [
+       "senior-pain-joint",
+       "4. 같이 먹어도 되나 — 출처와 기준일",
+       0.239
+      ]
+     ],
+     "top1_score": 0.379,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 276
+    }
+   ],
+   "out_of_scope": [
+    {
+     "q": "정수기 필터는 언제 갈아요?",
+     "top1": "senior-cold-sleep-stomach",
+     "top1_score": 0.223
+    },
+    {
+     "q": "공유기가 안 되는데 어떻게 재부팅해요?",
+     "top1": "closing-cash-mismatch",
+     "top1_score": 0.248
+    },
+    {
+     "q": "간판 조명은 몇 시에 켜고 꺼요?",
+     "top1": "closing-checklist",
+     "top1_score": 0.293
+    },
+    {
+     "q": "와이파이 비밀번호가 뭐예요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.212
+    },
+    {
+     "q": "직원 주차 등록은 어떻게 해요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.364
+    },
+    {
+     "q": "휴게실 에어컨은 몇 도로 맞춰요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.301
+    }
+   ]
+  },
+  {
+   "name": "C",
+   "chunking": 150,
+   "overlap": 30,
+   "indexed_chunks": 82,
+   "chunk_chars": {
+    "min": 63,
+    "median": 178,
+    "max": 215
+   },
+   "index_seconds": 2.3,
+   "hit1": 12,
+   "hit3": 12,
+   "hit4": 12,
+   "n": 12,
+   "leaks": 0,
+   "in_scope_top1": [
+    0.405,
+    0.43,
+    0.453,
+    0.46,
+    0.464,
+    0.511,
+    0.55,
+    0.558,
+    0.593,
+    0.616,
+    0.636,
+    0.671
+   ],
+   "out_scope_top1": [
+    0.223,
+    0.261,
+    0.297,
+    0.3,
+    0.345,
+    0.429
+   ],
+   "search_ms_median": 245.5,
+   "rows": [
+    {
+     "id": "WF-01",
+     "expect": "closing-checklist",
+     "ranked": [
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.616
+      ],
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.592
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.51
+      ],
+      [
+       "closing-checklist",
+       "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+       0.466
+      ]
+     ],
+     "top1_score": 0.616,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 185
+    },
+    {
+     "id": "WF-05",
+     "expect": "closing-cash-mismatch",
+     "ranked": [
+      [
+       "closing-cash-mismatch",
+       "4. 하면 안 되는 것",
+       0.464
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.431
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.409
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.402
+      ]
+     ],
+     "top1_score": 0.464,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 242
+    },
+    {
+     "id": "WF-12",
+     "expect": "recall-first-response",
+     "ranked": [
+      [
+       "recall-first-response",
+       "3. 따로 보관하고 개수 세기",
+       0.43
+      ],
+      [
+       "recall-first-response",
+       "2. 진열대에서 바로 빼기",
+       0.418
+      ],
+      [
+       "recall-first-response",
+       "1. 회수 공표란",
+       0.362
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.36
+      ]
+     ],
+     "top1_score": 0.43,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 250
+    },
+    {
+     "id": "T-01",
+     "expect": "closing-checklist",
+     "ranked": [
+      [
+       "closing-checklist",
+       "1. 문 닫기 30분 전 — 주문 넣고 손님",
+       0.453
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.327
+      ],
+      [
+       "closing-checklist",
+       "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+       0.306
+      ],
+      [
+       "request-records-guide",
+       "4. 연락처는 가려서 보여 줘요",
+       0.306
+      ]
+     ],
+     "top1_score": 0.453,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 497
+    },
+    {
+     "id": "T-03",
+     "expect": "closing-cash-mismatch",
+     "ranked": [
+      [
+       "closing-cash-mismatch",
+       "1. 먼저 다시 세기",
+       0.558
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.524
+      ],
+      [
+       "closing-checklist",
+       "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수",
+       0.523
+      ],
+      [
+       "closing-cash-mismatch",
+       "2. 흔한 원인 찾아보기",
+       0.458
+      ]
+     ],
+     "top1_score": 0.558,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 382
+    },
+    {
+     "id": "T-04",
+     "expect": "recall-customer-guide",
+     "ranked": [
+      [
+       "recall-customer-guide",
+       "1. 손님 안내는 약국이 하는 선택 서비스",
+       0.46
+      ],
+      [
+       "recall-first-response",
+       "4. 약사에게 알리기",
+       0.438
+      ],
+      [
+       "recall-customer-guide",
+       "4. 반품 받기와 기록",
+       0.397
+      ],
+      [
+       "recall-customer-guide",
+       "2. 안내 대상",
+       0.387
+      ]
+     ],
+     "top1_score": 0.46,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 234
+    },
+    {
+     "id": "T-07",
+     "expect": "mgr-owner-rules",
+     "ranked": [
+      [
+       "mgr-owner-rules",
+       "1. 현금 차액 처리 기준 — 얼마까지 승인",
+       0.511
+      ],
+      [
+       "closing-cash-mismatch",
+       "4. 하면 안 되는 것",
+       0.464
+      ],
+      [
+       "closing-cash-mismatch",
+       "3. 그래도 안 맞으면 — 기록하고 약국장에",
+       0.431
+      ],
+      [
+       "mgr-owner-rules",
+       "2. 금고와 마감 승인",
+       0.417
+      ]
+     ],
+     "top1_score": 0.511,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 412
+    },
+    {
+     "id": "T-31",
+     "expect": "senior-cold-sleep-stomach",
+     "ranked": [
+      [
+       "senior-cold-sleep-stomach",
+       "2. 감기 · 콧물 약 성분",
+       0.55
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "1. 이 문서는",
+       0.496
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "4. 출처와 기준일",
+       0.464
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       "3. 잠 오는 약 · 위장 약 성분",
+       0.45
+      ]
+     ],
+     "top1_score": 0.55,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 215
+    },
+    {
+     "id": "T-33",
+     "expect": "senior-pain-joint",
+     "ranked": [
+      [
+       "senior-pain-joint",
+       "4. 같이 먹어도 되나 — 출처와 기준일",
+       0.636
+      ],
+      [
+       "senior-safety-signals",
+       "2. 같이 먹어도 되나 묻기 전에",
+       0.562
+      ],
+      [
+       "senior-pain-joint",
+       "3. 어르신 주의 (노인주의)",
+       0.453
+      ],
+      [
+       "senior-pain-joint",
+       "1. 열 · 통증 약 — 아세트아미노펜",
+       0.452
+      ]
+     ],
+     "top1_score": 0.636,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 227
+    },
+    {
+     "id": "X-01",
+     "expect": "scope-and-escalation",
+     "ranked": [
+      [
+       "scope-and-escalation",
+       "1. 이 도우미가 답하는 것",
+       0.671
+      ],
+      [
+       "scope-and-escalation",
+       "3. 누구에게 넘기나",
+       0.646
+      ],
+      [
+       "scope-and-escalation",
+       "2. 답하지 않고 사람에게 넘기는 것",
+       0.571
+      ],
+      [
+       "senior-safety-signals",
+       "3. 이 도우미가 하지 않는 것",
+       0.492
+      ]
+     ],
+     "top1_score": 0.671,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 249
+    },
+    {
+     "id": "X-02",
+     "expect": "request-records-guide",
+     "ranked": [
+      [
+       "request-records-guide",
+       "2. 상태의 뜻",
+       0.593
+      ],
+      [
+       "request-records-guide",
+       "1. 접수 번호 읽기",
+       0.505
+      ],
+      [
+       "request-records-guide",
+       "4. 연락처는 가려서 보여 줘요",
+       0.467
+      ],
+      [
+       "request-records-guide",
+       "3. 내 건만 보이는 까닭",
+       0.461
+      ]
+     ],
+     "top1_score": 0.593,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 329
+    },
+    {
+     "id": "X-03",
+     "expect": "senior-safety-signals",
+     "ranked": [
+      [
+       "senior-safety-signals",
+       "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+       0.405
+      ],
+      [
+       "senior-safety-signals",
+       "4. AI 안내의 한계",
+       0.285
+      ],
+      [
+       "senior-pain-joint",
+       "3. 어르신 주의 (노인주의)",
+       0.281
+      ],
+      [
+       "senior-safety-signals",
+       "2. 같이 먹어도 되나 묻기 전에",
+       0.273
+      ]
+     ],
+     "top1_score": 0.405,
+     "hit1": true,
+     "hit3": true,
+     "hit4": true,
+     "leak": false,
+     "search_ms": 238
+    }
+   ],
+   "out_of_scope": [
+    {
+     "q": "정수기 필터는 언제 갈아요?",
+     "top1": "recall-first-response",
+     "top1_score": 0.261
+    },
+    {
+     "q": "공유기가 안 되는데 어떻게 재부팅해요?",
+     "top1": "closing-cash-mismatch",
+     "top1_score": 0.297
+    },
+    {
+     "q": "간판 조명은 몇 시에 켜고 꺼요?",
+     "top1": "closing-checklist",
+     "top1_score": 0.3
+    },
+    {
+     "q": "와이파이 비밀번호가 뭐예요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.223
+    },
+    {
+     "q": "직원 주차 등록은 어떻게 해요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.429
+    },
+    {
+     "q": "휴게실 에어컨은 몇 도로 맞춰요?",
+     "top1": "request-records-guide",
+     "top1_score": 0.345
+    }
+   ]
+  }
+ ],
+ "index_tokens": {
+  "chunks": 39,
+  "prompt_tokens": 9162,
+  "usd_per_1m": 0.13,
+  "price_source": "https://openai.com/api/pricing/ (text-embedding-3-large $0.13 / 1M tokens)",
+  "measured": "2026-11-03, OpenAI /v1/embeddings usage.prompt_tokens"
+ }
+}

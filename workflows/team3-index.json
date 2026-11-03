@@ -285,7 +285,7 @@
     300
    ],
    "parameters": {
-    "jsCode": "// 두 저장소에 다 넣은 뒤 한 번만 요약.\nconst s = $('Index settings').first().json;\nconst chunks = $('Make chunks').all().map(i => i.json);\nconst per = {};\nfor (const c of chunks) {\n  per[c.doc] ??= { doc: c.doc, chunks: 0, access_level: c.access_level };\n  per[c.doc].chunks += 1;\n}\nreturn [{ json: {\n  docs: Object.keys(per).length,\n  indexed_chunks: chunks.length,\n  seconds: Math.round((Date.now() - s.t0) / 100) / 10,\n  kb_version: s.kb_version,\n  chunking: s.chunking,\n  overlap: s.overlap,\n  per_doc: Object.values(per),\n} }];"
+    "jsCode": "// 두 저장소에 다 넣은 뒤 한 번만 요약.\nconst s = $('Index settings').first().json;\nconst chunks = $('Make chunks').all().map(i => i.json);\nconst per = {};\nfor (const c of chunks) {\n  per[c.doc] ??= { doc: c.doc, chunks: 0, access_level: c.access_level };\n  per[c.doc].chunks += 1;\n}\nreturn [{ json: {\n  docs: Object.keys(per).length,\n  indexed_chunks: chunks.length,\n  seconds: Math.round((Date.now() - s.t0) / 100) / 10,\n  kb_version: s.kb_version,\n  chunking: s.chunking,\n  overlap: s.overlap,\n  chunk_chars: (() => { const L = chunks.map(c => c.text.length).sort((a, b) => a - b);\n    return { min: L[0], median: L[Math.floor(L.length / 2)], max: L[L.length - 1] }; })(),\n  per_doc: Object.values(per),\n} }];"
    }
   },
   {

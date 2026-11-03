@@ -52,7 +52,7 @@ flowchart TD
 | 파일 | 웹훅 · 트리거 | 맡은 사람 | 노드 수 |
 | --- | --- | --- | --- |
 | `team3-support.json` | `POST /webhook/team3-support` | 다영 | <측정 후> |
-| `team3-index.json` · `team3-search.json` | `team3-index` · `team3-search` | 영민 | <측정 후> |
+| `team3-index.json` · `team3-search.json` | `team3-index` · `team3-search` | 영민 | 15 · 13 |
 | `team3-handoff.json` · `team3-errors.json` | `team3-handoff` · Error Trigger (`team3Errors00001`) | 병훈 | <측정 후> |
 | `team3-ticket.json` · `team3-alert.json` | Execute Workflow (`team3Ticket00001` · `team3Alert000001`) | 태웅 | <측정 후> |
 
