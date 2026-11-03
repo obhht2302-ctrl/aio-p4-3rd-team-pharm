@@ -1,0 +1,388 @@
+{
+ "name": "team3-search",
+ "nodes": [
+  {
+   "name": "Search webhook",
+   "type": "n8n-nodes-base.webhook",
+   "typeVersion": 2,
+   "position": [
+    0,
+    300
+   ],
+   "parameters": {
+    "httpMethod": "POST",
+    "path": "team3-search",
+    "responseMode": "responseNode",
+    "options": {}
+   }
+  },
+  {
+   "name": "KB settings",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    200,
+    300
+   ],
+   "parameters": {
+    "jsCode": "// 요청 {query, access_levels, top_k?, type?}. 권한은 저장소(메모리 키)를 고르는 것으로 거름 = 검색 전 필터.\n// type은 거르는 데 쓰지 않음 (공통 문서를 놓치지 않게). 정렬 · SCORE_MIN 거르기는 본체가 함.\nconst b = $('Search webhook').first().json.body ?? {};\nconst query = String(b.query ?? '').trim();\nconst access_levels = Array.isArray(b.access_levels) ? b.access_levels : ['all'];\nconst top_k = Math.min(Math.max(Number(b.top_k) || 4, 1), 10);\nreturn [{ json: {\n  query, top_k, fetch_k: top_k * 2,          // 같은 doc+section을 뺀 뒤에도 top_k개가 남게 넉넉히 가져옴\n  kb_version: 'pharm_kb_v1',\n  want_owner: access_levels.includes('owner'),\n  t0: Date.now(),\n} }];"
+   }
+  },
+  {
+   "name": "Has query?",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    400,
+    300
+   ],
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "strict",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "c1",
+       "leftValue": "={{ $json.query }}",
+       "rightValue": "",
+       "operator": {
+        "type": "string",
+        "operation": "notEmpty",
+        "singleValue": true
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "options": {}
+   }
+  },
+  {
+   "name": "Need owner?",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    640,
+    420
+   ],
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "strict",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "c1",
+       "leftValue": "={{ $json.want_owner }}",
+       "rightValue": "",
+       "operator": {
+        "type": "boolean",
+        "operation": "true",
+        "singleValue": true
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "options": {}
+   }
+  },
+  {
+   "name": "Search all",
+   "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+   "typeVersion": 1.3,
+   "position": [
+    900,
+    160
+   ],
+   "parameters": {
+    "mode": "load",
+    "memoryKey": {
+     "__rl": true,
+     "mode": "list",
+     "value": "pharm_kb_v1_all",
+     "cachedResultName": "pharm_kb_v1_all"
+    },
+    "prompt": "={{ $('KB settings').first().json.query }}",
+    "topK": "={{ $('KB settings').first().json.fetch_k }}",
+    "includeDocumentMetadata": true
+   },
+   "alwaysOutputData": true
+  },
+  {
+   "name": "Search owner",
+   "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+   "typeVersion": 1.3,
+   "position": [
+    900,
+    360
+   ],
+   "parameters": {
+    "mode": "load",
+    "memoryKey": {
+     "__rl": true,
+     "mode": "list",
+     "value": "pharm_kb_v1_owner",
+     "cachedResultName": "pharm_kb_v1_owner"
+    },
+    "prompt": "={{ $('KB settings').first().json.query }}",
+    "topK": "={{ $('KB settings').first().json.fetch_k }}",
+    "includeDocumentMetadata": true
+   },
+   "alwaysOutputData": true
+  },
+  {
+   "name": "Skip owner",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    900,
+    560
+   ],
+   "parameters": {
+    "jsCode": "// 약국장 권한이 없으면 owner 저장소는 아예 검색하지 않음. Merge가 기다리지 않게 빈 항목 하나만 넘김.\nreturn [{ json: {} }];"
+   }
+  },
+  {
+   "name": "Embeddings",
+   "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+   "typeVersion": 1.2,
+   "position": [
+    840,
+    760
+   ],
+   "parameters": {
+    "model": "text-embedding-3-large",
+    "options": {}
+   },
+   "credentials": {
+    "openAiApi": {
+     "id": "openAiCourse0001",
+     "name": "OpenAI (.env)"
+    }
+   }
+  },
+  {
+   "name": "Merge hits",
+   "type": "n8n-nodes-base.merge",
+   "typeVersion": 3,
+   "position": [
+    1160,
+    300
+   ],
+   "parameters": {
+    "numberInputs": 2
+   }
+  },
+  {
+   "name": "Shape evidence",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    1360,
+    300
+   ],
+   "parameters": {
+    "jsCode": "const s = $('KB settings').first().json;\nconst seen = new Set();\nconst evidence = $input.all().filter(i => i.json.document)\n  .map(i => ({ ...i.json.document.metadata, text: i.json.document.pageContent, score: Math.round(i.json.score * 1000) / 1000 }))\n  .filter(e => e.access_level === 'all' || s.want_owner)        // 한 번 더 막기 (키가 잘못 연결돼도 owner 문서가 새지 않게)\n  .sort((a, b) => b.score - a.score)\n  .filter(e => { const k = `${e.doc}|${e.section}`; if (seen.has(k)) return false; seen.add(k); return true; })\n  .slice(0, s.top_k)\n  .map(({ doc, title, section, text, score, access_level }) => ({ doc, title, section, text, score, access_level }));\nreturn [{ json: { evidence, kb_version: s.kb_version, search_ms: Date.now() - s.t0 } }];"
+   }
+  },
+  {
+   "name": "Send evidence",
+   "type": "n8n-nodes-base.respondToWebhook",
+   "typeVersion": 1.1,
+   "position": [
+    1560,
+    300
+   ],
+   "parameters": {
+    "respondWith": "json",
+    "responseBody": "={{ $json }}",
+    "options": {}
+   }
+  },
+  {
+   "name": "No query",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    640,
+    0
+   ],
+   "parameters": {
+    "jsCode": "const s = $('KB settings').first().json;\nreturn [{ json: { evidence: [], kb_version: s.kb_version, search_ms: Date.now() - s.t0 } }];"
+   }
+  },
+  {
+   "name": "Send empty",
+   "type": "n8n-nodes-base.respondToWebhook",
+   "typeVersion": 1.1,
+   "position": [
+    860,
+    0
+   ],
+   "parameters": {
+    "respondWith": "json",
+    "responseBody": "={{ $json }}",
+    "options": {}
+   }
+  }
+ ],
+ "connections": {
+  "Search webhook": {
+   "main": [
+    [
+     {
+      "node": "KB settings",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "KB settings": {
+   "main": [
+    [
+     {
+      "node": "Has query?",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Has query?": {
+   "main": [
+    [
+     {
+      "node": "Search all",
+      "type": "main",
+      "index": 0
+     },
+     {
+      "node": "Need owner?",
+      "type": "main",
+      "index": 0
+     }
+    ],
+    [
+     {
+      "node": "No query",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Need owner?": {
+   "main": [
+    [
+     {
+      "node": "Search owner",
+      "type": "main",
+      "index": 0
+     }
+    ],
+    [
+     {
+      "node": "Skip owner",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Search all": {
+   "main": [
+    [
+     {
+      "node": "Merge hits",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Search owner": {
+   "main": [
+    [
+     {
+      "node": "Merge hits",
+      "type": "main",
+      "index": 1
+     }
+    ]
+   ]
+  },
+  "Skip owner": {
+   "main": [
+    [
+     {
+      "node": "Merge hits",
+      "type": "main",
+      "index": 1
+     }
+    ]
+   ]
+  },
+  "Merge hits": {
+   "main": [
+    [
+     {
+      "node": "Shape evidence",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Shape evidence": {
+   "main": [
+    [
+     {
+      "node": "Send evidence",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "No query": {
+   "main": [
+    [
+     {
+      "node": "Send empty",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Embeddings": {
+   "ai_embedding": [
+    [
+     {
+      "node": "Search all",
+      "type": "ai_embedding",
+      "index": 0
+     },
+     {
+      "node": "Search owner",
+      "type": "ai_embedding",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1",
+  "errorWorkflow": "team3Errors00001"
+ }
+}
