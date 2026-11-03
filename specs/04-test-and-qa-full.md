@@ -104,24 +104,17 @@ uv run tools/flow.py llm down              # n8n의 OpenAI Credential을 일부�
 
 ## 2. 시험 돌리기
 
-### 2.1 시험 실행 스크립트 (`tools/run_tests.sh`, 직접 만듦)
+### 2.1 시험 실행 스크립트 (`tools/run_tests.sh`, 11/3 만듦)
 
 ```bash
-#!/usr/bin/env bash
-# 사용: tools/run_tests.sh [common|team|all] [반복 수]   — 샘 키트 폴더에서 flow.py를 부름
-set -euo pipefail
-REPO="$(cd "$(dirname "$0")/.." && pwd)"
-KIT="${KIT:-$HOME/aio-01d4-stu/Last3Mon/77}"          # 80일차 키트가 나오면 Last3Mon/80
-WHICH="${1:-all}"; REPEAT="${2:-1}"
-cd "$KIT"
-uv run tools/flow.py fault all ok && uv run tools/flow.py llm up
-uv run tools/flow.py call team3-index "$REPO/requests/empty.json" >/dev/null   # push 뒤 색인이 비어 있을 수 있음
-[[ "$WHICH" != team ]]   && uv run tools/flow.py test "$REPO/cases/common.json" --webhook team3-support --repeat "$REPEAT" -v
-[[ "$WHICH" != common ]] && uv run tools/flow.py test "$REPO/cases/team.json" --repeat "$REPEAT" -v
-cp -n "$KIT"/runs/*.json "$REPO/runs/" 2>/dev/null || true                  # 보고서를 팀 레포로
-uv run tools/flow.py fault all ok && uv run tools/flow.py llm up            # 꼭 되돌림
+tools/run_tests.sh common          # 공통 한 번 (골격이 올라왔을 때 출발점)
+tools/run_tests.sh all 3           # 공통 + 팀 3회 반복 (11/5 VM 측정)
+KIT=~/aio-01d4-stu/Last3Mon/80 tools/run_tests.sh all   # 80일차 키트가 나오면 (기본은 Last3Mon/77)
 ```
 
+- 순서: 장애 스위치 되돌림(`fault all ok` · `llm up`) → `call team3-index` (push 뒤 빈 색인 방지) → `flow.py test` → 이번 실행에서 생긴 `common-*.json` · `team-*.json` 보고서만 레포 `runs/`로 복사.
+- 시험이 실패하거나 Ctrl+C로 멈춰도 장애 스위치는 꼭 되돌립니다 (`trap`). 하나라도 실패하면 종료 코드 1.
+- 키트의 다른 실습 보고서(`lab01-*.json` 등)는 가져오지 않습니다.
 - 지금 샘 도구는 웹훅 키를 안 보내요. 샘이 키를 보내는 도구를 주면 실행 전에 `export FLOW_WEBHOOK_KEY=<팀 키>` (키트 확인).
 - 보고서는 `runs/<시나리오 파일>-<시각>.json`. **결과서 숫자의 유일한 근거**입니다.
 
@@ -217,7 +210,7 @@ uv run tools/flow.py fault all ok && uv run tools/flow.py llm up            # �
 ```text
 AGENTS.md, 00-DESIGN.md 7절, specs/04-test-and-qa-full.md, 샘 07-TESTING-GUIDE.md 를 읽고 다음을 해 줘.
 1) cases/common.json 과 cases/team.json 을 샘 03 문서 4·5절과 대조해서 판정이 약해진 곳 · 문서와 안 맞는 곳을 표로 짚어 줘 (고치지는 말고).
-2) tools/run_tests.sh 를 2.1절 그대로 만들고 chmod +x.
+2) tools/run_tests.sh 가 2.1절대로 도는지 읽어 보고, 키트가 바뀌었으면 (80일차) 맞춰 줘.
 3) docs/EXECUTION-RESULT.md 1절 표에 공통 · 팀 시나리오 줄을 미리 만들어 둬 (실제 칸은 비움).
 4) runs/ 에 보고서가 있으면 1 · 3절 숫자를 채우고 칸마다 보고서 파일 이름을 붙여. 보고서에 없는 숫자는 "없음".
 ```
