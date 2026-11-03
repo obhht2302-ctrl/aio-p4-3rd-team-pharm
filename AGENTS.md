@@ -7,6 +7,7 @@ CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 �
 1. 요청과 그 역할의 `specs/0N-*.md`를 읽고, **입력 · 노드 순서 · 결과 모양**을 3~5줄로 먼저 보여 준다. 실패가 있는 요청이면 "어떤 실패가 어디로 가는지" 표를 같이 보여 준다.
 2. 명세가 가리킨 파일만 고친다. **새 파일은 명세나 요청에 있을 때만.** 다른 역할의 파일은 읽기만 한다 (`00-DESIGN.md` 8절).
 3. 워크플로우면 `uv run <샘 키트>/tools/flow.py check workflows/<파일>.json` → 오류 0까지. 코드면 그 폴더의 시험 명령 (`api/`: `python3 -m pytest -q`).
+   - 예외 하나: 77 · 78판 `check`는 수업 OpenAI(`openAiCourse0001`) 말고 다른 Credential(`team3WebhookKey` · `team3ApiKey` · `dataApiKey` · Jira · Slack)에 `must use a course id` 오류를 낸다. **이 오류만은 그대로 두고 Credential id를 바꾸지 않는다** (80판에서 확인).
 4. 한국어로 보고: 바꾼 노드 · 파일, check · 시험 결과, 사람이 실행할 `push` · `test` 명령.
 5. push · test는 사람이 한다 (시키면 직접 해도 됨). 같은 곳을 3번 고쳐도 실패하면 멈추고 다른 방법을 제안한다.
 

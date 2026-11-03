@@ -53,6 +53,7 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 | `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
 - `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
+- `flow.py check`가 `credential '…' must use a course id ['openAiCourse0001']` 오류를 내도 **Credential은 그대로 두세요.** 77 · 78일차 `flow.py`가 수업 OpenAI 키만 알아서 팀 Credential(`team3WebhookKey` · `team3ApiKey` · `dataApiKey` · Jira · Slack)을 오류로 보는 거예요. 이 오류 말고 다른 오류가 0이면 통과로 봐요. AI 에이전트가 id를 `openAiCourse0001`로 바꾸려 하면 막아 주세요 (바꾸면 인증이 깨짐). 80일차 키트에서 리드가 다시 확인해요.
 - 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둬요. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고, 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 하면 돼요. 바꿀 때가 되면 리드가 디코로 알려요 (키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없어요.
 
 처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
@@ -86,7 +87,9 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 
 ## 2. Jira · Slack (`workflows/team3-ticket.json` · `team3-alert.json`)
 
-지금 JSON은 10/27 틀 그대로입니다 (주제 무관, `id` 고정: `team3Ticket00001` · `team3Alert000001`, Credential `jiraAio3Cloud001` · `slackAio3Bot0001`). 고칠 것:
+11/3 고침 (아래 표 반영, `id` 고정: `team3Ticket00001` · `team3Alert000001`, Credential `jiraAio3Cloud001` · `slackAio3Bot0001`). 노드 이름은 다른 워크플로우처럼 영어: `Ticket called` → `Ticket settings` → `Real?` → `Create Jira request` → `Jira ok` / `Jira failed` (연습이면 `Practice skip`), Slack도 같은 모양 (`Alert called` · `Alert settings` · `Post to Slack` · `Slack ok` · `Slack failed`). 돌려주는 값은 `{ok, mode, error}` (+ `ticketKey` · `url` 또는 `ts`). `flow.py check`의 `must use a course id` 오류 1건은 77판이 수업 OpenAI 키만 알아서 나는 것 (고치기 전 파일도 같음, 80판에서 확인).
+
+고친 것:
 
 | 할 일 | 왜 |
 | --- | --- |
@@ -94,7 +97,7 @@ cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-ph
 | `설정` 노드의 `mode` 기본값 `real` → 호출하는 쪽(`team3-handoff`의 `Handoff settings`)이 넘긴 값만 따름 | 실제/연습 스위치를 한 곳으로 |
 | Jira는 장애 티켓만: `team3-handoff`의 `tickets_down`, `team3-errors`의 `unexpected` | 약사 이관 티켓은 우리 화면 (조합 C) |
 | Slack 메시지에 연락처 · 약 이름 + 손님 정보를 넣지 않음 | 개인정보 · 건강 정보 |
-| 노드 이름을 영어로 맞출지 결정 (지금 한국어) | 설계서 노드 이름 = JSON 이름이면 둘 다 됨 |
+| 노드 이름을 영어로 (다른 워크플로우와 같게) | 설계서 노드 이름 = JSON 이름 |
 
 - 11/5 전: Slack 봇이 `#support-alerts`에 들어 있는지 확인. VM의 Jira Credential은 팀플용으로 만든 계정 토큰을 그대로 씁니다.
 - 키 · 토큰은 n8n Credential에만. JSON · 문서 · 캡처에 0. 공공데이터 API 키(회수 Service05 · e약은요 · 허가정보 Service08 · DUR 2종, 11/2 승인)도 개인 키라 저장소 · VM에 쓰지 않습니다 — 필요한 사람(RAG 원문 대조)은 각자 신청.

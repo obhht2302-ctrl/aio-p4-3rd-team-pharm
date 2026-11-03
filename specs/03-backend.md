@@ -54,6 +54,7 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 | `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
 - `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
+- `flow.py check`가 `credential '…' must use a course id ['openAiCourse0001']` 오류를 내도 **Credential은 그대로 두세요.** 77 · 78일차 `flow.py`가 수업 OpenAI 키만 알아서 팀 Credential(`team3WebhookKey` · `team3ApiKey` · `dataApiKey` · Jira · Slack)을 오류로 보는 거예요. 이 오류 말고 다른 오류가 0이면 통과로 봐요. AI 에이전트가 id를 `openAiCourse0001`로 바꾸려 하면 막아 주세요 (바꾸면 인증이 깨짐). 80일차 키트에서 리드가 다시 확인해요.
 - 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둬요. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고, 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 하면 돼요. 바꿀 때가 되면 리드가 디코로 알려요 (키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없어요.
 
 처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
@@ -178,6 +179,7 @@ uv run tools/flow.py call team3-handoff ~/aio-p4-3rd-team-pharm/requests/recall-
 
 | 증상 | 할 일 |
 | --- | --- |
+| `check`에 `must use a course id ['openAiCourse0001']` | 팀 Credential은 77 · 78판 도구가 몰라서 나는 오류 → **Credential id 바꾸지 말 것**, 다른 오류만 0이면 통과 (시작 전 준비 표 아래 설명) |
 | 티켓이 두 개씩 생김 | `key`에 `request_id`를 넣었는지, 재시도가 key 없이 보내는지 |
 | WF-04 알림이 2건 | 보통 이관에서도 알림을 보내는지 (high · 실패만 보냄), 억제 규칙 |
 | Error Workflow가 안 돎 | 게시했는지, 본체 settings에 `team3Errors00001` |
