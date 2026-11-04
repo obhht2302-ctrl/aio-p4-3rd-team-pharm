@@ -105,7 +105,7 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 
 1. data-api `POST /tickets` `{key: request_id, title, requester: user, category: type, priority}` → 실패 (5xx · timeout)면 `POST /dlq` (`item.id = request_id`, 개인정보 없이) + `POST /alerts` (`reason: tickets_down`, `severity: high`), `ticket: null`.
 2. 성공이고 `priority: high`면 `POST /alerts` (`reason: urgent`). 보통 이관은 알림 없음.
-3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST http://api:8000/tickets` (약사 화면, data-api가 준 `ticket_id` · `product`를 같이 넘김, 머리글 `X-Api-Key` = Credential `team3ApiKey`), `mode = real`일 때만 Execute Workflow `team3Alert000001` (Slack — 위 1번(티켓 실패)이나 2번(긴급)에서 data-api 알림을 남긴 경우)과 `team3Ticket00001` (Jira — 티켓 API 실패 `tickets_down`일 때만)을 부릅니다.
+3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST http://api:8000/tickets` (약사 화면, data-api가 준 `ticket_id` · `product`를 같이 넘김, 머리글 `X-Api-Key` = Credential `team3ApiKey`), 위 1번이나 2번에서 data-api 알림을 남겼으면 같은 본문을 FastAPI `POST http://api:8000/alerts`에도 (약사 화면 `/api/admin/alerts`가 이걸 읽음, 같은 키), `mode = real`일 때만 Execute Workflow `team3Alert000001` (Slack — 위 1번(티켓 실패)이나 2번(긴급)에서 data-api 알림을 남긴 경우)과 `team3Ticket00001` (Jira — 티켓 API 실패 `tickets_down`일 때만)을 부릅니다.
 4. 401 · 403은 재시도하지 않고 바로 DLQ + 알림 (`reason: auth_failed`).
 
 - `mode`(실제/연습 스위치)는 **Slack · Jira를 실제로 부를지만** 정합니다. 손님 문자 · 메일은 어떤 모드에서도 실제로 보내지 않고 연습 기록만 남깁니다.
