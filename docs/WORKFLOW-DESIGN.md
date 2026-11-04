@@ -74,7 +74,7 @@ flowchart TD
 | 분기 | `Build context` → `Evidence?` → `Check answer` | 검색 점수 · 근거 유무 · 금지 문장 | `SCORE_MIN` = 0.37 (영민 실측), `top_k` = 4 | WF-03, T-33 |
 | 병렬 | `Search knowledge` + `Get record` → `Merge evidence` | 근거와 접수 상태를 서로 기다리지 않고 | — (잰 시간: <측정 후>) | WF-12 |
 | 루프 | `attempt` (요청 사이) | 보완 질문 | 최대 3회 (3회째 이관) | WF-02 · 02b, T-32 · 33 |
-| 루프 | HTTP 재시도 | 외부 호출 | <측정 후> (401 · 403 · 404는 재시도 없음) | WF-04 · 11 |
+| 외부 호출 | HTTP 재시도 없음 | 본체의 HTTP Request 7개 (`Check user` · `Check cache` · `Search knowledge` · `Get record` · `Handoff` · `Save cache` · `Log request`) | 각 호출은 설정된 timeout 뒤 오류 갈래로 진행. `Get record`의 4초 제한은 전체 6초 응답 목표를 위한 값. 티켓 생성 재시도는 별도 `team3-handoff` 계약 (`00-DESIGN.md` 3.4절) | WF-04 · 11 |
 
 ## 5. 외부 연동 노드
 
@@ -83,7 +83,7 @@ flowchart TD
 | `Support webhook` | 팀 Webhook → 웹 화면 · Slack Trigger | Header Auth (`team3WebhookKey`) → SSO · Slack 서명 | 계약 요청 | — | 401 (n8n) |
 | `Create ticket` | data-api `POST /tickets` → (약사 이관은 우리 화면, 장애만 Jira) | `X-Api-Key` → Jira API Token | `{key, title, requester, category, priority}` | `{ticket_id, duplicate}` | <측정 후> 재시도 → DLQ + 알림 |
 | `Alert` | data-api `POST /alerts` → Slack `#support-alerts` | `X-Api-Key` → Slack Bot | `{workflow, severity, reason, message}` | `{stored}` | 실패 무시 (덧붙임) |
-| `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | `X-Api-Key` → 사내 API | 번호 · 사용자 | 접수 건 / 403 | timeout <측정 후> → 이관 (`tickets_slow`) |
+| `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | `X-Api-Key` → 사내 API | 번호 · 사용자 | 접수 건 / 403 | timeout 4초, 재시도 없음 → 이관 (`tickets_slow`) |
 | `Check user` | data-api `GET /employees/<user>` → 약국 계정 · SSO | `X-Api-Key` | 이름 | `role` · `access_levels` | 404 → 400 `unknown_user` |
 
 ## 6. 노드 간 페이로드 (연결선마다)
@@ -116,7 +116,7 @@ Error Workflow: `team3-errors` (`team3Errors00001`, 게시 여부 <측정 후>, 
 
 | 가져온 것 (일차 · 파일) | 어디에 | 바꾼 것 |
 | --- | --- | --- |
-| 72 `reference/baseline-helpdesk.json` | `team3-support` 뼈대 | <구현 후> |
-| 73 입력 검사 · 본인 건 · 출력 필터 | `Validate input` · `Get record` · `Output filter` | <구현 후> |
+| 72 `reference/baseline-helpdesk.json` | `team3-support` 뼈대 | 팀 계약에 맞춰 `Support settings` · `Type policy` · 처리 방식 분기 · 검색/접수 조회 병렬 갈래 · 이관 · 캐시를 연결한 47노드 본체로 확장 |
+| 73 입력 검사 · 본인 건 · 출력 필터 | `Validate input` · `Get record` · `Output filter` | 사용자 조회와 입력 오류를 LLM 앞에서 검사하고, 접수 조회에 `requester`를 넣어 본인 건만 확인하며, 응답의 연락처를 가림 |
 | 71 `lab01-example2-index` · `-search` | `team3-index` · `team3-search` | 권한별 메모리 키 2개 |
 | 76 `lab02-example2-intake` · `-error-handler` | `team3-handoff` · `team3-errors` | data-api 먼저 + 덧붙임 |
