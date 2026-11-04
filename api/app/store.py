@@ -123,13 +123,14 @@ class PgStore:
     # tickets (key 멱등)
     def upsert_ticket(self, body: dict) -> tuple[dict, bool]:
         key = body["key"]
+        ticket_id = body.get("ticket_id") or None  # n8n이 넘긴 번호가 있으면 그대로 쓴다 (메모리 저장소와 같게)
         with self._db.cursor() as cur:
             cur.execute(
                 """INSERT INTO tickets (ticket_id, key, title, requester, category, priority, product)
-                   VALUES ('T-' || nextval('team3_ticket_seq'), %s, %s, %s, %s, %s, %s)
+                   VALUES (COALESCE(%s, 'T-' || nextval('team3_ticket_seq')), %s, %s, %s, %s, %s, %s)
                    ON CONFLICT (key) DO NOTHING
                    RETURNING *""",
-                (key, body.get("title", ""), body.get("requester", ""), body.get("category", ""),
+                (ticket_id, key, body.get("title", ""), body.get("requester", ""), body.get("category", ""),
                  body.get("priority", "normal"), body.get("product", "")),
             )
             inserted = cur.fetchone()
@@ -215,6 +216,12 @@ class PgStore:
                     (row["ticket_id"], row["customer_id"], row.get("phone", ""), row.get("message", ""),
                      row.get("status", "practice_logged")),
                 )
+
+    def reset_for_tests(self) -> None:
+        """시험 사이에만 쓰는 초기화. 운영 코드에서는 호출하지 않는다."""
+        with self._db.cursor() as cur:
+            cur.execute("TRUNCATE requests, notices, alerts, tickets RESTART IDENTITY CASCADE")
+            cur.execute("ALTER SEQUENCE team3_ticket_seq RESTART WITH 3001")
 
 
 def make_store(dsn: str):
