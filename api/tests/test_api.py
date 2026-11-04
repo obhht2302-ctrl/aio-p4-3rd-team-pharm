@@ -66,6 +66,13 @@ def test_brain_down_keeps_contract_shape(client, monkeypatch):
     assert CONTRACT_KEYS <= set(resp) and resp["route"] == "담당자 이관" and resp["reason"] == "brain_down"
 
 
+def test_alert_post_appears_in_admin_alerts(client):
+    req = EXAMPLES["POST /alerts"]["request"]
+    assert client.post("/alerts", json=req).json() == EXAMPLES["POST /alerts"]["response"]
+    items = client.get("/api/admin/alerts", headers=as_user("이서준")).json()["items"]
+    assert len(items) == 1 and items[0]["reason"] == "urgent"
+
+
 def test_tickets_idempotent_by_key(client):
     req = EXAMPLES["POST /tickets"]["request"]
     first, again = client.post("/tickets", json=req), client.post("/tickets", json=req)
