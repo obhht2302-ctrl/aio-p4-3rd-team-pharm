@@ -16,3 +16,4 @@ web/.npm-cache/
 web/.playwright-cli/
 web/*.tsbuildinfo
 tools/.cache/
+.deploy/

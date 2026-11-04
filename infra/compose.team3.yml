@@ -46,8 +46,10 @@ services:
     image: nginx:1.27-alpine
     volumes:
       - ../web/out:/usr/share/nginx/html:ro
+      - ./nginx.team3.conf:/etc/nginx/conf.d/default.conf:ro   # /api/ → api:8000
     ports:
-      - "${BIND_HOST:-127.0.0.1}:${WEB_PORT:-3000}:80"
+      - "${WEB_BIND:-127.0.0.1}:${WEB_PORT:-3000}:80"          # 팀 VM: WEB_BIND=0.0.0.0 · WEB_PORT=80 → 게이트웨이가 https 주소로 엶
+    networks: [n8n]
     restart: unless-stopped
 
   db:
