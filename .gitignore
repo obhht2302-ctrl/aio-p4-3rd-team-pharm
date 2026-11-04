@@ -10,4 +10,8 @@ __pycache__/
 *.n8n.bak
 .pytest_cache/
 web/.next/
+web/.next-build/
 web/out/
+web/.npm-cache/
+web/.playwright-cli/
+web/*.tsbuildinfo
