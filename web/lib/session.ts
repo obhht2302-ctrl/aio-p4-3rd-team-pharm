@@ -7,5 +7,6 @@ export function loadWho(): Who | null {
 export function saveWho(who: Who | null) {
   memory = who;
   try { who ? sessionStorage.setItem("team3-who", JSON.stringify(who)) : sessionStorage.removeItem("team3-who"); } catch { /* 사생활 모드 */ }
+  window.dispatchEvent(new Event("team3-session-change"));
 }
 export const isAdmin = (who: Who | null) => !!who && (who.role === "pharmacist" || who.role === "owner");
