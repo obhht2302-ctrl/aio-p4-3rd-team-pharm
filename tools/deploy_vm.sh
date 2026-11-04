@@ -7,7 +7,7 @@
 set -euo pipefail
 MODE="${1:-real}"; case "$MODE" in real|practice) ;; *) echo "사용: $0 [real|practice]" >&2; exit 2 ;; esac
 cd "$(dirname "$0")/.."
-git pull --ff-only
+if [ -z "${DEPLOY_PULLED:-}" ]; then git pull --ff-only; DEPLOY_PULLED=1 exec bash tools/deploy_vm.sh "$@"; fi   # 받은 새 스크립트로 다시 시작
 python3 tools/packs.py check
 SAM_DATA_API="${SAM_DATA_API:-$HOME/aio-01d4-stu/Last3Mon/77/data-api/server.py}" \
   docker compose -f infra/compose.team3.yml --env-file infra/.env --profile db up -d --build data-api api db web
