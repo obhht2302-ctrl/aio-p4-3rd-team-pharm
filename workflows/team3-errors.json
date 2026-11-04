@@ -12,7 +12,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 실제/연습 스위치. 기본은 연습이라 Jira를 부르지 않는다.\nreturn [{ json: { mode: 'practice', t0: Date.now() } }];"
+        "jsCode": "// 실제/연습 스위치. 기본은 연습이라 Jira를 부르지 않는다.\nreturn [{ json: { mode: 'practice', api_url: 'http://api:8000', t0: Date.now() } }];"
       },
       "id": "e2-settings",
       "name": "Error settings",
@@ -51,6 +51,35 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [-240, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Error settings').first().json.api_url + '/alerts' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({workflow:$('Error details').first().json.workflow,node:$('Error details').first().json.node,message:$('Error details').first().json.message,execution_id:$('Error details').first().json.execution_id,severity:'critical',reason:'unexpected'}) }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "e4b-screen-alert",
+      "name": "Post alert to screen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-20, 100],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "team3ApiKey0001",
+          "name": "team3ApiKey"
+        }
+      },
       "onError": "continueRegularOutput"
     },
     {
@@ -202,6 +231,17 @@
       ]
     },
     "Send critical alert": {
+      "main": [
+        [
+          {
+            "node": "Post alert to screen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post alert to screen": {
       "main": [
         [
           {
