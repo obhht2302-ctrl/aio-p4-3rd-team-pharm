@@ -124,7 +124,7 @@
 
 1. data-api `POST /tickets` (`key` = `request_id`, 재시도 3회) → 실패하면 data-api `POST /dlq` + `POST /alerts` (`reason: tickets_down`, `severity: high`)
 2. 성공이고 `priority: high`면 data-api `POST /alerts` (`reason: urgent`). **보통 이관은 알림을 보내지 않습니다** (티켓으로 충분, 76일차 "사람이 할 일이 있을 때만")
-3. 덧붙임 (각각 timeout 2초 · 실패 무시 · `extras`에 결과만): FastAPI `POST /tickets` (약사 화면), `mode = real`일 때 `team3-alert` (Slack, 1 · 2에서 알림을 보냈을 때만), `team3-ticket` (Jira, `tickets_down`일 때만)
+3. 덧붙임 (각각 timeout 2초, Jira만 4초 · 재시도 없음 — 지라 요청 생성은 멱등이 아니라 2초 넘겨 재시도하면 같은 건이 두 번 생김(11/4 VM 실측) · 실패 무시 · `extras`에 결과만): FastAPI `POST /tickets` (약사 화면), `mode = real`일 때 `team3-alert` (Slack, 1 · 2에서 알림을 보냈을 때만), `team3-ticket` (Jira, `tickets_down`일 때만)
 4. 응답. 실제/연습 스위치는 `team3-handoff`의 `Handoff settings` 노드 `mode` 한 곳 (기본 `practice`, 시연 때만 `real`)
 
 ### 3.5 회수 흐름 (팩 고유)
