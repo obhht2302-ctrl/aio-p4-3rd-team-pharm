@@ -31,20 +31,25 @@
 
 ```mermaid
 flowchart TD
-  W(["Support webhook"]) --> U["Check user"] --> V{"Valid?"}
-  V -->|아님| R400(["Reject invalid 400"])
-  V --> C{"Cached?"} -->|예| RC(["Send cached"])
-  C --> I{"Blocked?"} -->|공격| B["Blocked result"]
-  I --> T{{"Triage"}} --> P["Type policy"] --> M{"Route by mode"}
+  W(["Support webhook"]) --> SS["Support settings"] --> ST["Start timer"] --> U["Check user"] --> VI["Validate input"] --> V{"Valid?"}
+  V -->|아님| IB["Invalid body"] --> R400(["Reject invalid"])
+  V -->|예| CK["Check cache"] --> C{"Cached?"} -->|예| MD["Mark duplicate"] --> RC(["Send cached"])
+  C -->|아님| IR["Injection rules"] --> I{"Blocked?"} -->|공격| B["Blocked result"]
+  I -->|통과| T{{"Triage"}} --> TF{"Triage failed?"} -->|아님| P["Type policy"] --> M{"Route by mode"}
+  TF -.->|LLM 멈춤| L["LLM down"] -.-> P
   M -->|deny| D["Deny"]
   M -->|clarify| Q["Clarify"]
   M -->|auto · evidence_handoff| S["Search knowledge"] & G["Get record"]
-  S & G --> MG["Merge evidence"] --> WR{{"Writer"}} --> VE{{"Verifier"}} --> CA["Check answer"]
-  M -->|record_status| G2["Get record → Record answer"]
-  M -->|handoff_only| H["Handoff"]
-  CA -->|이관| H
-  T -.->|LLM 멈춤| L["LLM down"] --> H
-  CA & H & D & Q & B & G2 --> F["Output filter"] --> BR["Build result"] --> OUT(["Send result"])
+  M -->|record_status| G
+  M -->|handoff_only| PH["Prepare handoff"]
+  G --> RM{"Record mode?"} -->|record_status| RA["Record answer"]
+  RM -->|그 밖| MG["Merge evidence"]
+  S --> MG --> BC["Build context"] --> E{"Evidence?"} -->|있음| WR{{"Writer"}} --> VE{{"Verifier"}} --> CA["Check answer"] --> NH{"Needs handoff?"}
+  E -->|없음| NE["No evidence"] --> PH
+  NH -->|이관| PH --> H["Handoff"] --> AH["After handoff"]
+  NH -->|답| BR["Build result"]
+  B & D & Q & RA & AH --> BR
+  BR --> F["Output filter"] --> SV["Save cache"] --> RR["Restore result"] --> LG["Log request"] --> RG["Result again"] --> OUT(["Send result"])
 ```
 
 워크플로우 파일:
@@ -72,7 +77,7 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | 분기 | `Route by mode` | 처리 방식 4개 + 권한 없음 · 보완 질문 | `Type policy` 표 | WF-01 · 02 · 05 · 06 · 12 |
 | 분기 | `Build context` → `Evidence?` → `Check answer` | 검색 점수 · 근거 유무 · 금지 문장 | `SCORE_MIN` = 0.37 (영민 실측), `top_k` = 4 | WF-03, T-33 |
-| 병렬 | `Search knowledge` + `Get record` → `Merge evidence` | 근거와 접수 상태를 서로 기다리지 않고 | — (잰 시간: <측정 후>) | WF-12 |
+| 병렬 | `Route by mode` → `Search knowledge` + `Get record` → `Merge evidence` | 근거 검색과 접수 조회는 서로의 결과가 필요 없어 한 노드에서 두 갈래로 나눔 · 수업 n8n(`executionOrder` v1)은 갈래를 하나씩 실행 | — (잰 시간: <측정 후>) | WF-12 |
 | 루프 | `attempt` (요청 사이) | 보완 질문 | 최대 3회 (3회째 이관) | WF-02 · 02b, T-32 · 33 |
 | 외부 호출 | HTTP 재시도 없음 | 본체의 HTTP Request 7개 (`Check user` · `Check cache` · `Search knowledge` · `Get record` · `Handoff` · `Save cache` · `Log request`) | 각 호출은 설정된 timeout 뒤 오류 갈래로 진행. `Get record`의 4초 제한은 전체 6초 응답 목표를 위한 값. 티켓 생성 재시도는 별도 `team3-handoff` 계약 (`00-DESIGN.md` 3.4절) | WF-04 · 11 |
 

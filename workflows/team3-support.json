@@ -553,8 +553,8 @@
         }
       },
       "position": [
-        4840,
-        300
+        4620,
+        520
       ],
       "onError": "continueRegularOutput"
     },
@@ -962,8 +962,8 @@
         "options": {}
       },
       "position": [
-        5060,
-        600
+        4840,
+        520
       ]
     },
     {
@@ -1170,11 +1170,6 @@
     "Search knowledge": {
       "main": [
         [
-          {
-            "node": "Get record",
-            "type": "main",
-            "index": 0
-          },
           {
             "node": "Merge evidence",
             "type": "main",
@@ -1445,11 +1440,21 @@
             "node": "Search knowledge",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Get record",
+            "type": "main",
+            "index": 0
           }
         ],
         [
           {
             "node": "Search knowledge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get record",
             "type": "main",
             "index": 0
           }
