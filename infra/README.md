@@ -24,3 +24,10 @@ curl -s localhost:8000/health
 - 문서 · 데이터를 고치면 `packs.py build` 뒤 `docker compose ... restart data-api` (파일을 그대로 읽어서 보통은 재시작 없이도 반영).
 - 80일차 키트가 나오면 `SAM_DATA_API`를 80판으로 바꾸고, 팀 데이터 파일 이름이 다르면 `compose.team3.yml`의 `volumes`만 고칩니다 (키트 확인).
 - 팀 VM 배포 순서는 `specs/05-lead.md` 4절 (주소 · 비밀번호는 여기에 쓰지 않음).
+
+## 팀 VM (리드)
+
+- 처음 한 번: `~/aio-01d4-stu`(샘 레포, data-api `server.py` · `llm` 장애 스크립트용)와 이 레포를 홈에 받고, `infra/.env`에 팀 키 · `OPENAI_API_KEY` · `TEAM3_ENTRY_CODE` · `CORS_ORIGINS=https://<VM 주소>` · `WEB_BIND=0.0.0.0` · `WEB_PORT=80` · `DATABASE_URL` · `DB_PASSWORD`를 넣고 `bash tools/setup.sh` (Jira · Slack Credential은 리드가 따로 넣음)
+- 배포할 때마다: VM 밖에서 화면을 빌드해 `web/out/`에 넣고 (`NEXT_PUBLIC_API_MODE=real`, `NEXT_PUBLIC_API_BASE=https://<VM 주소>`), VM에서 `bash tools/deploy_vm.sh`
+- 화면은 `https://<VM 주소>/`, n8n은 `:5678`. 화면의 `/api/`는 nginx가 FastAPI로 넘기므로 API 포트는 밖에 열지 않습니다.
+- VM은 **실제 모드**로 올라갑니다 (긴급 · 실패 → Slack, 티켓 API 장애 · 예상 못한 오류 → Jira). 레포 파일은 연습 모드 그대로입니다.

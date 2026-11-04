@@ -105,7 +105,7 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ serviceDeskId: $json.serviceDeskId, requestTypeId: $json.requestTypeId, requestFieldValues: { summary: (($json.title || ('[' + ($json.reason || 'tickets_down') + '] ' + ($json.workflow || 'team3-support'))) + '').replace(/01[016789][-. ]?\\d{3,4}[-. ]?\\d{4}/g, '010-****-****').replace(/[\\w.+-]+@[\\w-]+\\.[\\w.]+/g, '***@***').slice(0, 80), description: ['팀3 업무 도우미 자동 장애 티켓 (연락처 · 손님 정보 없음)', '까닭: ' + ($json.reason || '-'), '우선순위: ' + ($json.priority || $json.severity || '-'), '요청 번호: ' + ($json.request_id || $json.key || '-'), '워크플로우: ' + ($json.workflow || 'team3-support') + ($json.node ? ' › ' + $json.node : ''), '실행 번호: ' + ($json.execution_id || '-')].join('\\n') } }) }}",
         "options": {
-          "timeout": 2000
+          "timeout": 4000
         },
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "jiraSoftwareCloudApi"
@@ -117,9 +117,7 @@
         }
       },
       "onError": "continueErrorOutput",
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 1000
+      "retryOnFail": false
     },
     {
       "parameters": {

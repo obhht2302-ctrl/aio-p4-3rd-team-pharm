@@ -57,6 +57,8 @@
       "parameters": {
         "method": "POST",
         "url": "={{ $('Error settings').first().json.api_url + '/alerts' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({workflow:$('Error details').first().json.workflow,node:$('Error details').first().json.node,message:$('Error details').first().json.message,execution_id:$('Error details').first().json.execution_id,severity:'critical',reason:'unexpected'}) }}",

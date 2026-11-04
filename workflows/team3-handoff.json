@@ -267,6 +267,8 @@
       "parameters": {
         "method": "POST",
         "url": "={{ $('Handoff settings').first().json.api_url + '/alerts' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({workflow:'team3-handoff',node:'Handoff',severity:'high',reason:$('Ticket outcome').first().json.alert_reason,message:'['+$('Ticket outcome').first().json.type+'] '+$('Ticket outcome').first().json.assignee+'에게 이관',ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||'')}) }}",
@@ -337,6 +339,8 @@
       "parameters": {
         "method": "POST",
         "url": "={{ $('Handoff settings').first().json.api_url + '/tickets' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({key:$('Ticket outcome').first().json.request_id,ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||''),title:$('Ticket outcome').first().json.title,requester:$('Ticket outcome').first().json.user,category:$('Ticket outcome').first().json.type,priority:$('Ticket outcome').first().json.priority,product:$('Ticket outcome').first().json.product}) }}",
