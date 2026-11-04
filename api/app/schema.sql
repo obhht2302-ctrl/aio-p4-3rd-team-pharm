@@ -1,4 +1,5 @@
 -- [병훈님이 정함] PostgreSQL 표 초안 — 칸 · 색인 · 기본키는 바꿔도 됨. 연락처 · 질문 원문을 어디까지 남길지 같이 정할 것.
+CREATE SEQUENCE IF NOT EXISTS team3_ticket_seq START 3001;
 CREATE TABLE IF NOT EXISTS requests (
   request_id  text PRIMARY KEY,
   "user"      text NOT NULL,
