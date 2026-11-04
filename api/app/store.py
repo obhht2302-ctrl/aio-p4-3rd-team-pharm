@@ -36,7 +36,12 @@ class MemoryStore:
         key = body["key"]
         if key in self.tickets:
             return self.tickets[key], True
-        ticket = {"ticket_id": body.get("ticket_id") or f"T-{next(self._ids)}", "key": key, "status": "접수됨", "note": "",
+        ticket_id = body.get("ticket_id") or f"T-{next(self._ids)}"
+        # data-api는 다시 켜거나 tickets-reset 하면 T-2001부터 다시 매긴다 → 같은 번호의 지난 회차 티켓 · 안내 기록은 비운다
+        for old_key in [k for k, t in self.tickets.items() if t["ticket_id"] == ticket_id]:
+            del self.tickets[old_key]
+        self.notices = [n for n in self.notices if n["ticket_id"] != ticket_id]
+        ticket = {"ticket_id": ticket_id, "key": key, "status": "접수됨", "note": "",
                   "created_at": now(), **{k: body.get(k, "") for k in ("title", "requester", "category", "priority", "product")}}
         self.tickets[key] = ticket
         return ticket, False
@@ -125,6 +130,10 @@ class PgStore:
         key = body["key"]
         ticket_id = body.get("ticket_id") or None  # n8n이 넘긴 번호가 있으면 그대로 쓴다 (메모리 저장소와 같게)
         with self._db.cursor() as cur:
+            if ticket_id:  # data-api 번호 재사용 (메모리 저장소와 같게): 다른 key가 쓰던 같은 번호는 지난 회차 기록이라 비운다
+                cur.execute("DELETE FROM notices WHERE ticket_id IN (SELECT ticket_id FROM tickets WHERE ticket_id = %s AND key <> %s)",
+                            (ticket_id, key))
+                cur.execute("DELETE FROM tickets WHERE ticket_id = %s AND key <> %s", (ticket_id, key))
             cur.execute(
                 """INSERT INTO tickets (ticket_id, key, title, requester, category, priority, product)
                    VALUES (COALESCE(%s, 'T-' || nextval('team3_ticket_seq')), %s, %s, %s, %s, %s, %s)
