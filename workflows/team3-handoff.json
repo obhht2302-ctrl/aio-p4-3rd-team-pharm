@@ -1,0 +1,966 @@
+{
+  "name": "team3-handoff",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "team3-handoff",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "h1-webhook",
+      "name": "Handoff webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-980, 300],
+      "webhookId": "team3-handoff"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 실제/연습 스위치 한 곳. Slack · Jira만 실제로 부를지 정한다. 손님 문자 · 메일은 어떤 모드에서도 보내지 않는다.\nconst settings = {\n  mode: 'practice',\n  api_url: 'http://api:8000',\n  ticket_timeout: 2000,\n  ticket_tries: 3,\n  ticket_wait: 500,\n  extra_timeout: 2000,\n  t0: Date.now(),\n};\nreturn [{ json: settings }];"
+      },
+      "id": "h2-settings",
+      "name": "Handoff settings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-760, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 본체가 보낸 요청을 정리한다. 제목 · 요약의 전화 · 메일은 티켓 · 알림 · DLQ로 가기 전에 여기서 가린다.\nconst hook = $('Handoff webhook').first().json;\nconst b = hook.body ?? hook;\nconst s = $('Handoff settings').first().json;\nconst mask = (v) => String(v || '')\n  .replace(/01[016789]-?\\d{3,4}-?(\\d{4})/g, (_m, last) => `010-****-${last}`)\n  .replace(/([A-Za-z0-9._%+-])[A-Za-z0-9._%+-]*@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})/g, (_m, a, d) => `${a}***@${d}`);\nconst request_id = String(b.request_id || `handoff-${Date.now()}`);\nconst title = mask(b.title || '').slice(0, 80);\nconst summary = mask(b.summary || '');\nreturn [{ json: {\n  request_id,\n  user: String(b.user || ''),\n  type: String(b.type || 'other'),\n  title,\n  assignee: String(b.assignee || 'owner'),\n  priority: String(b.priority || 'normal'),\n  reason: String(b.reason || 'needs_person'),\n  summary,\n  product: String(b.product || ''),\n  mode: s.mode,\n  api_url: s.api_url,\n  t0: s.t0,\n} }];"
+      },
+      "id": "h3-prepare",
+      "name": "Prepare request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-540, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://data-api:8800/tickets",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({key:$('Prepare request').first().json.request_id,title:$('Prepare request').first().json.title,requester:$('Prepare request').first().json.user,category:$('Prepare request').first().json.type,priority:$('Prepare request').first().json.priority}) }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "h4-ticket",
+      "name": "Create ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-320, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 5xx·timeout만 한 번 더 재시도한다. 401·403은 바로 auth_failed로 보낸다.\nconst raw = $json;\nconst status = raw.statusCode ?? raw.httpCode ?? raw.error?.statusCode ?? raw.error?.httpCode ?? (raw.error ? 500 : 200);\nconst errText = JSON.stringify(raw.error || raw);\nconst auth = status === 401 || status === 403 || /\\b(401|403)\\b/.test(errText);\nconst retry = !auth && (!!raw.error || status >= 500 || status === 429);\nreturn [{ json: { ...raw, retry } }];"
+      },
+      "id": "h4b-retry-if",
+      "name": "Retry needed?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-100, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "h4c-cond",
+              "leftValue": "={{ $json.retry === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "h4b-retry-if-node",
+      "name": "Retry?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [120, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://data-api:8800/tickets",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({key:$('Prepare request').first().json.request_id,title:$('Prepare request').first().json.title,requester:$('Prepare request').first().json.user,category:$('Prepare request').first().json.type,priority:$('Prepare request').first().json.priority}) }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "h4c-retry",
+      "name": "Retry ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [340, 200],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// data-api 응답을 계약 모양으로 바꾼다. 이 노드 하나가 성공 · 실패 · 중복을 모두 정리한다.\nconst s = $('Handoff settings').first().json;\nconst req = $('Prepare request').first().json;\nconst raw = $json;\nconst body = raw.body ?? raw;\nconst status = raw.statusCode ?? raw.httpCode ?? raw.error?.statusCode ?? raw.error?.httpCode ?? (raw.error ? 500 : 200);\nconst errText = JSON.stringify(raw.error || raw);\nconst authFailed = status === 401 || status === 403 || /\\b(401|403)\\b/.test(errText);\nconst ok = (status === 200 || status === 201) && !!body.ticket_id;\nconst reason = ok ? '' : (authFailed ? 'auth_failed' : 'tickets_down');\nconst ticket = ok ? { ticket_id: body.ticket_id, priority: req.priority, duplicate: body.duplicate === true } : null;\nconst alert = ok ? (req.priority === 'high' && body.duplicate !== true) : true;\nreturn [{ json: {\n  ...req,\n  mode: s.mode,\n  t0: s.t0,\n  ticket,\n  reason,\n  dlq: !ok,\n  alert,\n  alert_reason: ok ? 'urgent' : reason,\n  failure: !ok,\n  extras: { screen: 'skipped', slack: 'skipped', jira: 'skipped' },\n} }];"
+      },
+      "id": "h5-outcome",
+      "name": "Ticket outcome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-100, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "h6-cond",
+              "leftValue": "={{ $json.dlq === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "h6-dlq-if",
+      "name": "DLQ needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [120, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// DLQ 항목은 나중에 다시 처리할 수 있게 request_id · 유형 · 이유만 남긴다 (연락처 · 약 이름 + 손님 조합 없음).\nconst j = $json;\nreturn [{ json: { item: { id: j.request_id, type: j.type, priority: j.priority, reason: j.reason, severity: 'high' } } }];"
+      },
+      "id": "h7-dlq-payload",
+      "name": "DLQ payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [340, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://data-api:8800/dlq",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "h7-dlq",
+      "name": "Send DLQ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [560, 200],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// DLQ를 보내지 않는 길도 같은 모양으로 다음 갈래에 넘긴다.\nreturn [{ json: $json }];"
+      },
+      "id": "h8-dlq-skip",
+      "name": "Skip DLQ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [340, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "h9-cond",
+              "leftValue": "={{ $('Ticket outcome').first().json.alert === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "h9-alert-if",
+      "name": "Alert needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [560, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://data-api:8800/alerts",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({workflow:'team3-handoff',node:'Handoff',severity:'high',reason:$('Ticket outcome').first().json.alert_reason,message:'['+$('Ticket outcome').first().json.type+'] '+$('Ticket outcome').first().json.assignee+'에게 이관',ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||'')}) }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "h10-alert",
+      "name": "Send alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [780, 200],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Handoff settings').first().json.api_url + '/alerts' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({workflow:'team3-handoff',node:'Handoff',severity:'high',reason:$('Ticket outcome').first().json.alert_reason,message:'['+$('Ticket outcome').first().json.type+'] '+$('Ticket outcome').first().json.assignee+'에게 이관',ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||'')}) }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "h10b-screen-alert",
+      "name": "Post alert to screen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 100],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "team3ApiKey0001",
+          "name": "team3ApiKey"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 알림을 보내지 않는 길.\nreturn [{ json: $json }];"
+      },
+      "id": "h11-alert-skip",
+      "name": "Skip alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "h12-cond",
+              "leftValue": "={{ $('Ticket outcome').first().json.ticket !== null && $('Ticket outcome').first().json.ticket.duplicate !== true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "h12-screen-if",
+      "name": "Screen needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Handoff settings').first().json.api_url + '/tickets' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({key:$('Ticket outcome').first().json.request_id,ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||''),title:$('Ticket outcome').first().json.title,requester:$('Ticket outcome').first().json.user,category:$('Ticket outcome').first().json.type,priority:$('Ticket outcome').first().json.priority,product:$('Ticket outcome').first().json.product}) }}",
+        "options": {
+          "timeout": 2000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "h12-screen",
+      "name": "Post to screen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1220, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "team3ApiKey0001",
+          "name": "team3ApiKey"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// data-api 티켓이 없으면 화면에도 만들지 않는다.\nreturn [{ json: $('Ticket outcome').first().json }];"
+      },
+      "id": "h12-screen-skip",
+      "name": "Skip screen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1220, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 화면은 덧붙임이라 실패해도 응답을 막지 않는다. extras.screen만 표시한다.\nconst base = $('Ticket outcome').first().json;\nconst raw = $json;\nconst status = raw.statusCode ?? raw.error?.statusCode ?? (raw.error ? 500 : 200);\nreturn [{ json: { ...base, extras: { ...base.extras, screen: (status >= 200 && status < 300) ? 'ok' : 'failed' } } }];"
+      },
+      "id": "h13-screen-done",
+      "name": "Screen done",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1440, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "h14-cond",
+              "leftValue": "={{ $('Handoff settings').first().json.mode === 'real' && $('Ticket outcome').first().json.alert === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "h14-slack-if",
+      "name": "Slack needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Slack에 넘길 값. 연락처 · 약 이름 + 손님 정보는 넣지 않는다.\nconst b = $json;\nreturn [{ json: { ...b, mode: 'real', severity: 'high', reason: b.alert_reason, message: `[${b.type}] ${b.assignee}에게 이관`, ticket_id: (b.ticket || {}).ticket_id || '' } }];"
+      },
+      "id": "h15-slack-req",
+      "name": "Slack request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1660, 200]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "team3Alert000001",
+          "mode": "id"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "h16-slack",
+      "name": "Call Slack",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1880, 200],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Slack 결과만 extras에 적는다. 실패해도 응답은 그대로 간다.\nconst base = $('Slack needed?').first().json;\nconst r = $json || {};\nreturn [{ json: { ...base, extras: { ...base.extras, slack: r.ok === true ? 'ok' : 'failed' } } }];"
+      },
+      "id": "h17-slack-done",
+      "name": "Slack done",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2100, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Slack을 부르지 않는 길.\nreturn [{ json: $('Slack needed?').first().json }];"
+      },
+      "id": "h18-slack-skip",
+      "name": "Skip Slack",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1660, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "h19-cond",
+              "leftValue": "={{ $('Handoff settings').first().json.mode === 'real' && $('Ticket outcome').first().json.reason === 'tickets_down' }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "h19-jira-if",
+      "name": "Jira needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2320, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Jira는 시스템 장애 티켓만. 개인정보 없이 요약한다.\nconst b = $json;\nreturn [{ json: { ...b, mode: 'real', severity: 'critical', summary: `[${b.type}] 이관 실패 (${b.reason})`, reason: b.reason, ticket_id: '' } }];"
+      },
+      "id": "h20-jira-req",
+      "name": "Jira request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2540, 200]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "team3Ticket00001",
+          "mode": "id"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "h21-jira",
+      "name": "Call Jira",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [2760, 200],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Jira 결과만 extras에 적는다.\nconst base = $('Jira needed?').first().json;\nconst r = $json || {};\nreturn [{ json: { ...base, extras: { ...base.extras, jira: r.ok === true ? 'ok' : 'failed' } } }];"
+      },
+      "id": "h22-jira-done",
+      "name": "Jira done",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2980, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Jira를 부르지 않는 길.\nreturn [{ json: $('Jira needed?').first().json }];"
+      },
+      "id": "h23-jira-skip",
+      "name": "Skip Jira",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2540, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 계약 응답 조립. 늘 HTTP 200.\nconst j = $json;\nreturn [{ json: {\n  ticket: j.ticket || null,\n  reason: j.reason || '',\n  dlq: j.dlq === true,\n  alert: j.alert === true,\n  extras: j.extras || { screen: 'skipped', slack: 'skipped', jira: 'skipped' },\n  handoff_ms: Date.now() - (j.t0 || Date.now()),\n} }];"
+      },
+      "id": "h24-build",
+      "name": "Build response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3200, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "h25-send",
+      "name": "Send response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3420, 300]
+    }
+  ],
+  "connections": {
+    "Handoff webhook": {
+      "main": [
+        [
+          {
+            "node": "Handoff settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handoff settings": {
+      "main": [
+        [
+          {
+            "node": "Prepare request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare request": {
+      "main": [
+        [
+          {
+            "node": "Create ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create ticket": {
+      "main": [
+        [
+          {
+            "node": "Retry needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry needed?": {
+      "main": [
+        [
+          {
+            "node": "Retry?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry?": {
+      "main": [
+        [
+          {
+            "node": "Retry ticket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ticket outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry ticket": {
+      "main": [
+        [
+          {
+            "node": "Ticket outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ticket outcome": {
+      "main": [
+        [
+          {
+            "node": "DLQ needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DLQ needed?": {
+      "main": [
+        [
+          {
+            "node": "DLQ payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip DLQ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DLQ payload": {
+      "main": [
+        [
+          {
+            "node": "Send DLQ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send DLQ": {
+      "main": [
+        [
+          {
+            "node": "Alert needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip DLQ": {
+      "main": [
+        [
+          {
+            "node": "Alert needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert needed?": {
+      "main": [
+        [
+          {
+            "node": "Send alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send alert": {
+      "main": [
+        [
+          {
+            "node": "Post alert to screen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post alert to screen": {
+      "main": [
+        [
+          {
+            "node": "Screen needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip alert": {
+      "main": [
+        [
+          {
+            "node": "Screen needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Screen needed?": {
+      "main": [
+        [
+          {
+            "node": "Post to screen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip screen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to screen": {
+      "main": [
+        [
+          {
+            "node": "Screen done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Screen done": {
+      "main": [
+        [
+          {
+            "node": "Slack needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip screen": {
+      "main": [
+        [
+          {
+            "node": "Slack needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack needed?": {
+      "main": [
+        [
+          {
+            "node": "Slack request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack request": {
+      "main": [
+        [
+          {
+            "node": "Call Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Slack": {
+      "main": [
+        [
+          {
+            "node": "Slack done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack done": {
+      "main": [
+        [
+          {
+            "node": "Jira needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Slack": {
+      "main": [
+        [
+          {
+            "node": "Jira needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira needed?": {
+      "main": [
+        [
+          {
+            "node": "Jira request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Jira",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira request": {
+      "main": [
+        [
+          {
+            "node": "Call Jira",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Jira": {
+      "main": [
+        [
+          {
+            "node": "Jira done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira done": {
+      "main": [
+        [
+          {
+            "node": "Build response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Jira": {
+      "main": [
+        [
+          {
+            "node": "Build response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build response": {
+      "main": [
+        [
+          {
+            "node": "Send response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "team3Errors00001"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3f0c2a1e-0000-4000-8000-000000000001",
+  "active": false,
+  "tags": []
+}

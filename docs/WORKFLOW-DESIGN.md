@@ -53,8 +53,8 @@ flowchart TD
 | --- | --- | --- | --- |
 | `team3-support.json` | `POST /webhook/team3-support` | 다영 | 47 |
 | `team3-index.json` · `team3-search.json` | `team3-index` · `team3-search` | 영민 | 15 · 13 |
-| `team3-handoff.json` · `team3-errors.json` | `team3-handoff` · Error Trigger (`team3Errors00001`) | 병훈 | <측정 후> |
-| `team3-ticket.json` · `team3-alert.json` | Execute Workflow (`team3Ticket00001` · `team3Alert000001`) | 태웅 | <측정 후> |
+| `team3-handoff.json` · `team3-errors.json` | `team3-handoff` · Error Trigger (`team3Errors00001`) | 병훈 | 32 · 12 |
+| `team3-ticket.json` · `team3-alert.json` | Execute Workflow (`team3Ticket00001` · `team3Alert000001`) | 태웅 | 7 · 7 |
 
 ## 4. 에이전트 역할 · 분기 · 병렬 · 루프
 
@@ -81,8 +81,13 @@ flowchart TD
 | 노드 | 연동 대상 (연습용 → 실제 운영) | 인증 | 입력 | 출력 | 오류 처리 |
 | --- | --- | --- | --- | --- | --- |
 | `Support webhook` | 팀 Webhook → 웹 화면 · Slack Trigger | Header Auth (`team3WebhookKey`) → SSO · Slack 서명 | 계약 요청 | — | 401 (n8n) |
-| `Create ticket` | data-api `POST /tickets` → (약사 이관은 우리 화면, 장애만 Jira) | `X-Api-Key` → Jira API Token | `{key, title, requester, category, priority}` | `{ticket_id, duplicate}` | <측정 후> 재시도 → DLQ + 알림 |
-| `Alert` | data-api `POST /alerts` → Slack `#support-alerts` | `X-Api-Key` → Slack Bot | `{workflow, severity, reason, message}` | `{stored}` | 실패 무시 (덧붙임) |
+| `Create ticket` | data-api `POST /tickets` → (약사 이관은 우리 화면, 장애만 Jira) | 77판은 키 없음 → 80판은 `dataApiKey` (`X-Api-Key`) | `{key, title, requester, category, priority}` | `{ticket_id, duplicate}` | 1차 실패 뒤 5xx·timeout·429만 2회 더 재시도 (2초 timeout · 500ms 간격, 최악 7초 < 본체 8초) → DLQ + 알림. 401·403은 재시도 없이 `auth_failed` |
+| `Send DLQ` | data-api `POST /dlq` | 위와 같음 | `{item:{id, type, priority, reason, severity}}` | `{ok}` | 실패 무시, `dlq: true` |
+| `Send alert` | data-api `POST /alerts` → Slack `#support-alerts` | 위와 같음 | `{workflow, severity, reason, message}` | `{stored}` | 실패 무시, `alert` 플래그만 (중복 티켓은 알림 없음) |
+| `Post alert to screen` | FastAPI `POST /alerts` (약사 화면 알림) | `team3ApiKey` (`X-Api-Key`) | data-api와 같은 알림 본문 | `{stored, count}` | 2초 timeout, 실패 무시 (data-api 알림은 그대로) |
+| `Post to screen` | FastAPI `POST /tickets` (약사 화면, data-api 티켓이 있을 때만) | `team3ApiKey` (`X-Api-Key`) | data-api와 같은 본문 + `ticket_id` · `product` | 201 / 200 | 2초 timeout, 실패 무시 → `extras.screen: "failed"` |
+| `Call Slack` | `team3-alert` (`team3Alert000001`) → Slack | Slack Bot (`slackAio3Bot0001`) | `{mode, severity, reason, message}` | `{ok, mode, error}` | 실패 무시 → `extras.slack: "failed"` |
+| `Call Jira` | `team3-ticket` (`team3Ticket00001`) → Jira | Jira Cloud (`jiraAio3Cloud001`) | `{mode, summary, reason}` | `{ok, mode, error}` | 실패 무시 → `extras.jira: "failed"` |
 | `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | `X-Api-Key` → 사내 API | 번호 · 사용자 | 접수 건 / 403 | timeout 4초, 재시도 없음 → 이관 (`tickets_slow`) |
 | `Check user` | data-api `GET /employees/<user>` → 약국 계정 · SSO | `X-Api-Key` | 이름 | `role` · `access_levels` | 404 → 400 `unknown_user` |
 
@@ -96,21 +101,27 @@ flowchart TD
 | `Type policy` → `Search knowledge` | `query`, `access_levels` | `top_k`, `type` | 역할 → 메모리 키 | `search.json` `request` |
 | `Search knowledge` → `Merge evidence` | `evidence[]` | `search_ms` | `SCORE_MIN` 미만 · 중복 제거 | `search.json` `response` |
 | `Check answer` → `Handoff` | `request_id`, `user`, `type`, `title`, `assignee`, `priority`, `reason` | `summary`, `product` | 질문 요약 80자, 연락처 가림 | `handoff.json` `request` |
-| `Handoff` → `Build result` | `ticket`, `reason`, `dlq`, `alert` | `extras` | — | `handoff.json` `response_ok` |
+| `Handoff` → `Build response` | `ticket`, `reason`, `dlq`, `alert` | `extras` | — | `handoff.json` `response_ok` |
+| `Handoff` → data-api `/dlq` | `item.id`(= `request_id`), `item.type`, `item.priority`, `item.reason`, `item.severity` | — | 연락처 · 약 이름 + 손님 조합은 넣지 않음 | `handoff.json` `response_tickets_down` |
+| `Handoff` → data-api `/alerts` | `workflow`, `node`, `severity`, `reason`, `message` | `ticket_id` | 메시지는 유형 · 담당자만 (연락처 없음) | `handoff.json` `response_ok` |
+| `Handoff` · `Error Trigger` → FastAPI `/alerts` | data-api와 같은 알림 본문 | — | 화면 알림용 덧붙임, 실패 무시 | `api.json` `POST /alerts` |
+| `Error Trigger` → `/alerts` · `/dlq` | `workflow`, `node`, `message`(앞 200자), `execution_id`, `severity:"critical"`, `reason:"unexpected"` | — | 메시지 연락처 가림 | — |
 
 ## 7. 오류 처리
 
 | 상황 | 알아채는 노드 | 처리 | 사용자 응답 | 기록 | 확인한 시나리오 |
 | --- | --- | --- | --- | --- | --- |
-| 인증 실패 | `Support webhook` · HTTP 401 | 재시도 없이 중단 + 알림 | 401 / 이관 안내 | 알림 `auth_failed` | 팀 |
-| 호출 한도 (429) | HTTP 상태 | `Retry-After` 기다림 <측정 후> | 이관 안내 | 재시도 수 | 팀 |
+| 인증 실패 | `Create ticket` · HTTP 401/403 | 재시도 없이 DLQ + 알림 (`reason: auth_failed`) | 이관 안내 | DLQ · 알림 | 팀 |
+| 호출 한도 (429) | `Create ticket` HTTP 상태 | 5xx·timeout·429만 1+2회 재시도 (2초 timeout · 500ms 간격) 뒤 DLQ + 알림 | 이관 안내 | 재시도 수 · DLQ | 팀 |
 | 검색 결과 없음 | `Evidence?` | 이관 `no_evidence` | 담당자 연결 안내 | `reason` | WF-03 |
-| 외부 API 장애 | `Create ticket` | 재시도 → DLQ + 알림 | 200, `ticket: null` | DLQ · 알림 | WF-04 |
-| 중복 요청 | `Cached?` · 티켓 `key` | 저장된 결과 | 같은 답 · `duplicate` | — | WF-09 |
+| 외부 API 장애 (5xx · timeout) | `Create ticket` | 1+2회 재시도 → DLQ + 알림 | 200, `ticket: null`, `dlq: true` | DLQ · 알림 | WF-04 |
+| 중복 요청 | `Cached?` · `Create ticket`의 `key` | 저장된 결과 / 기존 티켓, `duplicate: true` | 같은 답 | — | WF-09 |
 | LLM 멈춤 | Agent 오류 출력 → `LLM down` | 이관 (자동 답변 없음) | 이관 안내 | `llm_down` | WF-10 |
-| 접수 조회 느림 | `Get record` timeout | 티켓 없이 바로 답 | 6초 안 | `tickets_slow` | WF-11 |
+| 접수 조회 느림 | `Get record` timeout 4초 | 티켓 없이 바로 답 | 6초 안 | `tickets_slow` | WF-11 |
+| 화면 · Slack · Jira 실패 | `Post to screen` · `Post alert to screen` · `Call Slack` · `Call Jira` | 실패 무시, `extras`에 `failed`만 (알림 화면은 data-api 기록 유지) | 정상 응답 | `extras` · data-api | WF-04 · 12 |
+| 예상 못 한 오류 | Error Trigger (`team3Errors00001`) | `/alerts` critical + `/dlq` (+ real이면 Jira) | — | 알림 · DLQ | 팀 |
 
-Error Workflow: `team3-errors` (`team3Errors00001`, 게시 여부 <측정 후>, 모든 워크플로우 `settings.errorWorkflow`).
+Error Workflow: `team3-errors` (`team3Errors00001`) — push·게시 뒤 웹훅 500에서 2~3초 안에 실행되는지 확인 (`flow.py ops`). 모든 워크플로우 `settings.errorWorkflow`에 연결.
 
 ## 8. 64~79일차에서 가져온 것
 

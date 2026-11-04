@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import itertools
 import time
+from pathlib import Path
 
 
 def now() -> str:
@@ -68,13 +69,159 @@ class MemoryStore:
         self.notices.extend({**r, "at": now()} for r in rows)
 
 
-class PgStore(MemoryStore):
-    """[병훈님이 정함] PostgreSQL 저장소. schema.sql 초안을 보고 같은 메서드를 구현합니다."""
+class PgStore:
+    """PostgreSQL 저장소. `DATABASE_URL`이 있을 때만 쓰고, 없으면 MemoryStore.
+
+    표는 `schema.sql`이 기준이다. 메모리 저장소와 같은 메서드 이름 · 반환 모양을 유지한다.
+    """
 
     name = "postgres"
 
     def __init__(self, dsn: str) -> None:
-        raise NotImplementedError("PgStore는 아직 없어요. DATABASE_URL을 비우면 메모리 저장소로 돌아요 (specs/03-backend.md 3절).")
+        import psycopg
+        from psycopg.rows import dict_row
+
+        self._db = psycopg.connect(dsn, autocommit=True, row_factory=dict_row)
+        schema = (Path(__file__).with_name("schema.sql")).read_text(encoding="utf-8")
+        with self._db.cursor() as cur:
+            cur.execute(schema)
+
+    # requests
+    def add_request(self, item: dict) -> dict:
+        with self._db.cursor() as cur:
+            cur.execute(
+                """INSERT INTO requests (request_id, "user", question, route, ticket_id)
+                   VALUES (%s, %s, %s, %s, %s)
+                   ON CONFLICT (request_id) DO UPDATE
+                     SET route = EXCLUDED.route, ticket_id = EXCLUDED.ticket_id
+                   RETURNING request_id, "user", question, route, ticket_id, created_at""",
+                (item["request_id"], item["user"], item["question"], item.get("route"),
+                 (item.get("ticket") or {}).get("ticket_id")),
+            )
+            return self._request_row(cur.fetchone())
+
+    def my_requests(self, user: str) -> list[dict]:
+        with self._db.cursor() as cur:
+            cur.execute(
+                """SELECT request_id, "user", question, route, ticket_id, created_at
+                   FROM requests WHERE "user" = %s ORDER BY created_at DESC""",
+                (user,),
+            )
+            return [self._request_row(row) for row in cur.fetchall()]
+
+    @staticmethod
+    def _request_row(row: dict) -> dict:
+        row = dict(row)
+        row["created_at"] = row["created_at"].isoformat()
+        if row.get("ticket_id"):
+            row["ticket"] = {"ticket_id": row.pop("ticket_id")}
+        else:
+            row.pop("ticket_id", None)
+            row["ticket"] = None
+        return row
+
+    # tickets (key 멱등)
+    def upsert_ticket(self, body: dict) -> tuple[dict, bool]:
+        key = body["key"]
+        ticket_id = body.get("ticket_id") or None  # n8n이 넘긴 번호가 있으면 그대로 쓴다 (메모리 저장소와 같게)
+        with self._db.cursor() as cur:
+            cur.execute(
+                """INSERT INTO tickets (ticket_id, key, title, requester, category, priority, product)
+                   VALUES (COALESCE(%s, 'T-' || nextval('team3_ticket_seq')), %s, %s, %s, %s, %s, %s)
+                   ON CONFLICT (key) DO NOTHING
+                   RETURNING *""",
+                (ticket_id, key, body.get("title", ""), body.get("requester", ""), body.get("category", ""),
+                 body.get("priority", "normal"), body.get("product", "")),
+            )
+            inserted = cur.fetchone()
+            if inserted:
+                return self._ticket_row(inserted), False
+            cur.execute("SELECT * FROM tickets WHERE key = %s", (key,))
+            return self._ticket_row(cur.fetchone()), True
+
+    @staticmethod
+    def _ticket_row(row: dict) -> dict:
+        row = dict(row)
+        row["created_at"] = row["created_at"].isoformat()
+        return row
+
+    def list_tickets(self, status: str | None = None) -> list[dict]:
+        with self._db.cursor() as cur:
+            if status:
+                cur.execute("SELECT * FROM tickets WHERE status = %s ORDER BY (priority <> 'high'), created_at", (status,))
+            else:
+                cur.execute("SELECT * FROM tickets ORDER BY (priority <> 'high'), created_at")
+            return [self._ticket_row(row) for row in cur.fetchall()]
+
+    def get_ticket(self, ticket_id: str) -> dict | None:
+        with self._db.cursor() as cur:
+            cur.execute("SELECT * FROM tickets WHERE ticket_id = %s", (ticket_id,))
+            row = cur.fetchone()
+            return self._ticket_row(row) if row else None
+
+    def update_ticket(self, ticket_id: str, fields: dict) -> dict | None:
+        allowed = {k: v for k, v in fields.items() if k in ("status", "note") and v is not None}
+        if not allowed:
+            return self.get_ticket(ticket_id)
+        sets = ", ".join(f"{k} = %s" for k in allowed)
+        with self._db.cursor() as cur:
+            cur.execute(f"UPDATE tickets SET {sets} WHERE ticket_id = %s RETURNING *",
+                        (*allowed.values(), ticket_id))
+            row = cur.fetchone()
+            return self._ticket_row(row) if row else None
+
+    # alerts · notices
+    def add_alert(self, body: dict) -> int:
+        with self._db.cursor() as cur:
+            cur.execute(
+                """INSERT INTO alerts (workflow, node, severity, reason, message, ticket_id)
+                   VALUES (%s, %s, %s, %s, %s, %s)""",
+                (body.get("workflow"), body.get("node"), body.get("severity"), body.get("reason"),
+                 body.get("message"), body.get("ticket_id")),
+            )
+            cur.execute("SELECT count(*) AS count FROM alerts")
+            return int(cur.fetchone()["count"])
+
+    def list_alerts(self) -> list[dict]:
+        with self._db.cursor() as cur:
+            cur.execute("SELECT * FROM alerts ORDER BY id DESC")
+            rows = []
+            for row in cur.fetchall():
+                row = dict(row)
+                row["at"] = row["at"].isoformat()
+                rows.append(row)
+            return rows
+
+    def notices_for(self, ticket_id: str) -> list[dict]:
+        with self._db.cursor() as cur:
+            cur.execute(
+                """SELECT ticket_id, customer_id, phone_masked AS phone, message, status, at
+                   FROM notices WHERE ticket_id = %s ORDER BY id""",
+                (ticket_id,),
+            )
+            rows = []
+            for row in cur.fetchall():
+                row = dict(row)
+                row["at"] = row["at"].isoformat()
+                rows.append(row)
+            return rows
+
+    def add_notices(self, rows: list[dict]) -> None:
+        with self._db.cursor() as cur:
+            for row in rows:
+                cur.execute(
+                    """INSERT INTO notices (ticket_id, customer_id, phone_masked, message, status)
+                       VALUES (%s, %s, %s, %s, %s)
+                       ON CONFLICT (ticket_id, customer_id) DO NOTHING""",
+                    (row["ticket_id"], row["customer_id"], row.get("phone", ""), row.get("message", ""),
+                     row.get("status", "practice_logged")),
+                )
+
+    def reset_for_tests(self) -> None:
+        """시험 사이에만 쓰는 초기화. 운영 코드에서는 호출하지 않는다."""
+        with self._db.cursor() as cur:
+            cur.execute("TRUNCATE requests, notices, alerts, tickets RESTART IDENTITY CASCADE")
+            cur.execute("ALTER SEQUENCE team3_ticket_seq RESTART WITH 3001")
 
 
 def make_store(dsn: str):
