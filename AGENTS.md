@@ -6,8 +6,8 @@ CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 �
 
 1. 요청과 그 역할의 `specs/0N-*.md`를 읽고, **입력 · 노드 순서 · 결과 모양**을 3~5줄로 먼저 보여 준다. 실패가 있는 요청이면 "어떤 실패가 어디로 가는지" 표를 같이 보여 준다.
 2. 명세가 가리킨 파일만 고친다. **새 파일은 명세나 요청에 있을 때만.** 다른 역할의 파일은 읽기만 한다 (`00-DESIGN.md` 8절).
-3. 워크플로우면 `uv run <샘 키트>/tools/flow.py check workflows/<파일>.json` → 오류 0까지. 코드면 그 폴더의 시험 명령 (`api/`: `python3 -m pytest -q`).
-   - 예외 하나: 77 · 78판 `check`는 수업 OpenAI(`openAiCourse0001`) 말고 다른 Credential(`team3WebhookKey` · `team3ApiKey` · `dataApiKey` · Jira · Slack)에 `must use a course id` 오류를 낸다. **이 오류만은 그대로 두고 Credential id를 바꾸지 않는다** (80판에서 확인).
+3. 워크플로우면 레포 뿌리에서 `uv run tools/flow.py check workflows/<파일>.json` → 오류 0까지. 코드면 그 폴더의 시험 명령 (`api/`: `python3 -m pytest -q`).
+   - `tools/flow.py`는 샘 77판 복사본에 팀 Credential(`team3WebhookKey` · `team3ApiKey` · Jira · Slack)만 허용으로 더한 3팀판이다. 샘 키트 폴더의 `flow.py`로 돌려 `must use a course id` 오류가 나도 **Credential id를 바꾸지 않는다.**
 4. 한국어로 보고: 바꾼 노드 · 파일, check · 시험 결과, 사람이 실행할 `push` · `test` 명령.
 5. push · test는 사람이 한다 (시키면 직접 해도 됨). 같은 곳을 3번 고쳐도 실패하면 멈추고 다른 방법을 제안한다.
 
@@ -21,7 +21,7 @@ CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 �
 | 팀 웹훅 인증 | Header Auth Credential `team3WebhookKey` (머리글 `X-Team-Key`) |
 | data-api 나가는 호출 | Credential `dataApiKey` (`X-Api-Key`, 80일차 판에서 요구 — 키트 확인) |
 | FastAPI 부르는 호출 | Credential `team3ApiKey` (`X-Api-Key`). 팀 Credential은 `bash tools/setup.sh`가 `infra/.env`에서 등록 |
-| 도구 | 샘 `tools/flow.py` (check · push · call · test · bench · fault · llm · ops · doctor). **push는 n8n을 재시작**하므로 push 뒤 `team3-index`를 다시 부른다 |
+| 도구 | 레포 `tools/flow.py` = 샘 77판 + 팀 Credential 허용 (check · push · call · test · bench · fault · llm · ops · doctor, 보고서는 레포 `runs/`). **push는 n8n을 재시작**하므로 push 뒤 `team3-index`를 다시 부른다 |
 | 팩 도구 | `python3 tools/packs.py build` → `knowledge/` · `data/` · `cases/team.json` · `config/type-policy.json` 생성, `check`로 샘 기준 확인 |
 
 ## 3. 계약

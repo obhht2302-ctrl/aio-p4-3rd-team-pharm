@@ -242,7 +242,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | 조합 C | `api/` FastAPI (:8000, 기본 메모리 저장소, `DATABASE_URL`이면 PostgreSQL), `web/` Next.js(React) 정적 내보내기 → nginx (:3000). 빌드는 VM 밖에서 |
 | 화면 3개 (한 앱) | `/` 질문하기 (직원 · 환자 공용, 로그인 대신 사용자 선택 + 입장 코드, 환자에겐 어르신 약 질문 예시 버튼) · `/my` 내 문의 (내 질문 · 이관 건 상태) · `/admin` 약사 · 약국장 (이관 티켓 처리, 회수 공표 알림 → 약사 "손님 안내 보내기" 승인 → 연습용 기록만). 선택한 사용자의 `role`로 `/admin`을 막고 API도 한 번 더 막음 |
 | API | 샘 덱 6개 `POST /api/ask` · `GET /api/my-requests` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /tickets` · `POST /alerts` + 우리 5개 `GET /api/types` · `GET /api/users` (사용자 고르기, 연락처 없음) · `GET /stock/{name}` (품절 팩 자리) · `GET /api/admin/alerts` (회수 공표 · 긴급 알림 목록) · `POST /api/admin/tickets/{id}/recall-notice` (약사 승인 → 손님 안내 연습 기록) |
-| 도구 | 샘 `flow.py` (77판: `range` 판정 있음, push 때 n8n 재시작 → 재색인 필요) |
+| 도구 | 레포 `tools/flow.py` (샘 77판 복사 + 팀 Credential 허용, `range` 판정 있음, push 때 n8n 재시작 → 재색인 필요) |
 
 **키트 확인 (11/5 1교시, 리드)**: ① 80판 data-api가 팀 `data/`를 읽는 방법과 파일 이름 (`users.json`? `employees.json`?) ② `X-Api-Key` 요구 경로 ③ `/logs` vs `/audit` ④ 80판 `flow.py`의 `FLOW_WEBHOOK_KEY` · `range` · push 재시작 ⑤ 키트 `cases/common.json` 판정 칸 (WF-05 · 07 · 10 · 12의 키) ⑥ 400 `codes` 이름 ⑦ VM에 data-api를 어떻게 올리나 ⑧ 저장소 위치 (GitHub 비공개 그대로 되나).
 

@@ -34,8 +34,8 @@ cd ~/aio-p4-3rd-team-pharm && bash tools/setup.sh
 # 5) 확인 — n8n 화면의 Credentials에 team3WebhookKey · team3ApiKey가 보이고, 아래 명령에서 우리 문서 10개가 나오면 끝
 curl -s localhost:8800/docs | head -c 300
 
-# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
-cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+# 6) flow.py는 레포의 tools/flow.py(샘 77판 + 팀 Credential 허용)를 레포 폴더에서 실행
+cd ~/aio-p4-3rd-team-pharm && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
@@ -68,7 +68,7 @@ NEXT_PUBLIC_API_MODE=mock npm run dev    # contracts/examples/api.json 가짜 �
 cd ~/aio-p4-3rd-team-pharm/api && TEAM3_ENTRY_CODE=dev N8N_WEBHOOK_URL=http://localhost:5678/webhook/team3-support-stub uv run --python 3.12 --with fastapi --with uvicorn --with httpx uvicorn app.main:app --port 8000
 cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE=http://localhost:8000 npm run dev
 ```
-- 가짜 본체를 쓰려면 먼저 `cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/stubs/team3-support-stub.json`. 진짜 본체가 오면 `N8N_WEBHOOK_URL`의 `-stub`만 뺍니다.
+- 가짜 본체를 쓰려면 먼저 `cd ~/aio-p4-3rd-team-pharm && uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/stubs/team3-support-stub.json`. 진짜 본체가 오면 `N8N_WEBHOOK_URL`의 `-stub`만 뺍니다.
 
 ### 가짜 먼저, 준비되면 바꿔 끼우기
 

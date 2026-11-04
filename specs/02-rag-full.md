@@ -50,8 +50,8 @@ cd ~/aio-p4-3rd-team-pharm && bash tools/setup.sh
 # 5) 확인 — n8n 화면의 Credentials에 team3WebhookKey · team3ApiKey가 보이고, 아래 명령에서 우리 문서 10개가 나오면 끝
 curl -s localhost:8800/docs | head -c 300
 
-# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
-cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+# 6) flow.py는 레포의 tools/flow.py(샘 77판 + 팀 Credential 허용)를 레포 폴더에서 실행
+cd ~/aio-p4-3rd-team-pharm && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
@@ -78,7 +78,7 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 ### 혼자 끝까지 확인하는 법
 
 ```bash
-cd ~/aio-01d4-stu/Last3Mon/77
+cd ~/aio-p4-3rd-team-pharm
 uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/team3-index.json ~/aio-p4-3rd-team-pharm/workflows/team3-search.json
 uv run tools/flow.py call team3-index ~/aio-p4-3rd-team-pharm/requests/empty.json                     # 색인 (push 뒤마다)
 uv run tools/flow.py call team3-search ~/aio-p4-3rd-team-pharm/requests/search-closing.json           # 본체 없이 검색만. 1등 closing-checklist
