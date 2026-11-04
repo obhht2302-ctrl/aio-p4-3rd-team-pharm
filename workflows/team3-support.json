@@ -21,7 +21,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "parameters": {
-        "jsCode": "const settings = { SEARCH: 'real', HANDOFF: 'stub', SCORE_MIN: 0.37 };\nreturn [{ json: settings }];"
+        "jsCode": "const settings = { SEARCH: 'real', HANDOFF: 'real', SCORE_MIN: 0.37 };\nreturn [{ json: settings }];"
       },
       "position": [
         220,
