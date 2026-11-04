@@ -34,8 +34,8 @@ cd ~/aio-p4-3rd-team-pharm && bash tools/setup.sh
 # 5) 확인 — n8n 화면의 Credentials에 team3WebhookKey · team3ApiKey가 보이고, 아래 명령에서 우리 문서 10개가 나오면 끝
 curl -s localhost:8800/docs | head -c 300
 
-# 6) flow.py는 샘 키트 폴더에서 실행하고, 파일은 레포 경로로 넘김
-cd ~/aio-01d4-stu/Last3Mon/77 && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
+# 6) flow.py는 레포의 tools/flow.py(샘 77판 + 팀 Credential 허용)를 레포 폴더에서 실행
+cd ~/aio-p4-3rd-team-pharm && uv run tools/flow.py check ~/aio-p4-3rd-team-pharm/workflows/team3-support.json
 
 # 7) 내 작업은 내 브랜치에서 하고 PR로 올리기 (main에 바로 push하지 않음, 합치는 건 리드)
 cd ~/aio-p4-3rd-team-pharm && git switch main && git pull
@@ -65,7 +65,7 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 # 시나리오 파일 열어 보기: 공통 14유형 (20케이스) · 팀 시나리오 (11케이스, packs/*/cases.json에서 빌드)
 less ~/aio-p4-3rd-team-pharm/cases/common.json ~/aio-p4-3rd-team-pharm/cases/team.json
 # 가짜 본체로 시험 실행 · 보고서 저장 · 결과서 표 채우기 연습 (가짜 결과라 결과서 숫자로는 쓰지 않음)
-cd ~/aio-01d4-stu/Last3Mon/77
+cd ~/aio-p4-3rd-team-pharm
 uv run tools/flow.py push ~/aio-p4-3rd-team-pharm/workflows/stubs/team3-support-stub.json
 uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/common.json --webhook team3-support-stub -v   # 보고서는 키트의 runs/에 생김 → 레포 runs/로 복사
 # 다영 골격이 올라오면 웹훅 이름만 바꿈 (골격만 있어도 WF-08 차단 · WF-13 400 케이스는 확인됨)
@@ -109,7 +109,7 @@ uv run tools/flow.py llm down              # n8n의 OpenAI Credential을 일부�
 ```bash
 tools/run_tests.sh common          # 공통 한 번 (골격이 올라왔을 때 출발점)
 tools/run_tests.sh all 3           # 공통 + 팀 3회 반복 (11/5 VM 측정)
-KIT=~/aio-01d4-stu/Last3Mon/80 tools/run_tests.sh all   # 80일차 키트가 나오면 (기본은 Last3Mon/77)
+tools/run_tests.sh all 3   # 공통 + 팀 3회 반복 (보고서는 runs/)
 ```
 
 - 순서: 장애 스위치 되돌림(`fault all ok` · `llm up`) → `call team3-index` (push 뒤 빈 색인 방지) → `flow.py test` → 이번 실행에서 생긴 `common-*.json` · `team-*.json` 보고서만 레포 `runs/`로 복사.
