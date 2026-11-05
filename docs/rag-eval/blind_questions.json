@@ -1,0 +1,155 @@
+{
+ "_note": "블라인드 질문 25개 (2026-11-05): 맥락 없는 에이전트가 문서를 보지 않고 쓴 질문을 그대로 복사했다. 정답 문서 기준은 9648 명세 2절과 같다: Q01~05 = recall-first-response 또는 recall-customer-guide, Q06~10 = closing-checklist 또는 closing-cash-mismatch, Q11·Q13·Q14 = senior-cold-sleep-stomach, Q12·Q15 = senior-pain-joint, Q16~21 = senior-safety-signals, Q22~25 = 문서 밖(정답 없음, hit 집계 제외). 권한은 모두 all.",
+ "questions": [
+  {
+   "id": "Q01",
+   "category": "recall_staff",
+   "role": "staff",
+   "question": "회수 공지 방금 떴는데 뭐부터 해야돼요?"
+  },
+  {
+   "id": "Q02",
+   "category": "recall_staff",
+   "role": "staff",
+   "question": "판매중지 뜬 제품 매대에 아직 남아있는데 그냥 빼서 창고에 두면 됨?"
+  },
+  {
+   "id": "Q03",
+   "category": "recall_staff",
+   "role": "staff",
+   "question": "그 회수된 시럽 이미 사가신 손님한테는 연락 해야하나요 어떻게 말해야됨"
+  },
+  {
+   "id": "Q04",
+   "category": "recall_staff",
+   "role": "staff",
+   "question": "회수 품목 재고 세다가 로트번호 다른거 섞여있는데 이것도 다 빼요?"
+  },
+  {
+   "id": "Q05",
+   "category": "recall_staff",
+   "role": "staff",
+   "question": "약사님 지금 상담중이신데 회수건 바로 말씀드려야 하는거야 아님 끝나고?"
+  },
+  {
+   "id": "Q06",
+   "category": "closing_staff",
+   "role": "staff",
+   "question": "오늘 저 혼자 마감인데 문 닫기 전에 뭐뭐 해야되는지 순서 좀"
+  },
+  {
+   "id": "Q07",
+   "category": "closing_staff",
+   "role": "staff",
+   "question": "포스 정산 돌렸는데 현금이 3천원 모자라요 ㅠ 어케함"
+  },
+  {
+   "id": "Q08",
+   "category": "closing_staff",
+   "role": "staff",
+   "question": "시재 세는거 동전까지 다 세야 돼?"
+  },
+  {
+   "id": "Q09",
+   "category": "closing_staff",
+   "role": "staff",
+   "question": "마감하고 셔터 내리고 나서 보안 설정은 어디서 하는거임"
+  },
+  {
+   "id": "Q10",
+   "category": "closing_staff",
+   "role": "staff",
+   "question": "돈이 오히려 만원 더 남는데 이것도 보고해야되나여"
+  },
+  {
+   "id": "Q11",
+   "category": "senior_fact",
+   "role": "patient",
+   "question": "콧물약 먹으면 왜 그렇게 졸린가요? 그거 원래 그런 건가요"
+  },
+  {
+   "id": "Q12",
+   "category": "senior_fact",
+   "role": "patient",
+   "question": "타이레놀 그 하얀 알약 있잖아요 그게 정확히 무슨 성분이에요?"
+  },
+  {
+   "id": "Q13",
+   "category": "senior_fact",
+   "role": "patient",
+   "question": "나이 먹은 사람은 감기약 먹을 때 뭘 조심해야 되는지 좀 알려주세요"
+  },
+  {
+   "id": "Q14",
+   "category": "senior_fact",
+   "role": "patient",
+   "question": "변비약도 종류가 여러 가지라던데 어떻게 다른 건지 궁금하네요"
+  },
+  {
+   "id": "Q15",
+   "category": "senior_fact",
+   "role": "patient",
+   "question": "무릎 아플 때 먹는 소염진통제는 위에 안 좋다는 얘기가 있던데 그게 사실인가요?"
+  },
+  {
+   "id": "Q16",
+   "category": "senior_judgment",
+   "role": "patient",
+   "question": "제가 혈압약을 먹고 있는데 오늘 감기기운이 있어서 종합감기약 같이 먹어도 괜찮을까요?"
+  },
+  {
+   "id": "Q17",
+   "category": "senior_judgment",
+   "role": "patient",
+   "question": "무릎약 먹은 지 한 달 됐는데 요새 좀 덜 아파서 이제 그만 먹어도 되겠죠?"
+  },
+  {
+   "id": "Q18",
+   "category": "senior_judgment",
+   "role": "patient",
+   "question": "해열제 한 알 먹었는데 열이 안 떨어져요. 한 알 더 먹으면 안 될까요"
+  },
+  {
+   "id": "Q19",
+   "category": "senior_judgment",
+   "role": "patient",
+   "question": "저녁에 손주 생일이라 소주 한두 잔 할 건데 아까 먹은 진통제랑 문제없죠?"
+  },
+  {
+   "id": "Q20",
+   "category": "senior_judgment",
+   "role": "patient",
+   "question": "아침에 위장약 깜빡하고 못 먹었는데 점심때 두 번 치 한꺼번에 먹으면 되는 거예요?"
+  },
+  {
+   "id": "Q21",
+   "category": "senior_judgment",
+   "role": "patient",
+   "question": "집에 있는 변비약이 다 떨어졌는데 우리 영감 먹던 다른 변비약으로 대신 먹어도 상관없나 모르겠어요"
+  },
+  {
+   "id": "Q22",
+   "category": "out_of_scope",
+   "role": "staff",
+   "question": "창고 2번 지게차 배터리 충전 어디다 꽂아요?"
+  },
+  {
+   "id": "Q23",
+   "category": "out_of_scope",
+   "role": "staff",
+   "question": "직원 주차 등록 차량 바뀌면 누구한테 말해야됨"
+  },
+  {
+   "id": "Q24",
+   "category": "out_of_scope",
+   "role": "staff",
+   "question": "카드단말기 영수증 용지 걸렸는데 뚜껑 어떻게 열어요"
+  },
+  {
+   "id": "Q25",
+   "category": "out_of_scope",
+   "role": "staff",
+   "question": "다음달 근무표 언제 나와요? 연차 쓰고 싶은데"
+  }
+ ]
+}
