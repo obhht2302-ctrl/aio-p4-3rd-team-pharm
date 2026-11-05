@@ -45,7 +45,8 @@ async (page) => {
   await send.waitFor();
   const heard = await page.locator(".senior-heard").innerText();
   verify(heard.includes("혈압약이랑 관절약 같이 먹어도 돼요?"), `알아들은 문장 표시: ${heard}`);
-  verify((await page.locator("#senior-q").inputValue()) === "혈압약이랑 관절약 같이 먹어도 돼요?", "입력칸에도 채워짐");
+  verify((await page.locator("#senior-q").inputValue()) === "", "입력칸은 비어 있음 (말로 받은 문장은 확인 상자에만)");
+  verify(await page.getByRole("button", { name: /다시 말하기/ }).count() === 1, "다시 말하기 버튼은 하나 (큰 마이크 버튼)");
   await send.click();
   await page.locator(".senior-card").waitFor();
   const route = await page.locator(".senior-band").innerText();
