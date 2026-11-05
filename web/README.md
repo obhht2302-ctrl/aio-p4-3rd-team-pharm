@@ -50,6 +50,10 @@ npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke run-code --f
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke close
 ```
 
+## 퇴근 인수인계 (약사 화면 4단계)
+
+약사 화면 4단계 "인수인계"에서 남길 말을 적고 [인계 남기기]를 누르면, 아직 안 끝난 접수 건이 저절로 붙어 그 태블릿에 저장됩니다. 다음에 그 태블릿으로 약사 화면에 들어오면 1단계 "오늘 알림"에 "지난 근무 인계"가 보이고, [확인했어요]를 누르면 지워집니다. 매장 태블릿 한 대를 같이 쓰는 연습용이라 서버에는 저장하지 않습니다 (`tests/handover-smoke.js`).
+
 ## 말로 묻기 (고객 화면 마이크)
 
 고객(어르신) 화면 첫 화면에 큰 "말로 물어보기" 버튼이 있고, 답 화면의 "조금 더 알려 주세요" 칸에도 "말로 하기" 버튼이 있습니다.

@@ -165,7 +165,7 @@ export function SeniorAsk({ who }: { who: Who }) {
       </motion.div> : <div>
         {question.trim() && <p className="senior-question">“{question}”</p>}
         {error && <p className="error-box" role="alert">{error}</p>}
-        {loading && <div className="loading-card" aria-live="polite"><p>답을 찾고 있어요</p><Skeleton className="h-7 w-2/5" /><Skeleton className="h-6 w-full" /><Skeleton className="h-6 w-4/5" /></div>}
+        {loading && <div className="loading-card" aria-live="polite"><p>약국 안내 문서에서 찾고 있어요. 잠시만 기다려 주세요.</p><Skeleton className="h-7 w-2/5" /><Skeleton className="h-6 w-full" /><Skeleton className="h-6 w-4/5" /></div>}
         {answer && urgent && <motion.section className="senior-danger" role="alert" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           <div className="senior-danger-head"><span><PhoneCall /></span><div><b>지금 바로 연락해 주세요</b><p>걱정되는 내용이에요. 혼자 참지 마시고 도움을 받으세요.</p></div></div>
           <div className="senior-danger-actions"><CallButton who="119" className="senior-button senior-danger-call">119 전화하기</CallButton><CallButton who="pharmacist" variant="outline" className="senior-button senior-outline">약사에게 전화</CallButton></div>
@@ -173,7 +173,7 @@ export function SeniorAsk({ who }: { who: Who }) {
         {answer && <motion.section key={answer.request_id ?? answer.answer} className="senior-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           <div className={`senior-band band-${routeTone(answer.route)}`}><RouteBadge route={answer.route} /><b>{seniorLine[answer.route] ?? answer.route}</b></div>
           <p className="senior-answer">{answer.answer}</p>
-          {answer.ticket && <div className="ticket-number senior-ticket"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p></div>}
+          {answer.ticket && <div className="ticket-number senior-ticket"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p><p className="ticket-say">카운터에서 이 번호를 말씀해 주세요</p></div>}
           {!!answer.sources?.length && <p className="senior-source">출처: {answer.sources.map(source => source.doc).join(", ")}</p>}
           {answer.route === "보완 질문" && <div className="senior-followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="약 이름이나 상황을 적어 주세요" className="senior-input" />{followVoice.supported && <Button variant="outline" className="senior-button senior-outline" onClick={followVoice.listening ? followVoice.stop : followVoice.start} aria-pressed={followVoice.listening}>{followVoice.listening ? <><Square /> 듣고 있어요</> : <><Mic /> 말로 하기</>}</Button>}{followVoice.error && <p className="error-box" role="alert">{followVoice.error}</p>}<Button className="senior-button" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight /></Button></div>}
           <div className="senior-actions"><ListenButton text={answer.answer} /><Button variant="outline" className="senior-button" onClick={again}><Home /> 다시 질문하기</Button></div>

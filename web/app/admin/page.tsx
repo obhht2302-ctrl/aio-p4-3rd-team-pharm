@@ -35,6 +35,49 @@ const timeLabel = (value?: string) => {
 const statusTone = (status: string) => status === "처리 완료" ? "done" : status === "처리 중" ? "doing" : "new";
 const StatusPill = ({ status }: { status: string }) => <span className={`status-pill tone-${statusTone(status)}`}>{status}</span>;
 
+// 퇴근 인수인계: 남길 말 + 아직 안 끝난 접수 건을 이 태블릿(localStorage)에 남기고, 다음에 들어온 약사에게 맨 위에 보여 줍니다.
+// 매장 태블릿 한 대를 같이 쓰는 연습용이라 서버에는 저장하지 않습니다 (다른 기기에서는 안 보임).
+type Handover = { note: string; by: string; at: string; open: { ticket_id: string; title: string; status: string }[] };
+const HANDOVER_KEY = "team3-handover";
+const readHandover = (): Handover | null => {
+  try { const raw = localStorage.getItem(HANDOVER_KEY); return raw ? JSON.parse(raw) as Handover : null; } catch { return null; }
+};
+
+function HandoverNote({ memo, onOpen, onDone }: { memo: Handover; onOpen: (id: string) => void; onDone: () => void }) {
+  return <section className="handover-note" aria-label="지난 근무 인계">
+    <div className="handover-note-head"><b>지난 근무 인계</b><small>{memo.by} 님 · {timeLabel(memo.at)}</small></div>
+    {memo.note && <p className="handover-text">{memo.note}</p>}
+    {memo.open.length > 0 && <ul className="handover-list">{memo.open.map(item => <li key={item.ticket_id}><button type="button" className="ticket-link" onClick={() => onOpen(item.ticket_id)}>{item.ticket_id} · {item.title}</button></li>)}</ul>}
+    <Button variant="outline" className="secondary-action justify-self-start" onClick={onDone}>확인했어요</Button>
+  </section>;
+}
+
+function HandoverPage({ who, tickets, memo, onSaved, onOpen, onDone }: { who: Who; tickets: Ticket[]; memo: Handover | null; onSaved: (memo: Handover) => void; onOpen: (id: string) => void; onDone: () => void }) {
+  const [note, setNote] = useState("");
+  const openTickets = tickets.filter(item => item.status !== "처리 완료");
+  const leave = () => {
+    const next: Handover = { note: note.trim(), by: who.name, at: new Date().toISOString(), open: openTickets.map(({ ticket_id, title, status }) => ({ ticket_id, title, status })) };
+    try { localStorage.setItem(HANDOVER_KEY, JSON.stringify(next)); } catch { toast.error("이 태블릿에 저장하지 못했어요. 다시 눌러 주세요."); return; }
+    onSaved(next);
+    setNote("");
+    toast.success("인계를 남겼어요.", { description: "이 태블릿에서 다음에 들어오면 맨 위에 보여요." });
+  };
+  return <div className="stack-tight">
+    {memo && <HandoverNote memo={memo} onOpen={onOpen} onDone={onDone} />}
+    <section className="soft-card panel-pad handover-write">
+      <h2>퇴근 인수인계</h2>
+      <p className="handover-sub">다음 근무 약사님께 남길 말을 적어 주세요. 아직 안 끝난 접수 건은 저절로 붙어요.</p>
+      <label htmlFor="handover-note" className="field-label">남길 말</label>
+      <Textarea id="handover-note" rows={3} maxLength={500} className="bg-white" value={note} onChange={e => setNote(e.target.value)} placeholder="예: 회수 건 손님 연락이 한 분 남았어요" />
+      <div className="handover-open"><b>열린 건 {openTickets.length}개 자동 첨부</b>
+        {openTickets.length ? <ul>{openTickets.map(item => <li key={item.ticket_id}>{item.ticket_id} · {item.title} <StatusPill status={item.status} /></li>)}</ul> : <p>열린 건이 없어요.</p>}
+      </div>
+      <Button className="primary-action justify-self-start" onClick={leave} disabled={!note.trim() && openTickets.length === 0}>인계 남기기</Button>
+      <p className="field-help">이 태블릿에만 저장돼요.</p>
+    </section>
+  </div>;
+}
+
 function TicketDetail({ ticket, who, onSaved }: { ticket: Ticket; who: Who; onSaved: (id: string, status: string, note: string) => void }) {
   const [status, setStatus] = useState(ticket.status);
   const [note, setNote] = useState(ticket.note ?? "");
@@ -90,6 +133,9 @@ export default function AdminPage() {
   const [page, setPage] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [handover, setHandover] = useState<Handover | null>(null);
+  useEffect(() => { setHandover(readHandover()); }, []);
+  const clearHandover = () => { try { localStorage.removeItem(HANDOVER_KEY); } catch { /* 사생활 모드 */ } setHandover(null); };
 
   const load = async (me: Who) => {
     setLoading(true);
@@ -125,7 +171,7 @@ export default function AdminPage() {
     {error && <p className="error-box mb-4" role="alert">{error}</p>}
     {loading && !loaded ? <div className="stack" aria-live="polite" aria-label="목록을 불러오고 있어요"><Skeleton className="h-12 w-full" /><Skeleton className="h-28 w-full" /><Skeleton className="h-44 w-full" /></div> :
     !loaded ? <Button variant="outline" className="secondary-action" onClick={() => void load(who)}>다시 불러오기</Button> :
-    <Pager steps={["오늘 알림", "접수 목록", "접수 상세"]} index={page} onIndex={setPage}>
+    <Pager steps={["오늘 알림", "접수 목록", "접수 상세", "인수인계"]} index={page} onIndex={setPage}>
       <div>
         <div className="sr-only"><h1>약사 업무 화면</h1></div>
         {lead ? <motion.div className="recall-banner" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
@@ -133,7 +179,8 @@ export default function AdminPage() {
           <div className="recall-text"><span>{leadTicket?.category === "recall" ? "회수 공표 · 연습" : "긴급 확인이 필요해요"}</span><b>{leadTicket?.title ?? lead.message}</b>{lead.ticket_id && <small>접수 {lead.ticket_id}{lead.at ? ` · ${timeLabel(lead.at)}` : ""}</small>}</div>
           <div className="recall-count"><small>확인할 티켓</small><b>{tickets.filter(t => t.status !== "처리 완료").length}</b></div>
           {lead.ticket_id && <Button className="primary-action danger-action" onClick={() => open(lead.ticket_id)}>접수 상세 보기</Button>}
-        </motion.div> : <div className="soft-card panel-pad text-sm text-muted-foreground">새 알림이 없어요.</div>}
+        </motion.div> : <div className="soft-card panel-pad text-sm text-muted-foreground">새 알림이 없어요. 급한 건이 들어오면 여기에 가장 먼저 보여 드릴게요.</div>}
+        {handover && <HandoverNote memo={handover} onOpen={open} onDone={clearHandover} />}
         {urgentAlerts.length > 0 && <div className="alert-pills">{urgentAlerts.map((alert, index) => <button key={`${alert.ticket_id ?? "alert"}-${index}`} type="button" className="alert-pill" onClick={() => open(alert.ticket_id)}><span className="urgent-pill">긴급</span><span>{tickets.find(item => item.ticket_id === alert.ticket_id)?.title ?? alert.message}<em> · {alert.ticket_id ?? ""}</em></span></button>)}</div>}
         <Button variant="outline" className="primary-action mt-4" onClick={() => setPage(1)}>접수 목록 보기</Button>
       </div>
@@ -152,6 +199,7 @@ export default function AdminPage() {
             </MotionRow>)}</TableBody></Table>}
       </div>
       <div className="detail-card">{ticket ? <TicketDetail key={ticket.ticket_id} ticket={ticket} who={who} onSaved={(id, status, note) => setTickets(current => current.map(item => item.ticket_id === id ? { ...item, status, note } : item))} /> : <div className="empty-state"><strong>목록에서 접수 건을 골라 주세요</strong></div>}</div>
+      <HandoverPage who={who} tickets={tickets} memo={handover} onSaved={setHandover} onOpen={open} onDone={clearHandover} />
     </Pager>}
   </div>;
 }
