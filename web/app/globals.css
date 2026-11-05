@@ -739,3 +739,6 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 .retry-note p { margin: 0; font-weight: 700; color: var(--foreground); }
 .senior-retry { margin: .6rem 1.2rem; }
 .senior .retry-note p { font-size: 1.05rem; }
+
+/* 로고 = 해든 시안(둥근 사각형 안 알약): 원이 아니라 둥근 사각형으로 */
+.site-header .brand-mark { border-radius: 28%; }
