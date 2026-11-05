@@ -58,7 +58,7 @@
  "reason": "", "timings": {"total_ms": 2840}}
 ```
 
-- `route` ∈ `자동 답변` · `보완 질문` · `담당자 이관` · `권한 없음` · `차단`. `ticket` = `{"ticket_id", "priority", "duplicate"}` 또는 `null`.
+- `route` ∈ `자동 답변` · `보완 질문` · `담당자 이관` · `권한 없음` · `차단`. `ticket` = `{"ticket_id", "priority", "duplicate", "assignee"}` 또는 `null`. `assignee`는 이관에 성공한 요청에서 담당자로 전달한 역할이다.
 - `reason` (이관 · 실패의 까닭): `no_evidence` · `low_confidence` · `urgent` · `needs_person` · `risk_signal` · `attempt_limit` · `tickets_down` · `tickets_slow` · `llm_down` · `not_your_record` · `role_not_allowed` · `brain_down` (화면 API가 n8n에 못 닿음).
 - 잘못된 입력 → HTTP 400 `{"error": "invalid request", "codes": [...]}`, `codes` ∈ `request_id_required` · `question_required` · `too_long` · `unknown_user` (73일차와 같음).
 
