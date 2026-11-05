@@ -46,7 +46,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="header-inner">
             <Link href="/" className="brand" aria-label={`${BRAND.pharmacy}, 질문하기`}>
               <span className="brand-mark"><BrandMark size={senior ? 28 : 23} /></span>
-              <span><strong>{BRAND.pharmacy}</strong><small>{senior ? "고객 안내 · 큰 글씨" : BRAND.service}</small></span>
+              <span><strong>{BRAND.pharmacy}</strong><small>{senior ? "고객 안내 · 큰 글씨" : !who && pathname === "/" ? "매장 업무 태블릿" : BRAND.service}</small></span>
             </Link>
             {who && <nav aria-label="주 메뉴" className="main-nav">
               {nav.map(({ href, label }) => {
