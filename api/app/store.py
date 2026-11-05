@@ -21,6 +21,7 @@ class MemoryStore:
         self.tickets: dict[str, dict] = {}  # key → ticket
         self.alerts: list[dict] = []
         self.notices: list[dict] = []
+        self.handovers: list[dict] = []
         self._ids = itertools.count(3001)
 
     # requests (화면에서 들어온 질문 — 질문 글자는 화면용으로만 남기고 로그에는 쓰지 않음)
@@ -80,6 +81,22 @@ class MemoryStore:
 
     def add_notices(self, rows: list[dict]) -> None:
         self.notices.extend({**r, "at": now()} for r in rows)
+
+
+    # handovers (약사 퇴근 인수인계)
+    def add_handover(self, by: str, note: str, open_tickets: list[dict]) -> dict:
+        row = {"id": len(self.handovers) + 1, "by": by, "note": note, "open": open_tickets, "at": now(), "done_at": None, "done_by": None}
+        self.handovers.append(row)
+        return row
+
+    def latest_handover(self) -> dict | None:
+        return next((h for h in reversed(self.handovers) if not h["done_at"]), None)
+
+    def done_handover(self, handover_id: int, by: str) -> dict | None:
+        row = next((h for h in self.handovers if h["id"] == handover_id), None)
+        if row:
+            row.update(done_at=now(), done_by=by)
+        return row
 
 
 class PgStore:
@@ -245,10 +262,34 @@ class PgStore:
                      row.get("status", "practice_logged")),
                 )
 
+    # handovers
+    @staticmethod
+    def _handover_row(row: dict | None) -> dict | None:
+        if not row:
+            return None
+        return {"id": row["id"], "by": row["by_name"], "note": row["note"], "open": row["open_tickets"],
+                "at": row["at"].isoformat(), "done_at": row["done_at"].isoformat() if row["done_at"] else None, "done_by": row["done_by"]}
+
+    def add_handover(self, by: str, note: str, open_tickets: list[dict]) -> dict:
+        from psycopg.types.json import Jsonb
+        with self._db.cursor() as cur:
+            cur.execute("INSERT INTO handovers (by_name, note, open_tickets) VALUES (%s, %s, %s) RETURNING *", (by, note, Jsonb(open_tickets)))
+            return self._handover_row(cur.fetchone())
+
+    def latest_handover(self) -> dict | None:
+        with self._db.cursor() as cur:
+            cur.execute("SELECT * FROM handovers WHERE done_at IS NULL ORDER BY id DESC LIMIT 1")
+            return self._handover_row(cur.fetchone())
+
+    def done_handover(self, handover_id: int, by: str) -> dict | None:
+        with self._db.cursor() as cur:
+            cur.execute("UPDATE handovers SET done_at = now(), done_by = %s WHERE id = %s RETURNING *", (by, handover_id))
+            return self._handover_row(cur.fetchone())
+
     def reset_for_tests(self) -> None:
         """시험 사이에만 쓰는 초기화. 운영 코드에서는 호출하지 않는다."""
         with self._db.cursor() as cur:
-            cur.execute("TRUNCATE requests, notices, alerts, tickets RESTART IDENTITY CASCADE")
+            cur.execute("TRUNCATE requests, notices, alerts, tickets, handovers RESTART IDENTITY CASCADE")
             cur.execute("ALTER SEQUENCE team3_ticket_seq RESTART WITH 3001")
 
 
