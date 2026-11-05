@@ -5,6 +5,8 @@ import json
 import os
 import re
 import uuid
+from collections import Counter
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -36,6 +38,10 @@ def users() -> dict[str, dict]:
 
 def mask_phone(phone: str) -> str:
     return re.sub(r"(01\d)-?\d{3,4}-?(\d{4})", r"\1-****-\2", phone or "")
+
+
+def mask_text(text: str) -> str:  # 질문 글자 속 전화번호 · 메일 가림 (약사 화면 목록용)
+    return re.sub(r"[\w.+-]+@[\w-]+\.[\w.]+", "***@***", mask_phone(text or ""))
 
 
 def need_entry(code: str | None) -> None:
@@ -151,6 +157,36 @@ def admin_alerts(x_entry_code: str | None = Header(default=None), x_user: str | 
     need_entry(x_entry_code)
     need_role(x_user, ADMIN_ROLES)
     return {"items": STORE.list_alerts()}
+
+
+@app.get("/api/admin/requests")
+def admin_requests(route: str | None = None, x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+    """막힌 요청 모아 보기 — route를 쉼표로 (예: 권한 없음,차단). 질문 글자 속 연락처는 가림, 최근 100건."""
+    need_entry(x_entry_code)
+    need_role(x_user, ADMIN_ROLES)
+    routes = [item.strip() for item in route.split(",") if item.strip()] if route else None
+    rows = STORE.list_requests(routes)[:100]
+    return {"items": [{"request_id": r["request_id"], "user": r["user"], "question": mask_text(r.get("question", "")),
+                       "route": r.get("route"), "created_at": r.get("created_at"),
+                       "ticket_id": (r.get("ticket") or {}).get("ticket_id")} for r in rows]}
+
+
+KST = timezone(timedelta(hours=9))
+
+
+@app.get("/api/admin/summary")
+def admin_summary(x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+    """약국장 '오늘 한눈 요약' — 오늘(한국 시각) 화면으로 들어온 질문 수 · 처리 방식별 수, 지금 열린 티켓 수."""
+    need_entry(x_entry_code)
+    need_role(x_user, ADMIN_ROLES)
+    start = datetime.now(KST).replace(hour=0, minute=0, second=0, microsecond=0)
+    rows = STORE.list_requests(None, start)
+    tickets = STORE.list_tickets(None)
+    open_tickets = [t for t in tickets if t.get("status") != "처리 완료"]
+    return {"date": start.date().isoformat(), "questions": len(rows),
+            "by_route": dict(Counter(r.get("route") or "기타" for r in rows)),
+            "tickets_open": len(open_tickets), "tickets_urgent_open": sum(t.get("priority") == "high" for t in open_tickets),
+            "tickets_by_status": dict(Counter(t.get("status") for t in tickets))}
 
 
 @app.post("/api/admin/tickets/{ticket_id}/recall-notice")
