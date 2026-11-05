@@ -85,7 +85,7 @@ flowchart TD
 
 | 노드 | 연동 대상 (연습용 → 실제 운영) | 인증 | 입력 | 출력 | 오류 처리 |
 | --- | --- | --- | --- | --- | --- |
-| `Support webhook` | 팀 Webhook → 웹 화면 · Slack Trigger | Header Auth (`team3WebhookKey`) → SSO · Slack 서명 | 계약 요청 | — | 401 (n8n) |
+| `Support webhook` | 팀 Webhook → 웹 화면 · Slack Trigger | Header Auth (`team3WebhookKey`) → SSO · Slack 서명 | 계약 요청 | — | 키 없음 · 틀림 → 403 `Authorization data is wrong!` (n8n 2.42.6 실측), 워크플로우는 실행 안 됨 |
 | `Create ticket` | data-api `POST /tickets` → (약사 이관은 우리 화면, 장애만 Jira) | 77판은 키 없음 → 80판은 `dataApiKey` (`X-Api-Key`) | `{key, title, requester, category, priority}` | `{ticket_id, duplicate}` | 1차 실패 뒤 5xx·timeout·429만 2회 더 재시도 (2초 timeout · 500ms 간격, 최악 7초 < 본체 8초) → DLQ + 알림. 401·403은 재시도 없이 `auth_failed` |
 | `Send DLQ` | data-api `POST /dlq` | 위와 같음 | `{item:{id, type, priority, reason, severity}}` | `{ok}` | 실패 무시, `dlq: true` |
 | `Send alert` | data-api `POST /alerts` → Slack `#support-alerts` | 위와 같음 | `{workflow, severity, reason, message}` | `{stored}` | 실패 무시, `alert` 플래그만 (중복 티켓은 알림 없음) |

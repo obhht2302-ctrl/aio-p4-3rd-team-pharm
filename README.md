@@ -109,7 +109,7 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 | `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
 - `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
-- 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둬요. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고, 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 하면 돼요. 바꿀 때가 되면 리드가 디코로 알려요 (키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없어요.
+- 입구 웹훅(`team3-support`)은 Header Auth(`team3WebhookKey`)가 켜져 있어요. 레포 `tools/flow.py`는 웹훅을 부를 때 `X-Team-Key`를 붙여요 — 값은 `FLOW_WEBHOOK_KEY` 환경 변수(샘 80판과 같은 이름), 비어 있으면 `infra/.env`의 `TEAM3_KEY`. 그래서 `setup.sh`를 돌린 노트북 · 팀 VM은 따로 할 일이 없어요. 키 없이 부르면 n8n이 403(`Authorization data is wrong!`)을 돌려줘요. 안쪽 웹훅(`team3-search` · `team3-handoff` · `team3-index`)과 가짜 웹훅(`workflows/stubs/`)은 인증이 없어요.
 
 ## 바로 실행 (노트북)
 
@@ -166,7 +166,7 @@ docs/             제안서 · 헌장 · 설계서 2종 · 결과서 · 데일�
 
 | 증상 | 할 일 |
 | --- | --- |
-| `call` 404 / 401 | push 했는지, 웹훅 노드 Authentication이 `None`인지 (지금 샘 도구는 웹훅 키를 안 보냄) |
+| `call` 404 / 403 | push 했는지, `infra/.env`의 `TEAM3_KEY`(또는 `FLOW_WEBHOOK_KEY`)가 n8n `team3WebhookKey` 값과 같은지 |
 | 검색 결과가 항상 비어 있음 | push 하면 n8n이 재시작돼 색인이 사라짐 → `team3-index`를 다시 부름 |
 | 장애 시나리오 뒤 다른 시나리오가 실패 | `flow.py fault all ok` · `flow.py llm up` |
 | `packs.py check` 실패 | 메시지에 나온 팩의 문서 · 시나리오 수를 채우거나 `packs/active.json`을 되돌림 |
