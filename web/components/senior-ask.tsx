@@ -114,7 +114,8 @@ export function SeniorAsk({ who }: { who: Who }) {
   const examples = types.find(item => item.type === "senior")?.examples ?? [];
   const urgent = answer?.ticket?.priority === "high";
   const [input, setInput] = useState("");
-  const voice = useSpeech(setInput);
+  const [spoken, setSpoken] = useState(""); // 말로 받은 문장은 입력칸과 따로 둠 (입력칸에 남지 않게)
+  const voice = useSpeech(setSpoken);
   const followVoice = useSpeech(ask.setContext);
 
   // 고른 글씨 크기는 이 탭에서 다시 들어와도 유지합니다.
@@ -127,8 +128,8 @@ export function SeniorAsk({ who }: { who: Who }) {
     return () => { document.documentElement.style.fontSize = ""; };
   }, [size]);
 
-  const again = () => { setInput(""); voice.clear(); followVoice.clear(); ask.askAgain(); };
-  const sendVoice = () => { const text = input.trim(); voice.clear(); void ask.send(text); };
+  const again = () => { setInput(""); setSpoken(""); voice.clear(); followVoice.clear(); ask.askAgain(); };
+  const sendVoice = () => { const text = spoken.trim(); voice.clear(); setSpoken(""); void ask.send(text); };
 
   return <div>
     <div className="senior-bar">
@@ -143,15 +144,14 @@ export function SeniorAsk({ who }: { who: Who }) {
         {voice.supported && <section className="senior-voice" aria-label="말로 물어보기">
           <button type="button" className={voice.listening ? "senior-mic on" : "senior-mic"} onClick={voice.listening ? voice.stop : voice.start} aria-pressed={voice.listening} disabled={loading}>
             <span className="senior-mic-icon">{voice.listening ? <Square /> : <Mic />}</span>
-            <span className="senior-mic-text"><b>{voice.listening ? "듣고 있어요" : "말로 물어보기"}</b><small>{voice.listening ? "말씀이 끝나면 저절로 멈춰요" : "누르고 궁금한 것을 말씀하세요"}</small></span>
+            <span className="senior-mic-text"><b>{voice.listening ? "듣고 있어요" : voice.heard ? "다시 말하기" : "말로 물어보기"}</b><small>{voice.listening ? "말씀이 끝나면 저절로 멈춰요" : voice.heard ? "다르게 알아들었으면 다시 눌러 주세요" : "누르고 궁금한 것을 말씀하세요"}</small></span>
           </button>
-          {voice.listening && <p className="senior-heard" aria-live="polite">{input || "말씀해 주세요…"}</p>}
+          {voice.listening && <p className="senior-heard" aria-live="polite">{spoken || "말씀해 주세요…"}</p>}
           {voice.error && <p className="error-box" role="alert">{voice.error}</p>}
           {!voice.listening && voice.heard && <div className="senior-heard-box">
-            <p className="senior-heard" aria-live="polite">“{input}”</p>
+            <p className="senior-heard" aria-live="polite">“{spoken}”</p>
             <div className="senior-voice-actions">
-              <Button className="senior-button senior-submit" onClick={sendVoice} disabled={!input.trim() || loading}>이대로 물어보기 <ArrowRight /></Button>
-              <Button variant="outline" className="senior-button senior-outline" onClick={voice.start}><Mic /> 다시 말하기</Button>
+              <Button className="senior-button senior-submit" onClick={sendVoice} disabled={!spoken.trim() || loading}>이대로 물어보기 <ArrowRight /></Button>
             </div>
           </div>}
         </section>}
