@@ -27,8 +27,10 @@ def client(request, monkeypatch):
     else:
         store = MemoryStore()
     monkeypatch.setattr(main, "STORE", store)
+    monkeypatch.setattr(main, "_alert_cache", {"at": 0.0, "items": None})
     monkeypatch.setenv("TEAM3_ENTRY_CODE", "test-code")
     monkeypatch.delenv("TEAM3_API_KEY", raising=False)
+    monkeypatch.delenv("DATA_API_URL", raising=False)
     return TestClient(main.app)
 
 
@@ -71,6 +73,41 @@ def test_alert_post_appears_in_admin_alerts(client):
     assert client.post("/alerts", json=req).json() == EXAMPLES["POST /alerts"]["response"]
     items = client.get("/api/admin/alerts", headers=as_user("이서준")).json()["items"]
     assert len(items) == 1 and items[0]["reason"] == "urgent"
+
+
+def test_admin_alerts_reads_data_api_newest_first(client, monkeypatch):
+    monkeypatch.setenv("DATA_API_URL", "http://data-api:8800")
+
+    async def fake_alerts():
+        return [
+            {"id": 1, "workflow": "team3-handoff", "severity": "high", "reason": "urgent",
+             "message": "old", "ticket_id": "T-2001", "at": "2026-11-05T09:00:00+09:00"},
+            {"id": 2, "workflow": "team3-errors", "node": "Writer", "severity": "critical", "reason": "unexpected",
+             "message": "new", "execution_id": "42", "at": 1762304400.0},
+        ]
+    monkeypatch.setattr(main, "call_data_api_alerts", fake_alerts)
+    items = client.get("/api/admin/alerts", headers=as_user("정민재")).json()["items"]
+    assert [item["message"] for item in items] == ["new", "old"]
+    assert items[0]["at"].endswith("+09:00")  # data-api의 초 숫자 → 화면용 ISO (new Date가 읽게)
+    assert {"workflow", "severity", "reason", "message", "at"} <= set(items[0])  # 화면이 쓰는 칸은 그대로
+    assert "id" not in items[0] and "execution_id" not in items[0]  # 내부 칸은 뺀다
+    assert items[1]["ticket_id"] == "T-2001"
+
+
+def test_admin_alerts_keeps_last_good_when_data_api_down(client, monkeypatch):
+    monkeypatch.setenv("DATA_API_URL", "http://data-api:8800")
+
+    async def fake_alerts():
+        return [{"severity": "high", "reason": "urgent", "message": "kept", "at": "2026-11-05T10:00:00+09:00"}]
+    monkeypatch.setattr(main, "call_data_api_alerts", fake_alerts)
+    assert client.get("/api/admin/alerts", headers=as_user("이서준")).json()["items"][0]["message"] == "kept"
+
+    async def broken():
+        raise TimeoutError("data-api down")
+    monkeypatch.setattr(main, "call_data_api_alerts", broken)
+    monkeypatch.setattr(main, "_alert_cache", {"at": 0.0, "items": main._alert_cache["items"]})  # 캐시 만료
+    items = client.get("/api/admin/alerts", headers=as_user("이서준")).json()["items"]
+    assert [item["message"] for item in items] == ["kept"]
 
 
 def test_tickets_idempotent_by_key(client):

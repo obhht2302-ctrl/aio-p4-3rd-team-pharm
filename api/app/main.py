@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import uuid
 from collections import Counter
 from datetime import datetime, timedelta, timezone
@@ -152,11 +153,51 @@ def admin_update(ticket_id: str, payload: dict, x_entry_code: str | None = Heade
     return {k: ticket[k] for k in ("ticket_id", "status", "note")}
 
 
+ALERT_FIELDS = ("workflow", "node", "severity", "reason", "message", "ticket_id", "at")
+ALERT_LIMIT = 50
+_alert_cache: dict = {"at": 0.0, "items": None}  # data-api 알림 캐시 (마지막 성공값)
+
+
+def alert_view(row: dict) -> dict:
+    """data-api 알림 → 화면이 쓰는 칸만. `at`은 data-api가 초 단위 숫자라 화면용 ISO(한국 시각)로 바꾼다."""
+    view = {k: row[k] for k in ALERT_FIELDS if k in row}
+    if isinstance(view.get("at"), (int, float)):
+        view["at"] = datetime.fromtimestamp(view["at"], KST).isoformat()
+    return view
+
+
+async def call_data_api_alerts() -> list[dict]:
+    """data-api GET /alerts. 주소가 비면 빈 목록 (로컬 · 시험은 저장소를 봄)."""
+    url = os.getenv("DATA_API_URL", "").rstrip("/")
+    if not url:
+        return []
+    async with httpx.AsyncClient(timeout=float(os.getenv("DATA_API_TIMEOUT", "1.5"))) as client:
+        resp = await client.get(url + "/alerts")
+        resp.raise_for_status()
+        return resp.json().get("alerts", [])
+
+
+async def read_alerts() -> list[dict]:
+    """화면 알림은 data-api가 원본 — 3초 캐시, 답이 없으면 마지막 성공값 (없으면 로컬 저장소)."""
+    if not os.getenv("DATA_API_URL", "").strip():
+        return STORE.list_alerts()[:ALERT_LIMIT]
+    cached = _alert_cache["items"]
+    if cached is not None and time.monotonic() - _alert_cache["at"] < float(os.getenv("ALERTS_CACHE_SECONDS", "3")):
+        return cached
+    try:
+        rows = await call_data_api_alerts()
+    except Exception:  # noqa: BLE001 — 화면은 data-api 장애로 멈추지 않는다 (fail-open)
+        return cached if cached is not None else STORE.list_alerts()[:ALERT_LIMIT]
+    items = [alert_view(row) for row in rows if isinstance(row, dict)][-ALERT_LIMIT:][::-1]
+    _alert_cache.update(at=time.monotonic(), items=items)
+    return items
+
+
 @app.get("/api/admin/alerts")
-def admin_alerts(x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+async def admin_alerts(x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
     need_entry(x_entry_code)
     need_role(x_user, ADMIN_ROLES)
-    return {"items": STORE.list_alerts()}
+    return {"items": await read_alerts()}
 
 
 @app.get("/api/admin/requests")

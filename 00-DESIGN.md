@@ -127,6 +127,8 @@
 3. 덧붙임 (각각 timeout 2초, Jira만 4초 · 재시도 없음 — 지라 요청 생성은 멱등이 아니라 2초 넘겨 재시도하면 같은 건이 두 번 생김(11/4 VM 실측) · 실패 무시 · `extras`에 결과만): FastAPI `POST /tickets` (약사 화면), `mode = real`일 때 `team3-alert` (Slack, 1 · 2에서 알림을 보냈을 때만), `team3-ticket` (Jira, `tickets_down`일 때만)
 4. 응답. 실제/연습 스위치는 `team3-handoff`의 `Handoff settings` 노드 `mode` 한 곳 (기본 `practice`, 시연 때만 `real`)
 
+**알림은 data-api 한 곳에만 씁니다.** 약사 화면 `GET /api/admin/alerts`는 FastAPI가 data-api `GET /alerts`를 읽어(3초 캐시, 실패하면 마지막 성공값) 최신순으로 보여 줍니다. n8n이 FastAPI `POST /alerts`로 따로 보내지 않습니다 (그 경로는 시험 · 로컬용). 이렇게 해야 api를 다시 켜도 화면 알림이 사라지지 않고, 공통 시나리오가 세는 data-api 알림 수와 화면이 어긋나지 않습니다.
+
 ### 3.5 회수 흐름 (팩 고유)
 
 1. **공표 수신 (연습)**: `flow.py call team3-handoff requests/recall-announce.json` — 가짜 식약처 회수 공표를 `type: recall`, `priority: high` 이관으로 넣음 → data-api 티켓 · 알림 → 약사 화면 긴급 티켓 · Slack. 운영이라면 식약처 회수 · 판매중지 API (`1471000/MdcinRtrvlSleStpgeInfoService05/getMdcinRtrvlSleStpgelList05`, 11/2 호출 확인)를 주기적으로 읽는 Schedule Trigger (키는 저장소에 쓰지 않음).
@@ -241,7 +243,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | data-api | 77판 `server.py` + **우리 `data/` · `knowledge/`** (`infra/compose.team3.yml`이 띄움, 이름 `data-api` · 포트 8800이라 샘 data-api는 끄고 씀) |
 | 조합 C | `api/` FastAPI (:8000, 기본 메모리 저장소, `DATABASE_URL`이면 PostgreSQL), `web/` Next.js(React) 정적 내보내기 → nginx (:3000). 빌드는 VM 밖에서 |
 | 화면 3개 (한 앱) | `/` 질문하기 (직원 · 환자 공용, 로그인 대신 사용자 선택 + 입장 코드, 환자에겐 어르신 약 질문 예시 버튼) · `/my` 내 문의 (내 질문 · 이관 건 상태) · `/admin` 약사 · 약국장 (이관 티켓 처리, 회수 공표 알림 → 약사 "손님 안내 보내기" 승인 → 연습용 기록만). 선택한 사용자의 `role`로 `/admin`을 막고 API도 한 번 더 막음 |
-| API | 샘 덱 6개 `POST /api/ask` · `GET /api/my-requests` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /tickets` · `POST /alerts` + 우리 5개 `GET /api/types` · `GET /api/users` (사용자 고르기, 연락처 없음) · `GET /stock/{name}` (품절 팩 자리) · `GET /api/admin/alerts` (회수 공표 · 긴급 알림 목록) · `POST /api/admin/tickets/{id}/recall-notice` (약사 승인 → 손님 안내 연습 기록) |
+| API | 샘 덱 6개 `POST /api/ask` · `GET /api/my-requests` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /tickets` · `POST /alerts` + 우리 5개 `GET /api/types` · `GET /api/users` (사용자 고르기, 연락처 없음) · `GET /stock/{name}` (품절 팩 자리) · `GET /api/admin/alerts` (data-api `GET /alerts`를 읽어 만든 회수 공표 · 긴급 알림 목록) · `POST /api/admin/tickets/{id}/recall-notice` (약사 승인 → 손님 안내 연습 기록) |
 | 도구 | 레포 `tools/flow.py` (샘 77판 복사 + 팀 Credential 허용, `range` 판정 있음, push 때 n8n 재시작 → 재색인 필요) |
 
 

@@ -265,37 +265,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "={{ $('Handoff settings').first().json.api_url + '/alerts' }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({workflow:'team3-handoff',node:'Handoff',severity:'high',reason:$('Ticket outcome').first().json.alert_reason,message:'['+$('Ticket outcome').first().json.type+'] '+$('Ticket outcome').first().json.assignee+'에게 이관',ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||'')}) }}",
-        "options": {
-          "timeout": 2000,
-          "response": {
-            "response": {
-              "neverError": true
-            }
-          }
-        }
-      },
-      "id": "h10b-screen-alert",
-      "name": "Post alert to screen",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1000, 100],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "team3ApiKey0001",
-          "name": "team3ApiKey"
-        }
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
         "jsCode": "// 알림을 보내지 않는 길.\nreturn [{ json: $json }];"
       },
       "id": "h11-alert-skip",
@@ -736,17 +705,6 @@
       ]
     },
     "Send alert": {
-      "main": [
-        [
-          {
-            "node": "Post alert to screen",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Post alert to screen": {
       "main": [
         [
           {

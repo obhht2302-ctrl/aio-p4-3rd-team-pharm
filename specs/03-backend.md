@@ -104,7 +104,8 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 
 1. data-api `POST /tickets` `{key: request_id, title, requester: user, category: type, priority}` → 실패 (5xx · timeout)면 `POST /dlq` (`item.id = request_id`, 개인정보 없이) + `POST /alerts` (`reason: tickets_down`, `severity: high`), `ticket: null`.
 2. 성공이고 `priority: high`면 `POST /alerts` (`reason: urgent`). 보통 이관은 알림 없음.
-3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST http://api:8000/tickets` (약사 화면, data-api가 준 `ticket_id` · `product`를 같이 넘김, 머리글 `X-Api-Key` = Credential `team3ApiKey`), 위 1번이나 2번에서 data-api 알림을 남겼으면 같은 본문을 FastAPI `POST http://api:8000/alerts`에도 (약사 화면 `/api/admin/alerts`가 이걸 읽음, 같은 키), `mode = real`일 때만 Execute Workflow `team3Alert000001` (Slack — 위 1번(티켓 실패)이나 2번(긴급)에서 data-api 알림을 남긴 경우)과 `team3Ticket00001` (Jira — 티켓 API 실패 `tickets_down`일 때만)을 부릅니다.
+3. 덧붙임 (실패 무시, `extras`에 결과만): FastAPI `POST http://api:8000/tickets` (약사 화면, data-api가 준 `ticket_id` · `product`를 같이 넘김, 머리글 `X-Api-Key` = Credential `team3ApiKey`), `mode = real`일 때만 Execute Workflow `team3Alert000001` (Slack — 위 1번(티켓 실패)이나 2번(긴급)에서 data-api 알림을 남긴 경우)과 `team3Ticket00001` (Jira — 티켓 API 실패 `tickets_down`일 때만)을 부릅니다.
+   - 알림은 data-api 한 곳에만 남깁니다. 약사 화면 `GET /api/admin/alerts`는 FastAPI가 data-api `GET /alerts`를 읽어(3초 캐시, 실패 시 마지막 성공값) 보여 줍니다. n8n은 FastAPI `/alerts`로 따로 보내지 않습니다.
 4. 401 · 403은 재시도하지 않고 바로 DLQ + 알림 (`reason: auth_failed`).
 
 - `mode`(실제/연습 스위치)는 **Slack · Jira를 실제로 부를지만** 정합니다. 손님 문자 · 메일은 어떤 모드에서도 실제로 보내지 않고 연습 기록만 남깁니다.
@@ -136,19 +137,19 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 | `GET /api/my-requests?user=` | 화면 `/my` | `X-Entry-Code` | `{"items": [{request_id, question, route, ticket, created_at}]}` 그 사용자 것만 |
 | `GET /api/admin/tickets?status=` | 화면 `/admin` | `X-Entry-Code`, `X-User` (이름을 `encodeURIComponent` 한 값, 약사 · 약국장만, 아니면 403) | `{"items": [{ticket_id, key, title, requester, category, priority, status, created_at}]}` |
 | `PATCH /api/admin/tickets/{id}` | 화면 `/admin` | `{status?, note?}` | 바뀐 티켓 |
-| `GET /api/admin/alerts` | 화면 `/admin` | 약사 · 약국장 | `{"items": [...]}` 회수 공표 · 긴급 알림 |
+| `GET /api/admin/alerts` | 화면 `/admin` | 약사 · 약국장 | `{"items": [...]}` 회수 공표 · 긴급 알림 — data-api `GET /alerts`를 최신순 50건으로 변환 (3초 캐시, data-api가 답하지 않으면 마지막 성공값) |
 | `POST /api/admin/tickets/{id}/recall-notice` | 화면 `/admin` (약사만) | — | `{"notices": [{customer_id, phone(가림), status: "practice_logged"}], "count"}` |
 | `POST /tickets` | n8n handoff | 머리글 `X-Api-Key`, data-api와 같은 본문 (+ 선택 `ticket_id`: data-api가 준 번호를 그대로 씀, `product`) | 201 `{ticket_id, duplicate: false}` / 같은 `key`면 200 `duplicate: true` |
-| `POST /alerts` | n8n handoff | `X-Api-Key`, data-api와 같은 본문 | `{"stored": 1, "count"}` |
+| `POST /alerts` | 시험 · 로컬 (화면은 읽지 않음) | `X-Api-Key`, data-api와 같은 본문 | `{"stored": 1, "count"}` |
 | `GET /api/types` | 화면 | — | `config/type-policy.json`의 `{type, label, examples}` 목록 |
 | `GET /api/users` | 화면 (사용자 고르기) | — | `{"items": [{name, role}]}` (연락처 없음) |
 | `GET /stock/{name}` | (품절 팩 자리) | — | 품절 팩이 꺼져 있으면 404 `{"error":"stockout pack off"}` |
 
 - 역할은 `data/users.json`의 `role`로 판단 (질문 · 요청 본문의 말로 판단하지 않음). 운영이라면 SSO라고 설계서에 적습니다.
 - 회수 손님 안내: 그 티켓의 `product`를 산 손님 중 `recall_consent: true`만, **실제 발송 없음 · 연습 기록만**, 기록에 약 이름과 연락처를 같이 두지 않음 (`notices`엔 `ticket_id` · `customer_id` · 안내문만, 안내문엔 약 이름 없음).
-- 키는 `infra/.env`에만 (`TEAM3_KEY` 하나를 compose가 `TEAM3_API_KEY` · `N8N_WEBHOOK_KEY`로 넘김, 그 밖에 `TEAM3_ENTRY_CODE` · `N8N_WEBHOOK_URL` · `DATABASE_URL`), `.env.example`만 커밋.
+- 키는 `infra/.env`에만 (`TEAM3_KEY` 하나를 compose가 `TEAM3_API_KEY` · `N8N_WEBHOOK_KEY`로 넘김, 그 밖에 `TEAM3_ENTRY_CODE` · `N8N_WEBHOOK_URL` · `DATA_API_URL` · `DATABASE_URL`), `.env.example`만 커밋. `DATA_API_URL`은 api가 화면 알림을 읽을 data-api 주소이고, compose가 `http://data-api:8800`으로 넘깁니다 (비면 로컬 저장소만 봄).
 
-**지금 뼈대** (`api/`): `app/main.py` (위 경로 전부, 메모리 저장소로 동작), `app/store.py` (`MemoryStore` 완성, `PgStore`는 자리), `app/schema.sql` (표 초안), `tests/` (pytest 6개). 실행 · 시험 명령은 `api/README.md`.
+**지금 뼈대** (`api/`): `app/main.py` (위 경로 전부, 메모리 저장소로 동작, 화면 알림은 `DATA_API_URL`이 있으면 data-api `GET /alerts`를 읽음), `app/store.py` (`MemoryStore` 완성, `PgStore`는 자리), `app/schema.sql` (표 초안), `tests/` (pytest 14개). 실행 · 시험 명령은 `api/README.md`.
 
 **병훈님이 정함**:
 
