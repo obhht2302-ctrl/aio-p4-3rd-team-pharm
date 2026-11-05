@@ -47,11 +47,14 @@ const alertText = (alert: Alert, ticket?: Ticket) => {
 const SAVE_FAIL = "저장하지 못했어요. 다시 눌러 주세요.";
 
 function HandoverNote({ memo, onOpen, onDone }: { memo: Handover; onOpen: (id: string) => void; onDone: () => void }) {
+  // 열린 건이 많아도 '확인했어요'가 가려지지 않게: 버튼은 머리 줄에, 열린 건은 3줄 + 나머지 건수
+  const shown = memo.open.slice(0, 3);
+  const rest = memo.open.length - shown.length;
   return <section className="handover-note" aria-label="지난 근무 인계">
-    <div className="handover-note-head"><b>지난 근무 인계</b><small>{memo.by} 님 · {timeLabel(memo.at)}</small></div>
+    <div className="handover-note-head"><b>지난 근무 인계</b><small>{memo.by} 님 · {timeLabel(memo.at)}</small><Button variant="outline" className="secondary-action handover-done" onClick={onDone}>확인했어요</Button></div>
     {memo.note && <p className="handover-text">{memo.note}</p>}
-    {memo.open.length > 0 && <ul className="handover-list">{memo.open.map(item => <li key={item.ticket_id}><button type="button" className="ticket-link" onClick={() => onOpen(item.ticket_id)}>{item.ticket_id} · {item.title}</button></li>)}</ul>}
-    <Button variant="outline" className="secondary-action justify-self-start" onClick={onDone}>확인했어요</Button>
+    {shown.length > 0 && <ul className="handover-list">{shown.map(item => <li key={item.ticket_id}><button type="button" className="ticket-link" onClick={() => onOpen(item.ticket_id)}>{item.ticket_id} · {item.title}</button></li>)}
+      {rest > 0 && <li className="handover-more">외 {rest}건 · 접수 목록에서 볼 수 있어요</li>}</ul>}
   </section>;
 }
 

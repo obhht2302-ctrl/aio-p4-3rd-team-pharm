@@ -19,6 +19,8 @@ const links = [
   { href: "/admin/", label: "약사 화면" },
 ];
 const roleNames: Record<string, string> = { staff: "직원", pharmacist: "책임 약사", owner: "약국장", patient: "고객" };
+// 하단 '연습 모드' 표시는 연습(mock) 빌드에서만 (실제 모드 VM에서는 빼기)
+const PRACTICE = (process.env.NEXT_PUBLIC_API_MODE || "mock") === "mock";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -62,7 +64,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <motion.main key={pathname} className="page-container" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}>
           {children}
         </motion.main>
-        <footer className="site-footer">{BRAND.pharmacy} · 연습 모드 · 사람과 제품, 연락처는 가상 데이터이며 실제 문자는 발송되지 않습니다</footer>
+        <footer className="site-footer">{BRAND.pharmacy}{PRACTICE ? " · 연습 모드" : ""} · 사람과 제품, 연락처는 가상 데이터이며 실제 문자는 발송되지 않습니다</footer>
         <Toaster position="bottom-center" richColors closeButton />
       </div></TabletFrame>
     </MotionConfig>

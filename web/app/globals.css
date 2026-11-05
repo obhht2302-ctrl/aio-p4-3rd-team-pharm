@@ -428,6 +428,8 @@ h1, h2, h3, .brand strong, .senior-title { font-family: var(--font-gowun), var(-
 .handover-note-head small { font-size: 13px; color: var(--muted-foreground); }
 .handover-text { margin: 0; font-size: 15px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
 .handover-list { display: grid; gap: 4px; margin: 0; padding-left: 18px; font-size: 14px; }
+.handover-note-head .handover-done { margin-left: auto; }
+.handover-more { list-style: none; color: var(--muted-foreground); font-size: 13px; }
 .handover-write { display: grid; gap: 10px; }
 .handover-write h2 { margin: 0; font-size: 18px; }
 .handover-sub { margin: 0; font-size: 14px; color: var(--muted-foreground); }
