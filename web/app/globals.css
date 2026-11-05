@@ -694,3 +694,19 @@ body { word-break: keep-all; overflow-wrap: break-word; }
   .pending-card { flex: 1; }
   .pending-scroll { flex: 1; max-height: none; }
 }
+
+/* 약사 접수 상세 (11/5 해든 QA): 메모 칸은 남는 높이만 씀(글이 길면 칸 안 스크롤) · '상태 저장'은 늘 보이게 · 왼쪽 정보가 길면 그 칸만 스크롤 */
+.detail-work textarea { field-sizing: fixed; resize: none; overflow-y: auto; }
+.detail-work .box-foot { flex: none; }
+@container page (min-width: 600px) {
+  .detail { flex: 1 1 0; min-height: 0; }
+  .detail-info { flex: 0 1 auto; min-height: 0; }
+  .detail-work { flex: 1 0 auto; }
+  .detail-work textarea { flex: 1 1 4rem; min-height: 3rem; }
+}
+@container page (min-width: 860px) {
+  .detail { grid-template-rows: minmax(0, 1fr); }
+  .detail-info { min-height: 0; }
+  .detail-work { min-height: 0; }
+  .detail-work textarea { flex: 1 1 0; min-height: 3rem; }
+}

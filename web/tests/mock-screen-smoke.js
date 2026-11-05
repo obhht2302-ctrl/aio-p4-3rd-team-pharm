@@ -57,12 +57,12 @@ async (page) => {
   await page.goto(origin + "/admin/");
   await page.getByRole("button", { name: "접수 목록 보기" }).click();
   await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).click();
-  await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).waitFor({ state: "visible" });
+  await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).waitFor({ state: "visible" });
   await page.getByRole("button", { name: "처리 중", exact: true }).click();
   await page.getByRole("button", { name: "상태 저장" }).click();
   await page.getByText("상태를 저장했어요.").waitFor({ state: "visible" });
   verify(true, "티켓 상태 저장");
-  await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).click();
+  await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).click();
   const notice = page.locator(".notice-result");
   await notice.waitFor({ state: "visible" });
   verify(await notice.getByText("연습 기록 · 실제 발송 없음").isVisible(), "회수 안내는 연습 기록");
@@ -75,7 +75,7 @@ async (page) => {
   await page.getByRole("button", { name: "접수 목록 보기" }).click();
   await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).click();
   await page.getByText("손님 안내는 약사 계정에서만").waitFor({ state: "visible" });
-  verify(await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).count() === 0, "약국장 회수 안내 제한");
+  verify(await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).count() === 0, "약국장 회수 안내 제한");
 
   await login("최영순");
   const followup = "혈압약이랑 관절약 같이 먹어도 돼요?";

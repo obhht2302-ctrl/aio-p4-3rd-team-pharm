@@ -118,14 +118,14 @@ function TicketDetail({ ticket, who, onSaved }: { ticket: Ticket; who: Who; onSa
   };
 
   return <motion.div className="detail" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-    <div className="detail-info">
+    <ScrollBox className="detail-info">
     <div className="detail-head"><span className="detail-id">{ticket.ticket_id}</span>{ticket.priority === "high" && <span className="urgent-pill">긴급</span>}<StatusPill status={ticket.status} /></div>
     <h3 className="detail-title">{ticket.title}</h3>
     <dl className="kv"><dt>요청</dt><dd>{ticket.requester} · {timeLabel(ticket.created_at)}</dd><dt>분류</dt><dd>{categoryNames[ticket.category] ?? ticket.category}</dd>{ticket.product && <><dt>제품</dt><dd>{ticket.product}</dd></>}</dl>
-    {ticket.category === "recall" && who.role === "pharmacist" && <div className="notice-box"><div><b>손님 안내 보내기</b><p>이 제품을 산 손님 중 동의한 분만 기록해요. 실제로 발송되지 않아요.</p></div><Button className="primary-action danger-action" disabled={sending} onClick={notify}><Send size={16} /> {sending ? "기록하는 중" : "손님 안내 보내기 (연습)"}</Button></div>}
+    {ticket.category === "recall" && who.role === "pharmacist" && <div className="notice-box"><div><b>회수 손님 안내</b><p>이 제품을 산 손님 중 동의한 분만 기록해요. 실제로 발송되지 않아요.</p></div><Button className="primary-action danger-action" disabled={sending} onClick={notify}><Send size={16} /> {sending ? "기록하는 중" : "손님 안내 보내기"}</Button></div>}
     {ticket.category === "recall" && who.role === "owner" && <p className="callout"><b>권한 안내</b> 손님 안내는 약사 계정에서만 할 수 있어요.</p>}
     {notice && <div className="notice-result" aria-live="polite"><strong>연습 기록 · 실제 발송 없음</strong><p>동의한 손님 {notice.count}명에게 안내한 것으로 기록했어요.</p><p>가린 번호: {notice.notices.map(item => item.phone).join(", ")}</p></div>}
-    </div>
+    </ScrollBox>
     <div className="detail-work">
     {error && <p className="error-box" role="alert">{error}</p>}
     <h4 className="section-label">처리 상태</h4>
