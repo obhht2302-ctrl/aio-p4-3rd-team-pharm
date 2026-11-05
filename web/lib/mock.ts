@@ -2,7 +2,7 @@
 import ex from "./contract-examples.json";
 import type { Who } from "./session";
 
-type RequestItem = { request_id: string; question: string; route: string; created_at: string; ticket: { ticket_id: string; status?: string } | null };
+type RequestItem = { request_id: string; question: string; route: string; created_at: string; ticket: { ticket_id: string; status?: string; priority?: string } | null };
 type Ticket = { ticket_id: string; status: string; [key: string]: unknown };
 type AskInput = { user: string; question: string; context?: string; attempt?: number };
 const examples = ex as unknown as Record<string, { response: unknown }>;
@@ -83,6 +83,8 @@ export function mock(method: string, path: string, body?: unknown, who?: Who | n
     const isFollowup = input.question === seniorFollowupQuestion;
     const needsMore = isFollowup && !input.context?.trim();
     const shouldHandoff = input.question !== exampleQuestion && !needsMore;
+    // 위험 신호 흉내 (실제는 packs/senior/pack.json handoff_rules): 긴급 이관 → 어르신 화면에 119 카드
+    const risky = /숨이|숨쉬|가슴이|가슴 통증|의식|정신이|쓰러|경련|피를|피가|두드러기|입술|얼굴이 부|와파린/.test(input.question);
     let response: { route: string; answer: string; sources: unknown[]; ticket: RequestItem["ticket"]; agents: string[] };
     if (input.question === exampleQuestion) {
       response = copy<typeof response>("POST /api/ask");
@@ -91,7 +93,8 @@ export function mock(method: string, path: string, body?: unknown, who?: Who | n
     } else {
       response = {
         route: "담당자 이관",
-        answer: isFollowup
+        answer: risky ? "걱정되는 증상이에요. 약사에게 긴급으로 넘겼어요."
+          : isFollowup
           ? "알려 주신 내용을 약사가 확인할 수 있도록 접수했어요. 임의로 함께 복용하지 마세요."
           : "연습 모드에는 이 질문의 답변 자료가 없어요. 담당자 확인 건으로 접수했어요.",
         sources: [], ticket: null, agents: [],
@@ -101,11 +104,11 @@ export function mock(method: string, path: string, body?: unknown, who?: Who | n
       const ticketId = `T-MOCK-${Date.now()}-${serial}`;
       const ticket: Ticket = {
         ticket_id: ticketId, key: requestId, title: input.question, requester: input.user,
-        category: isFollowup ? "senior" : "other", priority: "normal", status: "접수됨",
+        category: isFollowup || risky ? "senior" : "other", priority: risky ? "high" : "normal", status: "접수됨",
         created_at: new Date().toISOString(),
       };
       tickets.unshift(ticket);
-      response.ticket = { ticket_id: ticketId, status: "접수됨" };
+      response.ticket = { ticket_id: ticketId, status: "접수됨", ...(risky ? { priority: "high" } : {}) };
     }
     if (who?.role === "patient") response.answer += `\n\n${seniorDisclosure}`;
     const item: RequestItem = { request_id: requestId, question: input.question, route: response.route, ticket: response.ticket, created_at: new Date().toISOString() };
