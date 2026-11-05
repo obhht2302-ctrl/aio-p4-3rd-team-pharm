@@ -640,9 +640,9 @@
       "typeVersion": 3.1,
       "parameters": {
         "promptType": "define",
-        "text": "=질문: {{ $('Build context').first().json.clean_question }}\\n처리 방식: {{ $('Build context').first().json.plan.mode }}\\n발췌: {{ $('Build context').first().json.context }}",
+        "text": "=질문: {{ $('Build context').first().json.clean_question }}\\n처리 방식: {{ $('Build context').first().json.plan.mode }}\\n발췌: {{ $('Build context').first().json.context }}\n보완 답: {{ $('Validate input').first().json.context }}",
         "options": {
-          "systemMessage": "번호 붙은 발췌만 사용해 해요체로 2~3문장 답한다. 쓴 발췌 번호를 [1]처럼 붙인다. 발췌 밖 숫자나 약속을 만들지 않는다. 발췌에 없는 효능·효과 표현을 추가하지 않는다. 예를 들어 발췌의 “쓰는 성분”을 “효과적”이라고 바꾸지 않는다. 약을 같이 먹어도 된다거나 복용량을 바꾸라는 판단을 하지 않는다. 현금 차액을 임의로 처리하라고 하지 않는다. evidence_handoff면 지금 할 첫 조치만 짧게 말하고 담당자에게 넘겼다고 쓴다. 손님 연락 여부 질문에는 recall-customer-guide 발췌가 있으면 그것을 먼저 인용한다. 약국장의 차액 승인 기준 질문에는 mgr-owner-rules 발췌가 있으면 그것을 인용한다.",
+          "systemMessage": "번호 붙은 발췌만 사용해 해요체로 2~3문장 답한다. 쓴 발췌 번호를 [1]처럼 붙인다. 발췌 밖 숫자나 약속을 만들지 않는다. 발췌에 없는 효능·효과 표현을 추가하지 않는다. 예를 들어 발췌의 “쓰는 성분”을 “효과적”이라고 바꾸지 않는다. 약을 같이 먹어도 된다거나 복용량을 바꾸라는 판단을 하지 않는다. 보완 답에 약 이름이나 상황이 이미 있으면 다시 묻지 않고, 받은 약 이름을 짧게 되짚은 뒤 약사에게 확인을 넘겼다고 쓴다. 현금 차액을 임의로 처리하라고 하지 않는다. evidence_handoff면 지금 할 첫 조치만 짧게 말하고 담당자에게 넘겼다고 쓴다. 손님 연락 여부 질문에는 recall-customer-guide 발췌가 있으면 그것을 먼저 인용한다. 약국장의 차액 승인 기준 질문에는 mgr-owner-rules 발췌가 있으면 그것을 인용한다.",
           "maxIterations": 1
         }
       },
@@ -683,7 +683,7 @@
       "typeVersion": 3.1,
       "parameters": {
         "promptType": "define",
-        "text": "=발췌: {{ $('Build context').first().json.context }}\\n답변: {{ $('Writer').first().json.output }}",
+        "text": "=발췌: {{ $('Build context').first().json.context }}\n보완 답: {{ $('Validate input').first().json.context }}\\n답변: {{ $('Writer').first().json.output }}",
         "options": {
           "systemMessage": "발췌가 답변을 뒷받침하고 복용 판단, 현금 결정, 연락처 노출, 발췌 밖 숫자와 발췌에 없는 효능·효과 표현이 없는지 확인한다. “쓰는 성분”을 “효과적”이라고 바꾼 답은 grounded=false로 판정한다. JSON 하나만 출력: {\"grounded\":true,\"policy_ok\":true,\"issues\":[]}. 답변을 다시 쓰지 않는다.",
           "maxIterations": 1
