@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import itertools
 import time
+from datetime import datetime
 from pathlib import Path
 
 
@@ -30,6 +31,13 @@ class MemoryStore:
 
     def my_requests(self, user: str) -> list[dict]:
         return [r for r in reversed(self.requests) if r["user"] == user]
+
+    def list_requests(self, routes: list[str] | None = None, since: datetime | None = None) -> list[dict]:
+        """약사 · 약국장 화면용 (막힌 요청 모아 보기 · 오늘 집계). 최근 것부터."""
+        rows = [r for r in reversed(self.requests) if not routes or r.get("route") in routes]
+        if since:
+            rows = [r for r in rows if datetime.strptime(r["created_at"], "%Y-%m-%dT%H:%M:%S%z") >= since]
+        return rows
 
     # tickets (data-api와 같은 모양, key 멱등)
     def upsert_ticket(self, body: dict) -> tuple[dict, bool]:
@@ -111,6 +119,17 @@ class PgStore:
                 """SELECT request_id, "user", question, route, ticket_id, created_at
                    FROM requests WHERE "user" = %s ORDER BY created_at DESC""",
                 (user,),
+            )
+            return [self._request_row(row) for row in cur.fetchall()]
+
+    def list_requests(self, routes: list[str] | None = None, since: datetime | None = None) -> list[dict]:
+        with self._db.cursor() as cur:
+            cur.execute(
+                """SELECT request_id, "user", question, route, ticket_id, created_at FROM requests
+                   WHERE (%(routes)s::text[] IS NULL OR route = ANY(%(routes)s::text[]))
+                     AND (%(since)s::timestamptz IS NULL OR created_at >= %(since)s::timestamptz)
+                   ORDER BY created_at DESC LIMIT 500""",
+                {"routes": routes, "since": since},
             )
             return [self._request_row(row) for row in cur.fetchall()]
 
