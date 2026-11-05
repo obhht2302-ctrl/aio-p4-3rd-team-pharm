@@ -1735,6 +1735,31 @@
      ],
      "total_ms": 932,
      "cached": false
+    },
+    "run2": {
+     "attempt": 2,
+     "context": "암로디핀, 콧물 감기약(클로르페니라민)",
+     "http": 200,
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "ticket_id": "T-2019",
+     "ticket_assignee": "pharmacist",
+     "ticket_priority": "normal",
+     "sources": [
+      {
+       "doc": "senior-safety-signals",
+       "score": 0.528
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier",
+      "handoff"
+     ],
+     "total_ms": 3820,
+     "cached": false
     }
    },
    {
@@ -1782,6 +1807,35 @@
      ],
      "total_ms": 735,
      "cached": false
+    },
+    "run2": {
+     "attempt": 2,
+     "context": "아세트아미노펜",
+     "http": 200,
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "ticket_id": "T-2020",
+     "ticket_assignee": "pharmacist",
+     "ticket_priority": "normal",
+     "sources": [
+      {
+       "doc": "senior-pain-joint",
+       "score": 0.486
+      },
+      {
+       "doc": "senior-safety-signals",
+       "score": 0.399
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier",
+      "handoff"
+     ],
+     "total_ms": 3281,
+     "cached": false
     }
    },
    {
@@ -1828,6 +1882,39 @@
       "triage"
      ],
      "total_ms": 884,
+     "cached": false
+    },
+    "run2": {
+     "attempt": 2,
+     "context": "나프록센",
+     "http": 200,
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "ticket_id": "T-2021",
+     "ticket_assignee": "pharmacist",
+     "ticket_priority": "normal",
+     "sources": [
+      {
+       "doc": "senior-pain-joint",
+       "score": 0.409
+      },
+      {
+       "doc": "senior-pain-joint",
+       "score": 0.396
+      },
+      {
+       "doc": "senior-pain-joint",
+       "score": 0.411
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier",
+      "handoff"
+     ],
+     "total_ms": 3323,
      "cached": false
     }
    },
@@ -1960,11 +2047,16 @@
    "defs": {
     "evidence_found": "검색 시험(위 ranked): top-1 점수 >= 0.37 이고 기대 문서가 top-4 안",
     "run_sources_attached": "실제 실행 응답 sources가 1개 이상 (보완 질문은 검색 전에 끝나 sources 없음)",
-    "handoff_executed_judgment": "판단 5문항 중 route=담당자 이관 + 티켓 번호가 생긴 수"
+    "handoff_executed_judgment": "판단 5문항 중 route=담당자 이관 + 티켓 번호가 생긴 수",
+    "handoff_executed_judgment_after_clarify": "판단 5문항 중 1턴 이관(J4 · J5) + 보완 질문 뒤 2턴째(약 이름을 context로, attempt 2) 이관된 수"
    },
    "at": "2026-11-05T14:38:21+09:00",
    "vm_commit": "f05f277",
-   "how": "팀 VM uv run tools/flow.py call team3-support, 문항당 1회, attempt 1, 사실=최영순 · 판단=한기철 (patient)"
+   "how": "팀 VM uv run tools/flow.py call team3-support, 문항당 1회, attempt 1, 사실=최영순 · 판단=한기철 (patient)",
+   "handoff_executed_judgment_after_clarify": "5/5",
+   "at_turn2": "2026-11-05T14:42:17+09:00",
+   "vm_commit_turn2": "459bacd",
+   "index_note": "1턴(run)은 VM f05f277 색인(#35 지식 문서 변경 전), 2턴째(run2)는 459bacd 재색인 뒤. #35는 지식 문서 2개만 바꿔 handoff_rules · 워크플로우는 같음 → route · reason · 배정 · 긴급도는 영향 없고 run sources 점수만 재색인 전 값. 검색 열(ranked · top1_score)은 #35 갱신값"
   }
  }
 }
