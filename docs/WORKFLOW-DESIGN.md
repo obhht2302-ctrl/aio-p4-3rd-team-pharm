@@ -1,6 +1,6 @@
 # 노코드 워크플로우 설계서 · 3팀
 
-> 샘 `templates/WORKFLOW-DESIGN-TEMPLATE.md` (원본 요구 KSM-REQ 4절 산출물 1)의 구조입니다. 노드 이름은 `workflows/*.json`의 실제 이름과 같아야 합니다. `<측정 후>` 칸은 `runs/` 보고서에서 옮깁니다. 담당: 1절 리드, 2~4절 오케스트레이션, 5~7절 연동 · 안정성.
+> 샘 `templates/WORKFLOW-DESIGN-TEMPLATE.md` (원본 요구 KSM-REQ 4절 산출물 1)의 구조입니다. 노드 이름은 `workflows/*.json`의 실제 이름과 같아야 합니다. 담당: 1절 리드, 2~4절 오케스트레이션, 5~7절 연동 · 안정성.
 
 ## 1. 업무 시나리오
 
@@ -77,7 +77,7 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | 분기 | `Route by mode` | 처리 방식 4개 + 권한 없음 · 보완 질문 | `Type policy` 표 | WF-01 · 02 · 05 · 06 · 12 |
 | 분기 | `Build context` → `Evidence?` → `Check answer` | 검색 점수 · 근거 유무 · 금지 문장 | `SCORE_MIN` = 0.37 (영민 실측), `top_k` = 4 | WF-03, T-33 |
-| 병렬 | `Route by mode` → `Search knowledge` + `Get record` → `Merge evidence` | 근거 검색과 접수 조회는 서로의 결과가 필요 없어 한 노드에서 두 갈래로 나눔 · 수업 n8n(`executionOrder` v1)은 갈래를 하나씩 실행 | — (잰 시간: <측정 후>) | WF-12 |
+| 병렬 | `Route by mode` → `Search knowledge` + `Get record` → `Merge evidence` | 근거 검색과 접수 조회는 서로의 결과가 필요 없어 한 노드에서 두 갈래로 나눔 · 수업 n8n(`executionOrder` v1)은 갈래를 하나씩 실행 | — | WF-12 |
 | 루프 | `attempt` (요청 사이) | 보완 질문 | 최대 3회 (3회째 이관) | WF-02 · 02b, T-32 · 33 |
 | 외부 호출 | HTTP 재시도 없음 | 본체의 HTTP Request 7개 (`Check user` · `Check cache` · `Search knowledge` · `Get record` · `Handoff` · `Save cache` · `Log request`) | 각 호출은 설정된 timeout 뒤 오류 갈래로 진행. `Get record`의 4초 제한은 전체 6초 응답 목표를 위한 값. 티켓 생성 재시도는 별도 `team3-handoff` 계약 (`00-DESIGN.md` 3.4절) | WF-04 · 11 |
 

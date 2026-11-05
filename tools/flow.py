@@ -4,11 +4,12 @@
 # ///
 """Course helper: check, push and test the n8n workflows that a CLI coding agent wrote.
 
-3팀판 (샘 77일차 tools/flow.py 복사본, 팀 레포 뿌리에서 실행: uv run tools/flow.py ...). 샘 판과 다른 곳은 4개뿐:
+3팀판 (샘 77일차 tools/flow.py 복사본, 팀 레포 뿌리에서 실행: uv run tools/flow.py ...). 샘 판과 다른 곳은 5개뿐:
   1) TEAM_CREDENTIALS — 우리 팀 Credential(웹훅 키 · FastAPI 키 · Jira · Slack)도 허용해 check · push가 막히지 않음
   2) runs/ 보고서 · cases · requests 경로 = 팀 레포 (ROOT = 레포 뿌리)
   3) 샘 키트에 있는 것(n8n 설치 .env · llm 장애 스크립트 · budget.json)은 SAM_LAST3MON (기본 ~/aio-01d4-stu/Last3Mon)에서 찾음
   4) 팀 웹훅 Header Auth — 웹훅 부를 때 X-Team-Key = FLOW_WEBHOOK_KEY, 비면 infra/.env 의 TEAM3_KEY
+  5) llm down · up — infra/.env 에 OPENAI_API_KEY가 있으면 (팀 VM) 그 키로 Credential을 직접 등록 (샘 Last3Mon/.env 없이)
 
   uv run tools/flow.py doctor                          # is everything ready?
   uv run tools/flow.py check my-work/helpdesk.json     # find mistakes before n8n sees the file
@@ -92,17 +93,17 @@ CONTAINER = find_container()
 N8N_URL = os.getenv("N8N_URL", "http://localhost:5678").rstrip("/")
 
 
-def team_webhook_key() -> str:  # 3팀판: 팀 웹훅 Header Auth 키 = FLOW_WEBHOOK_KEY, 없으면 infra/.env 의 TEAM3_KEY
-    key = os.getenv("FLOW_WEBHOOK_KEY", "").strip()
+def team_env(name: str) -> str:  # 3팀판: 레포 infra/.env 의 값 (없으면 "")
     env_file = ROOT / "infra/.env"
-    if not key and env_file.exists():
+    if env_file.exists():
         for row in env_file.read_text(encoding="utf-8").splitlines():
-            if row.startswith("TEAM3_KEY="):
-                key = re.sub(r"\s#.*$", "", row.split("=", 1)[1]).strip().strip("'\"")
-    return key
+            if row.startswith(f"{name}="):
+                return re.sub(r"\s#.*$", "", row.split("=", 1)[1]).strip().strip("'\"")
+    return ""
 
 
-WEBHOOK_KEY = team_webhook_key()
+# 3팀판: 팀 웹훅 Header Auth 키 = FLOW_WEBHOOK_KEY, 없으면 infra/.env 의 TEAM3_KEY
+WEBHOOK_KEY = os.getenv("FLOW_WEBHOOK_KEY", "").strip() or team_env("TEAM3_KEY")
 
 # Versions written in AGENTS.md. Other versions still work if n8n knows them (warning only).
 RECOMMENDED = {
@@ -1085,6 +1086,21 @@ def cmd_fault(args: argparse.Namespace) -> int:
 
 def cmd_llm(args: argparse.Namespace) -> int:
     """Outage drill: register the course OpenAI credential with a broken key (down) or the real key from .env (up)."""
+    real_key = team_env("OPENAI_API_KEY")  # 3팀판: infra/.env 에 키가 있으면 (팀 VM) 샘 스크립트 없이 직접 등록
+    if real_key:
+        key = "sk-invalid-key-for-drill-000000" if args.state == "down" else real_key
+        base_url = team_env("OPENAI_BASE_URL") or "https://api.openai.com/v1"
+        credential = [{"id": "openAiCourse0001", "name": "OpenAI (.env)", "type": "openAiApi", "data": {"apiKey": key, "url": base_url}}]
+        result = docker("exec", "-i", CONTAINER, "sh", "-c",
+                        "cat > /tmp/course-credentials.json && n8n import:credentials --input=/tmp/course-credentials.json; "
+                        "status=$?; rm -f /tmp/course-credentials.json; exit $status",
+                        stdin=json.dumps(credential), check=False)
+        if result.returncode != 0:
+            print((result.stderr or result.stdout).strip())
+            return 1
+        print(f"{OK} OpenAI credential: " + ("broken key (drill). Restore with: uv run tools/flow.py llm up" if args.state == "down"
+                                            else "real key from infra/.env restored"))
+        return 0
     script = SAM_LAST3MON / "65" / "n8n" / "register-credentials.sh"
     if not script.exists():
         die(f"{script} not found")
