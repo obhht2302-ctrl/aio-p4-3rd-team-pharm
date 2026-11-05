@@ -184,8 +184,11 @@ export default function AdminPage() {
   const ticket = tickets.find(item => item.ticket_id === selected);
   const openTickets = tickets.filter(item => item.status !== "처리 완료");
   const urgentAlerts = alerts.filter(alert => alert.severity === "high" || alert.severity === "critical");
-  // 맨 위 배너: 아직 안 끝난 티켓이 달린 긴급 알림 먼저
-  const lead = urgentAlerts.find(alert => openTickets.some(item => item.ticket_id === alert.ticket_id)) ?? urgentAlerts[0];
+  // 맨 위 배너: 열린 회수(recall) 티켓이 있으면 그것 먼저 (해든 QA 11/5: 최근 긴급 건이 배너를 차지해 회수가 안 보였음, 아직 손 안 댄 '접수됨' 우선)
+  // → 없으면 아직 안 끝난 티켓이 달린 긴급 알림 → 그 밖의 긴급 알림
+  const recall = openTickets.find(item => item.category === "recall" && item.status === "접수됨") ?? openTickets.find(item => item.category === "recall");
+  const recallLead: Alert | undefined = recall && (urgentAlerts.find(alert => alert.ticket_id === recall.ticket_id) ?? { reason: "recall", severity: "high", message: recall.title, ticket_id: recall.ticket_id, at: recall.created_at });
+  const lead = recallLead ?? urgentAlerts.find(alert => openTickets.some(item => item.ticket_id === alert.ticket_id)) ?? urgentAlerts[0];
   const leadTicket = tickets.find(item => item.ticket_id === lead?.ticket_id);
   // 오른쪽 '그 밖의 알림': 왼쪽 열린 접수 목록에 이미 있는 건 빼고, 같은 문구는 한 줄로 묶음
   const others: { text: string; count: number; at?: string; ticket_id?: string }[] = [];
