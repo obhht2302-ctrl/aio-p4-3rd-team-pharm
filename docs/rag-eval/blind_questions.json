@@ -1,5 +1,5 @@
 {
- "_note": "블라인드 질문 25개 (2026-11-05): 맥락 없는 에이전트가 문서를 보지 않고 쓴 질문을 그대로 복사했다. 정답 문서 기준은 9648 명세 2절과 같다: Q01~05 = recall-first-response 또는 recall-customer-guide, Q06~10 = closing-checklist 또는 closing-cash-mismatch, Q11·Q13·Q14 = senior-cold-sleep-stomach, Q12·Q15 = senior-pain-joint, Q16~21 = senior-safety-signals, Q22~25 = 문서 밖(정답 없음, hit 집계 제외). 권한은 모두 all.",
+ "_note": "블라인드 질문 25개 (2026-11-05): 맥락 없는 에이전트가 문서를 보지 않고 쓴 질문을 그대로 복사했다. 정답 문서 기준: Q01~05 = recall-first-response 또는 recall-customer-guide, Q06~10 = closing-checklist 또는 closing-cash-mismatch, Q11·Q13·Q14 = senior-cold-sleep-stomach, Q12·Q15 = senior-pain-joint, Q16~21 = senior-safety-signals, Q22~25 = 문서 밖(정답 없음, hit 집계 제외). 권한은 모두 all.",
  "questions": [
   {
    "id": "Q01",
