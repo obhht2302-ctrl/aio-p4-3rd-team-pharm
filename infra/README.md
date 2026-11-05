@@ -22,7 +22,6 @@ curl -s localhost:8000/health
 
 - 샘 시나리오의 `before`(`/tickets-reset` · `/cache-clear` …)와 `flow.py fault`는 이 data-api에서도 그대로 됩니다.
 - 문서 · 데이터를 고치면 `packs.py build` 뒤 `docker compose ... restart data-api` (파일을 그대로 읽어서 보통은 재시작 없이도 반영).
-- 80일차 키트가 나오면 `SAM_DATA_API`를 80판으로 바꾸고, 팀 데이터 파일 이름이 다르면 `compose.team3.yml`의 `volumes`만 고칩니다 (키트 확인).
 - 팀 VM 배포 순서는 `specs/05-lead.md` 4절 (주소 · 비밀번호는 여기에 쓰지 않음).
 
 ## 팀 VM (리드)

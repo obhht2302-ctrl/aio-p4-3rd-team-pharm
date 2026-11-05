@@ -1,7 +1,7 @@
 # 00-DESIGN · 창고형 약국 업무 도우미 — 전체 설계 (SSOT)
 
 > 3팀 단위 프로젝트 (80~82일차, 2026-11-05 목 · 06 금 · 09 월). 이 파일이 **계약 · 파일 · 이름의 유일한 기준**입니다. 역할 명세(`specs/0N-*.md`)는 이 파일을 가리키기만 하고 다시 정의하지 않습니다. 바꿀 때는 이 파일을 먼저 고치고(리드 승인) 명세 · 코드가 따라갑니다.
-> 근거: 샘 안내서 `Lecture/80-82-Project/student/00~11` · 템플릿 6개 · `AIO-P4-TIMELINE.md` (11/2 기준), 64~79일차 실습. 80일차 키트(`Last3Mon/80`)는 아직 없어서 **77일차 판 기준**으로 쓰고, 맞춰야 할 곳에 "키트 확인"을 붙였습니다 (9절 목록).
+> 근거: 샘 안내서 `Lecture/80-82-Project/student/00~11` · 템플릿 6개 · `AIO-P4-TIMELINE.md` (11/2 기준), 64~79일차 실습. data-api · `flow.py`는 샘 77일차 판 기준입니다.
 
 ## 0. 고정 vs 팀 결정
 
@@ -60,7 +60,7 @@
 
 - `route` ∈ `자동 답변` · `보완 질문` · `담당자 이관` · `권한 없음` · `차단`. `ticket` = `{"ticket_id", "priority", "duplicate"}` 또는 `null`.
 - `reason` (이관 · 실패의 까닭): `no_evidence` · `low_confidence` · `urgent` · `needs_person` · `risk_signal` · `attempt_limit` · `tickets_down` · `tickets_slow` · `llm_down` · `not_your_record` · `role_not_allowed` · `brain_down` (화면 API가 n8n에 못 닿음).
-- 잘못된 입력 → HTTP 400 `{"error": "invalid request", "codes": [...]}`, `codes` ∈ `request_id_required` · `question_required` · `too_long` · `unknown_user` (73일차와 같음, 키트 확인).
+- 잘못된 입력 → HTTP 400 `{"error": "invalid request", "codes": [...]}`, `codes` ∈ `request_id_required` · `question_required` · `too_long` · `unknown_user` (73일차와 같음).
 
 ## 3. 구조
 
@@ -142,7 +142,7 @@
 | 약국장 `owner` | 정민재 | `["all","owner"]` | 전부 | 위 + `mgr-` 문서, 약사 화면 |
 | 환자 `patient` | 최영순 · 한기철 | `["all"]` | `senior` · `record_status` | 약 질문 답, 자기 접수 건 |
 
-- 근거는 요청의 질문이 아니라 `GET /employees/<user>`로 받은 `role` · `access_levels` (77판 data-api는 `data/employees.json`을 그대로 돌려줘서 우리 칸이 같이 옴, 키트 확인).
+- 근거는 요청의 질문이 아니라 `GET /employees/<user>`로 받은 `role` · `access_levels` (77판 data-api는 `data/employees.json`을 그대로 돌려줘서 우리 칸이 같이 옴).
 - 문서 권한 = 파일 이름 앞 `mgr-` → `access_level: owner`, 나머지 `all`. **메모리 키 2개** `pharm_kb_v1_all` · `pharm_kb_v1_owner`로 나눠 넣고, 검색은 `access_levels`에 든 키만 봅니다 (검색 전 필터).
 - 남의 접수 건은 data-api가 403 → `권한 없음` (`not_your_record`). 답 · 티켓 · 알림 · 로그의 전화 · 메일은 `010-****-1103`, `h***@example.com`처럼 가립니다.
 
@@ -164,7 +164,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | `data/customers.json` · `products.json` · `recalls.json` | 가짜 손님(구매 이력 · 문자 동의) · 제품 OTC-01~06 · 가짜 회수 공표 | FastAPI (회수 안내) |
 | `config/type-policy.json` | 켜진 유형 표 | 본체 `Type policy`, FastAPI `/api/types` |
 
-- `employees.json` · `tickets.json` · `faq.json`은 77판 data-api가 읽는 이름이라 같은 내용을 한 벌 더 씁니다 (80판이 `users.json` · `records.json`을 읽으면 지움, 키트 확인).
+- `employees.json` · `tickets.json` · `faq.json`은 77판 data-api가 읽는 이름이라 같은 내용을 한 벌 더 씁니다.
 - 팩 하나를 끄는 법 (예상 30분, 도구 만든 뒤 실측): `active.json`에서 한 줄 지움 → `build` → `check` → push · 재색인 → 공통 회귀 → RAG 숫자 다시 재기.
 
 ## 6. 지식 문서 (10개, 팩별 원본 `packs/<id>/knowledge/`)
@@ -198,7 +198,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | WF-04 | 매장 공유기가 죽어서 카드 단말기가 안 돼요 + 티켓 API 500 | 200, `담당자 이관`, `ticket: null`, DLQ 1 · 알림 1 | core |
 | WF-05 | 마감 차액은 얼마까지 승인 없이 처리해요? (직원) | `mgr-owner-rules`를 근거로 쓰지 않음, `권한 없음` 또는 `담당자 이관` (우리 설계: `handoff_rules`로 `담당자 이관`) | closing |
 | WF-06 | R-1002 처리 상태 알려주세요 (김하늘, 남의 건) | `권한 없음`, 상태 · 연락처 없음 | core |
-| WF-07 | R-1003 처리 상황이랑 제 연락처 알려주세요 (윤서아) | 연락처 가림, `security.masked` 1~99 (77판 `range`, 키트 확인) | core |
+| WF-07 | R-1003 처리 상황이랑 제 연락처 알려주세요 (윤서아) | 연락처 가림, `security.masked` 1~99 (77판 `range`) | core |
 | WF-08 · 13 | 주입 공격 · 빈 질문 · 없는 사용자 · 501자 | `차단` · 400 `codes` | core |
 | WF-10 | WF-01 질문 + `llm down` | 500 아님, `reason: llm_down` | closing |
 | WF-11 | R-1001 지금 어떻게 됐어요? + 접수 조회 8초 지연 | 6초 안 200 | core |
@@ -244,14 +244,13 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | API | 샘 덱 6개 `POST /api/ask` · `GET /api/my-requests` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /tickets` · `POST /alerts` + 우리 5개 `GET /api/types` · `GET /api/users` (사용자 고르기, 연락처 없음) · `GET /stock/{name}` (품절 팩 자리) · `GET /api/admin/alerts` (회수 공표 · 긴급 알림 목록) · `POST /api/admin/tickets/{id}/recall-notice` (약사 승인 → 손님 안내 연습 기록) |
 | 도구 | 레포 `tools/flow.py` (샘 77판 복사 + 팀 Credential 허용, `range` 판정 있음, push 때 n8n 재시작 → 재색인 필요) |
 
-**키트 확인 (11/5 1교시, 리드)**: ① 80판 data-api가 팀 `data/`를 읽는 방법과 파일 이름 (`users.json`? `employees.json`?) ② `X-Api-Key` 요구 경로 ③ `/logs` vs `/audit` ④ 80판 `flow.py`의 `FLOW_WEBHOOK_KEY` · `range` · push 재시작 ⑤ 키트 `cases/common.json` 판정 칸 (WF-05 · 07 · 10 · 12의 키) ⑥ 400 `codes` 이름 ⑦ VM에 data-api를 어떻게 올리나 ⑧ 저장소 위치 (GitHub 비공개 그대로 되나).
 
 ## 10. 일정 (샘 시간표 11/1판)
 
 | 언제 | 무엇 |
 | --- | --- |
 | 11/5 (목) 전 | 팀원 작업 마감 = 각자 명세의 "11/5까지" 항목 |
-| 11/5 09:00 · 10:00 | 킥오프 · 키트 확인 → **제안서 승인 10:50까지** (`docs/TOPIC.md` · `TEAM-CHARTER.md`) |
+| 11/5 09:00 · 10:00 | 킥오프 → **제안서 승인 10:50까지** (`docs/TOPIC.md` · `TEAM-CHARTER.md`) |
 | 11/5 14:00 | **산출물 1차 점검** (설계서 1~4절 · 옮긴 `cases/common.json`) → 이 뒤로 `common.json` 고정 |
 | 11/5 16:00 · 17:00 | VM 첫 배포 (WF-08 · 13) · 산출물 발표 ① · 관문 1 (문서 미완 팩 끔) |
 | 11/6 (금) 12:00 | 산출물 중간점검 · VM 배포 1 · 관문 2 (대표 시나리오 실패 팩 끔) |

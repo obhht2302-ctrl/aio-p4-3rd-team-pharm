@@ -1,6 +1,6 @@
 # AGENTS.md · 3팀 창고형 약국 업무 도우미 (team3-support)
 
-CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 때 따르는 규칙입니다. 샘 `09-AGENT-WORKING-RULES`와 64~79일차 `AGENTS.md`를 바탕으로 했고, 80일차 키트의 `AGENTS.md`가 나오면 2 · 4절을 맞춥니다 (키트 확인). claude는 `CLAUDE.md`의 `@AGENTS.md` 한 줄로 이 파일을 읽습니다.
+CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 때 따르는 규칙입니다. 샘 `09-AGENT-WORKING-RULES`와 64~79일차 `AGENTS.md`를 바탕으로 했습니다. claude는 `CLAUDE.md`의 `@AGENTS.md` 한 줄로 이 파일을 읽습니다.
 
 ## 1. 작업 순서
 
@@ -17,9 +17,9 @@ CLI 코딩 에이전트(codex · claude · agy)가 이 저장소에서 일할 �
 | --- | --- |
 | n8n | 2.42.6 (각자 노트북 `~/day65-n8n`, 팀 VM은 팀장이 배포), 웹훅 `http://localhost:5678/webhook/<path>` (n8n 안에서도 같음) |
 | OpenAI Credential | id `openAiCourse0001`, 이름 `OpenAI (.env)`, 채팅 `gpt-4.1-mini`, 임베딩 `text-embedding-3-large`. Ollama 없음 |
-| data-api | n8n 안 `http://data-api:8800`, 터미널 `http://localhost:8800`. 지금 기준은 77일차 판, 80일차 판이 나오면 맞춤 (키트 확인) |
+| data-api | n8n 안 `http://data-api:8800`, 터미널 `http://localhost:8800`. 샘 77일차 판 `server.py`에 우리 `data/` · `knowledge/` |
 | 팀 웹훅 인증 | Header Auth Credential `team3WebhookKey` (머리글 `X-Team-Key`) |
-| data-api 나가는 호출 | Credential `dataApiKey` (`X-Api-Key`, 80일차 판에서 요구 — 키트 확인) |
+| data-api 나가는 호출 | 키 없음 (연습용 data-api) |
 | FastAPI 부르는 호출 | Credential `team3ApiKey` (`X-Api-Key`). 팀 Credential은 `bash tools/setup.sh`가 `infra/.env`에서 등록 |
 | 도구 | 레포 `tools/flow.py` = 샘 77판 + 팀 Credential 허용 (check · push · call · test · bench · fault · llm · ops · doctor, 보고서는 레포 `runs/`). **push는 n8n을 재시작**하므로 push 뒤 `team3-index`를 다시 부른다 |
 | 팩 도구 | `python3 tools/packs.py build` → `knowledge/` · `data/` · `cases/team.json` · `config/type-policy.json` 생성, `check`로 샘 기준 확인 |

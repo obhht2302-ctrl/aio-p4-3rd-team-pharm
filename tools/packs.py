@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LIMITS = {"docs_min": 6, "sections_min": 3, "types_min": 4, "types_max": 6, "team_cases_min": 5, "users_min": 5, "records_min": 4}
 MODES = {"auto", "evidence_handoff", "handoff_only", "record_status"}
 ROLES = {"staff", "pharmacist", "owner", "patient"}
-COMPAT = {"users": "employees", "records": "tickets"}  # 77판 data-api가 읽는 이름 (80판 키트 확인 뒤 정리)
+COMPAT = {"users": "employees", "records": "tickets"}  # 77판 data-api가 읽는 이름
 CONTRACT_KEYS = {"request_id", "route", "answer", "sources", "ticket", "agents", "security", "reason", "timings"}
 BEFORE = [{"url": f"http://localhost:8800/{p}", "body": {}} for p in ("tickets-reset", "dlq-clear", "alerts-clear", "cache-clear")] + [
     {"url": "http://localhost:8800/admin/fault", "body": {"tickets": "ok", "faq": "ok", "dlq": "ok"}}]

@@ -60,7 +60,7 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 | 해든 | 화면 3개 · 역할 막기 · 디자인 (가짜 응답으로) | 병훈 API (진짜 연결) | `contracts/examples/api.json` 가짜 응답 (`NEXT_PUBLIC_API_MODE=mock`) |
 | 태웅 | 시나리오 · 기대값 검토, 시험 스크립트 · 결과서 틀, 문서 · 데이터 검수, Jira · Slack 틀, 팩 도구, VM 준비 | 다영 골격(공통 첫 실행) · 전체 연결 · 해든 화면(QA) | 가짜 본체 `team3-support-stub`으로 시험 · 결과서 표 연습 (결과서엔 안 씀), 400 · 차단은 골격만으로 통과 |
 
-**가짜 먼저, 준비되면 바꿔 끼우기** (완료 목표는 11/5 목요일 하나): ① 각자 `contracts/examples/`의 가짜로 단독 시험 통과 → ② 영민 search가 준비되면 다영 본체 `SEARCH=real` → ③ 병훈 handoff가 준비되면 `HANDOFF=real` → 태웅 공통 시나리오 실행 → ④ 병훈 API가 준비되면 화면 `NEXT_PUBLIC_API_MODE=real` → ⑤ 11/5 키트 맞춤 · VM 첫 배포. 스위치는 본체 `Support settings` 노드와 화면 환경 변수 한 곳씩뿐입니다.
+**가짜 먼저, 준비되면 바꿔 끼우기** (완료 목표는 11/5 목요일 하나): ① 각자 `contracts/examples/`의 가짜로 단독 시험 통과 → ② 영민 search가 준비되면 다영 본체 `SEARCH=real` → ③ 병훈 handoff가 준비되면 `HANDOFF=real` → 태웅 공통 시나리오 실행 → ④ 병훈 API가 준비되면 화면 `NEXT_PUBLIC_API_MODE=real` → ⑤ VM 첫 배포. 스위치는 본체 `Support settings` 노드와 화면 환경 변수 한 곳씩뿐입니다.
 
 ⏳ **진짜 부품이 붙어야 할 수 있는 것** (가짜로는 못 함): RAG 청킹 비교 · hit@k · 점수 기준 (문서 검수 뒤), 공통 14유형 전체 통과 · LLM 3회 반복 · bench (본체 + 하위 연결 뒤), 실행 결과서 숫자 (11/5 VM 배포 뒤 실제로 잰 값만 — 노트북 · 가짜로 잰 숫자는 결과서에 쓰지 않음).
 
@@ -73,7 +73,7 @@ team3-handoff ── 1) data-api 기록 (티켓 · 알림 · DLQ, 시험 기준)
 git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm
 cd ~/aio-p4-3rd-team-pharm && git pull
 
-# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77 (80일차 키트가 나오면 77 → 80)
+# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77
 cd ~/aio-01d4-stu && git pull
 
 # 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
@@ -106,10 +106,9 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 | `OpenAI (.env)` | 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` (수업 때 각자 받은 키 그대로, 팀 VM은 리드가 넣음) |
 | `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값은 팀 키) |
 | `team3ApiKey` | n8n이 FastAPI(`POST /tickets` · `/alerts`)를 호출할 때 보내는 머리글 `X-Api-Key` (값은 팀 키) |
-| `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
 - `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
-- 입구 웹훅(`team3-support`)은 Header Auth(`team3WebhookKey`)가 켜져 있어요. 레포 `tools/flow.py`는 웹훅을 부를 때 `X-Team-Key`를 붙여요 — 값은 `FLOW_WEBHOOK_KEY` 환경 변수(샘 80판과 같은 이름), 비어 있으면 `infra/.env`의 `TEAM3_KEY`. 그래서 `setup.sh`를 돌린 노트북 · 팀 VM은 따로 할 일이 없어요. 키 없이 부르면 n8n이 403(`Authorization data is wrong!`)을 돌려줘요. 안쪽 웹훅(`team3-search` · `team3-handoff` · `team3-index`)과 가짜 웹훅(`workflows/stubs/`)은 인증이 없어요.
+- 입구 웹훅(`team3-support`)은 Header Auth(`team3WebhookKey`)가 켜져 있어요. 레포 `tools/flow.py`는 웹훅을 부를 때 `X-Team-Key`를 붙여요 — 값은 `FLOW_WEBHOOK_KEY` 환경 변수, 비어 있으면 `infra/.env`의 `TEAM3_KEY`. 그래서 `setup.sh`를 돌린 노트북 · 팀 VM은 따로 할 일이 없어요. 키 없이 부르면 n8n이 403(`Authorization data is wrong!`)을 돌려줘요. 안쪽 웹훅(`team3-search` · `team3-handoff` · `team3-index`)과 가짜 웹훅(`workflows/stubs/`)은 인증이 없어요.
 
 ## 바로 실행 (노트북)
 
@@ -141,7 +140,6 @@ uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/team.json -v
 | --- | --- |
 | `OpenAI (.env)` (`openAiCourse0001`) | gpt-4.1-mini · text-embedding-3-large |
 | `team3WebhookKey` | 팀 웹훅 Header Auth |
-| `dataApiKey` | data-api `X-Api-Key` (80일차 키트 확인) |
 | `jiraAio3Cloud001` · `slackAio3Bot0001` | 가산: Jira 장애 티켓 · Slack 알림 |
 
 ## 폴더
@@ -187,5 +185,5 @@ docs/             제안서 · 헌장 · 설계서 2종 · 결과서 · 데일�
 | DLQ | 처리 못 한 요청을 잃지 않게 넣어 두는 대기열 (나중에 다시 처리) |
 | `fault` · `llm` 명령 | 장애 연습 스위치. `flow.py fault tickets error` = 티켓 API 고장 → `fault all ok`로 되돌림, `flow.py llm down` = OpenAI 키를 일부러 깨뜨림 → `llm up`으로 되돌림 |
 | 팩 (pack) · `active.json` | 기능 하나를 켜고 끄는 파일 묶음 (문서 + `Type policy` 한 줄 + 시나리오), `packs/<이름>/`. 사람의 일을 나누는 말이 아님. 켜진 팩 목록 = `packs/active.json` |
-| 샘 키트 · 키트 확인 | 강사(샘) 실습 폴더 `~/aio-01d4-stu/Last3Mon/77` (`flow.py` · data-api, 80일차 키트가 나오면 `80`). 키트 확인 = 80일차 키트(11/5 공개)를 보고 맞출 곳 |
+| 샘 키트 | 강사(샘) 실습 폴더 `~/aio-01d4-stu/Last3Mon/77` (`flow.py` 원본 · data-api `server.py`) |
 | 이관 | 사람에게 넘김 = 티켓 생성, 응답 `route: 담당자 이관` |
