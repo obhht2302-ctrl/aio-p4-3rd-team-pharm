@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { BatteryFull, Wifi } from "lucide-react";
-import { BRAND } from "@/lib/brand";
 
 // 넓은 화면(PC)에서는 매장 태블릿처럼 테두리 안에 보여 줘요. 진짜 태블릿 · 휴대폰에서는 화면을 꽉 채워요.
 export function TabletFrame({ children }: { children: React.ReactNode }) {
@@ -19,7 +18,7 @@ export function TabletFrame({ children }: { children: React.ReactNode }) {
       <div className="tablet-device">
         <div className="tablet-status" aria-hidden>
           <span className="tabular-nums">{now ?? ""}</span>
-          <span className="truncate">{BRAND.pharmacy} 매장 태블릿</span>
+          <span className="truncate">매장 업무 태블릿</span>
           <span className="flex items-center gap-1.5">
             <Wifi className="size-3.5" />
             <span className="tabular-nums">87%</span>

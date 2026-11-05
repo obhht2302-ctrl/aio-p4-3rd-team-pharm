@@ -661,6 +661,79 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 .senior-card { display: flex; flex-direction: column; flex: 1 0 auto; }
 .senior-actions { margin-top: auto; }
 
+/* 내 문의 한눈에 (11/5 해든 QA): 숫자 카드는 낮게 한 줄(전체 + 경로 4칸, 칸 합 = 전체), 아래는 아직 처리 중인 문의 목록 (상자 안 스크롤) */
+.kpi-ask { color: var(--route-ask); }
+.kpi-other { color: var(--route-denied); }
+.kpi-sub { font-style: normal; font-size: 11px; color: var(--muted-foreground); white-space: nowrap; }
+.kpi-grid.kpi-five .kpi-total { grid-column: 1 / -1; }
+.pending-card { display: flex; flex-direction: column; gap: 8px; min-height: 0; padding: 14px 16px; }
+.pending-card h2 { margin: 0; font-size: 17px; font-weight: 700; }
+.pending-card h2 small { margin-left: 6px; font-family: var(--font-pretendard), sans-serif; font-size: 13px; font-weight: 500; color: var(--muted-foreground); }
+.pending-card .empty-state { padding: 24px 12px; }
+.pending-scroll { display: flex; flex-direction: column; gap: 6px; max-height: 22rem; }
+.pending-scroll .open-row { flex: none; cursor: default; }
+.pending-scroll .open-row:hover { background: var(--muted); }
+.pending-scroll .status-wrap { flex: none; }
+.pending-foot { flex: none; margin: auto 0 0; padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted-foreground); }
+.senior .pending-foot { font-size: 18px; }
+.senior .pending-card h2 { font-size: 20px; }
+.senior .pending-card .open-title, .senior .pending-card .open-id, .senior .kpi-sub { font-size: 18px; }
+@container page (max-width: 599px) {
+  .kpi-grid.kpi-five { gap: 8px; }
+  .kpi-grid.kpi-five .kpi-card { padding: 8px 12px; }
+  .kpi-grid.kpi-five .kpi-card b { font-size: 22px; line-height: 1.2; }
+  .pending-scroll .open-row { flex-wrap: wrap; row-gap: 4px; }
+  .pending-scroll .open-title { flex-basis: 100%; }
+}
+@container page (min-width: 600px) {
+  .kpi-step { grid-template-rows: auto minmax(0, 1fr); }
+  .kpi-step .kpi-grid.kpi-five { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: auto; }
+  .kpi-grid.kpi-five .kpi-total { grid-column: auto; }
+  .kpi-step .kpi-card { padding: 10px 12px; }
+  .kpi-step .kpi-card b { font-size: clamp(1.75rem, 3.4cqi, 2.5rem); }
+  .pending-card { flex: 1; }
+  .pending-scroll { flex: 1; max-height: none; }
+}
+
+/* 약사 접수 상세 (11/5 해든 QA): 메모 칸은 남는 높이만 씀(글이 길면 칸 안 스크롤) · '상태 저장'은 늘 보이게 · 왼쪽 정보가 길면 그 칸만 스크롤 */
+.detail-work textarea { field-sizing: fixed; resize: none; overflow-y: auto; }
+.detail-work .box-foot { flex: none; }
+@container page (min-width: 600px) {
+  .detail { flex: 1 1 0; min-height: 0; }
+  .detail-info { flex: 0 1 auto; min-height: 0; }
+  .detail-work { flex: 1 0 auto; }
+  .detail-work textarea { flex: 1 1 4rem; min-height: 3rem; }
+}
+@container page (min-width: 860px) {
+  .detail { grid-template-rows: minmax(0, 1fr); }
+  .detail-info { min-height: 0; }
+  .detail-work { min-height: 0; }
+  .detail-work textarea { flex: 1 1 0; min-height: 3rem; }
+}
+
+/* 첫 화면 (11/5 해든 QA): 역할 카드는 폭(cqi)과 함께 창 높이(dvh)에도 맞춰 낮은 PC 창에서 안 가리게 */
+@container page (min-width: 600px) {
+  .login-card { padding: clamp(16px, min(2.8cqi, 3dvh), 36px); }
+  .role-grid { gap: clamp(10px, min(1.4cqi, 1.8dvh), 16px); margin-top: clamp(10px, min(1.8cqi, 2.2dvh), 20px); }
+  .role-card { min-height: clamp(96px, min(17cqi, 20dvh), 188px); padding: clamp(12px, min(2cqi, 2.6dvh), 24px); gap: clamp(6px, min(1.1cqi, 1.4dvh), 12px); }
+  .role-card b { font-size: clamp(16px, min(2cqi, 3dvh), 22px); }
+  .role-card > :first-child { width: clamp(36px, min(5.4cqi, 7dvh), 60px); height: clamp(36px, min(5.4cqi, 7dvh), 60px); }
+  .login-form { gap: clamp(12px, min(2cqi, 2.6dvh), 22px); }
+  .person-card { min-height: clamp(48px, min(7cqi, 9dvh), 84px); }
+  .login-form .field-control, .login-form .primary-action { min-height: clamp(44px, min(5.6cqi, 7.5dvh), 60px); }
+}
+
+/* 단계 버튼 (11/5 해든 QA): 좁은 폭(본문 600 미만, 폰)에선 이름이 '오.' '접.'처럼 잘리지 않게 — 화살표는 숨기고(손가락 넘김 · 단계 버튼으로 이동) 번호 위 · 이름 아래로 쌓음 */
+@container page (max-width: 599px) {
+  .pager-wrap .pager-arrow { display: none; }
+  .pager-steps { gap: 6px; }
+  .pager-step { flex-direction: column; gap: 0; padding-inline: 2px; line-height: 1.2; }
+  .pager-step .step-no { font-size: 12px; opacity: .85; }
+  .pager-step .step-name { overflow: visible; text-overflow: clip; white-space: nowrap; font-size: 14px; }
+  .senior .pager-step .step-no { font-size: 15px; }
+  .senior .pager-step .step-name { font-size: 18px; }
+}
+
 /* 티켓 없는 이관: 접수됨처럼 보이지 않게 '잠시 후 다시 시도' + 다시 묻기 */
 .retry-note { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0 16px; padding: 12px 16px; border-radius: 12px; border: 1px dashed var(--route-ask); background: var(--route-ask-bg); }
 .retry-note p { margin: 0; font-weight: 700; color: var(--foreground); }

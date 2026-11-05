@@ -66,7 +66,7 @@ export function Pager({
     }, 120);
   };
 
-  const arrow = "grid size-12 shrink-0 place-items-center rounded-xl bg-card ring-1 ring-foreground/10 transition-transform active:scale-95 disabled:opacity-30";
+  const arrow = "pager-arrow grid size-12 shrink-0 place-items-center rounded-xl bg-card ring-1 ring-foreground/10 transition-transform active:scale-95 disabled:opacity-30";
 
   return (
     <div className="pager-wrap">
@@ -75,7 +75,7 @@ export function Pager({
         <button type="button" aria-label="이전 단계" className={arrow} disabled={index === 0} onClick={() => onIndex(index - 1)}>
           <ChevronLeft className="size-6" />
         </button>
-        <ol className="flex min-w-0 flex-1 gap-2">
+        <ol className="pager-steps flex min-w-0 flex-1 gap-2">
           {steps.map((s, i) => (
             <li key={s} className="min-w-0 flex-1">
               <button
@@ -83,12 +83,12 @@ export function Pager({
                 aria-current={i === index ? "step" : undefined}
                 onClick={() => onIndex(i)}
                 className={cn(
-                  "flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-2 text-[15px] font-semibold transition-transform active:scale-[0.98]",
+                  "pager-step flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-2 text-[15px] font-semibold transition-transform active:scale-[0.98]",
                   i === index ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground ring-1 ring-foreground/10"
                 )}
               >
-                <span className="tabular-nums">{i + 1}</span>
-                <span className="truncate">{s}</span>
+                <span className="step-no tabular-nums">{i + 1}</span>
+                <span className="step-name truncate">{s}</span>
               </button>
             </li>
           ))}

@@ -74,17 +74,24 @@ async (page) => {
   await page.goto(origin + "/admin/");
   await page.getByRole("button", { name: "접수 목록 보기" }).click();
   await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).click();
-  await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).waitFor({ state: "visible" });
+  await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).waitFor({ state: "visible" });
   await page.getByRole("button", { name: "처리 중", exact: true }).click();
   await page.getByRole("button", { name: "상태 저장" }).click();
   await page.getByText("상태를 저장했어요.").waitFor({ state: "visible" });
   verify(true, "티켓 상태 저장");
-  await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).click();
+  await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).click();
   const notice = page.locator(".notice-result");
   await notice.waitFor({ state: "visible" });
   verify(await notice.getByText("연습 기록 · 실제 발송 없음").isVisible(), "회수 안내는 연습 기록");
   verify((await notice.textContent()).includes("010-****-"), "연락처 가림 표시");
   verify(!(await notice.textContent()).includes("OTC-03"), "연락처와 약 이름 분리");
+  // 제품 정보 없는 회수 티켓: 손님 안내 버튼 대신 '제품이 확인되지 않아' 한 줄
+  await page.evaluate(() => { const st = JSON.parse(sessionStorage.getItem("team3-mock")); st.tickets.unshift({ ticket_id: "T-NOPROD", key: "noprod", title: "회수 공표 제품 확인 필요", requester: "김하늘", category: "recall", priority: "high", status: "접수됨", product: "", created_at: new Date().toISOString() }); sessionStorage.setItem("team3-mock", JSON.stringify(st)); });
+  await page.goto(origin + "/admin/");
+  await page.getByRole("button", { name: "접수 목록 보기" }).click();
+  await page.locator(".ticket-link", { hasText: "회수 공표 제품 확인 필요" }).click();
+  await page.getByText("제품이 확인되지 않아 손님 안내를 보낼 수 없어요").waitFor({ state: "visible" });
+  verify(await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).count() === 0, "제품 없는 회수 티켓: 손님 안내 버튼 없음");
   await width("약사 화면");
 
   await login("정민재");
@@ -92,7 +99,7 @@ async (page) => {
   await page.getByRole("button", { name: "접수 목록 보기" }).click();
   await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).click();
   await page.getByText("손님 안내는 약사 계정에서만").waitFor({ state: "visible" });
-  verify(await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).count() === 0, "약국장 회수 안내 제한");
+  verify(await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).count() === 0, "약국장 회수 안내 제한");
 
   await login("최영순");
   const followup = "혈압약이랑 관절약 같이 먹어도 돼요?";
@@ -117,6 +124,11 @@ async (page) => {
   await page.goto(origin + "/my/");
   await page.locator(".mobile-cards").getByText(followup, { exact: true }).first().waitFor({ state: "visible" });
   verify(await page.getByText(example, { exact: true }).count() === 0, "다른 사용자 문의 숨김");
+  // 한눈에 보기 칸 합 = 전체: 이 고객은 보완 질문 1 + 담당자 이관 1 (예전엔 보완 질문이 어느 칸에도 안 들어가 합이 모자랐음)
+  await page.locator(".pager-wrap ol button").nth(1).click();
+  const kpi = await page.evaluate(() => ({ total: Number(document.querySelector('[data-kpi="total"] b').textContent), parts: [...document.querySelectorAll('[data-kpi="part"] b')].map(b => Number(b.textContent)) }));
+  verify(kpi.total === 2 && kpi.parts.reduce((sum, n) => sum + n, 0) === kpi.total, `한눈에 보기 칸 합 = 전체 ${JSON.stringify(kpi)}`);
+  await page.locator(".pager-wrap ol button").nth(0).click();
   await page.setViewportSize({ width: 1280, height: 900 });
   verify(await page.locator(".desktop-table").isVisible(), "데스크톱 문의 표 표시");
   verify(!(await page.locator(".mobile-cards").isVisible()), "데스크톱에서 모바일 카드 숨김");
