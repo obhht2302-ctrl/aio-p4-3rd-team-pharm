@@ -27,6 +27,15 @@ export const seniorLine: Record<string, string> = {
   "차단": "이 요청은 도와드리기 어려워요",
 };
 
+// 티켓 없는 '담당자 이관' (응답 오류 · 두뇌 멈춤 등)은 '전달했어요'로 보이지 않게. route 값은 그대로(계약), 문구만 바꿉니다.
+// tickets_down = 접수 시스템 장애로 DLQ에 보관된 경우 (워크플로우 After handoff 문구와 같게).
+export type HandoffState = "sent" | "unsent" | "held";
+export const handoffState = (answer: { route: string; ticket: unknown; reason?: string }): HandoffState =>
+  answer.route !== "담당자 이관" || answer.ticket ? "sent" : answer.reason === "tickets_down" ? "held" : "unsent";
+export const UNSENT_LINE = "아직 접수되지 않았어요";
+export const HELD_LINE = "요청은 보관됐어요 · 확인되는 대로 연락드려요";
+export const RETRY_NOTE = "잠시 후 다시 시도해 주세요.";
+
 export function RouteBadge({ route }: { route: string }) {
   return <motion.span className="inline-flex" initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.2 }}>
     <Badge className={`route-badge tone-${routeTone(route)}`}><i className="route-dot" />{route}</Badge>

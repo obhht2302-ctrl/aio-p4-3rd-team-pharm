@@ -85,7 +85,12 @@ export function mock(method: string, path: string, body?: unknown, who?: Who | n
     const shouldHandoff = input.question !== exampleQuestion && !needsMore;
     // 위험 신호 흉내 (실제는 packs/senior/pack.json handoff_rules): 긴급 이관 → 어르신 화면에 119 카드
     const risky = /숨이|숨쉬|가슴이|가슴 통증|의식|정신이|쓰러|경련|피를|피가|두드러기|입술|얼굴이 부|와파린/.test(input.question);
-    let response: { route: string; answer: string; sources: unknown[]; ticket: RequestItem["ticket"]; agents: string[] };
+    // 티켓 없는 이관 흉내: WF-04 질문(공유기)은 접수 시스템 장애 → DLQ 보관(tickets_down),
+    // sessionStorage team3-mock-noticket=1이면 다음 이관 한 번만 두뇌 응답 오류(brain_down) → 화면은 '아직 접수되지 않았어요' + 다시 묻기
+    const ticketsDown = /공유기/.test(input.question);
+    let brainDown = false;
+    if (shouldHandoff && !ticketsDown) { try { brainDown = sessionStorage.getItem("team3-mock-noticket") === "1"; if (brainDown) sessionStorage.removeItem("team3-mock-noticket"); } catch { /* 저장소 없음 */ } }
+    let response: { route: string; answer: string; sources: unknown[]; ticket: RequestItem["ticket"]; agents: string[]; reason?: string };
     if (input.question === exampleQuestion) {
       response = copy<typeof response>("POST /api/ask");
     } else if (needsMore) {
@@ -100,7 +105,11 @@ export function mock(method: string, path: string, body?: unknown, who?: Who | n
         sources: [], ticket: null, agents: [],
       };
     }
-    if (shouldHandoff) {
+    if (shouldHandoff && (ticketsDown || brainDown)) {
+      response = { route: "담당자 이관", sources: [], ticket: null, agents: [],
+        answer: ticketsDown ? "담당자에게 넘기는 중 접수 시스템이 응답하지 않았어요. 요청은 보관해 두었고 확인되는 대로 연락드려요." : "지금 도우미가 응답하지 않아요. 잠시 뒤 다시 물어봐 주세요.",
+        reason: ticketsDown ? "tickets_down" : "brain_down" };
+    } else if (shouldHandoff) {
       const ticketId = `T-MOCK-${Date.now()}-${serial}`;
       const ticket: Ticket = {
         ticket_id: ticketId, key: requestId, title: input.question, requester: input.user,

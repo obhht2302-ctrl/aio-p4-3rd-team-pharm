@@ -9,7 +9,7 @@ import { useWho, type Who } from "@/lib/session";
 import { CallButton } from "@/components/call";
 import { LoginPanel } from "@/components/login";
 import { Pager, ScrollBox } from "@/components/pager";
-import { RouteBadge, routeLine, routeTone } from "@/components/route-badge";
+import { HELD_LINE, RETRY_NOTE, RouteBadge, UNSENT_LINE, handoffState, routeLine, routeTone } from "@/components/route-badge";
 import { SeniorAsk } from "@/components/senior-ask";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,14 +36,16 @@ function Agents({ list }: { list: string[] }) {
   </div>;
 }
 
-function ResultCard({ answer, foot }: { answer: Answer; foot?: React.ReactNode }) {
+function ResultCard({ answer, foot, onRetry }: { answer: Answer; foot?: React.ReactNode; onRetry?: () => void }) {
+  const state = handoffState(answer);
   return <motion.section key={answer.request_id ?? answer.answer} className={`result-card ${answer.ticket?.priority === "high" ? "urgent" : ""}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
     <div className={`result-band band-${routeTone(answer.route)}`}>
-      <RouteBadge route={answer.route} /><b>{routeLine[answer.route] ?? answer.route}</b>
+      <RouteBadge route={answer.route} /><b>{state === "unsent" ? UNSENT_LINE : state === "held" ? HELD_LINE : routeLine[answer.route] ?? answer.route}</b>
       {answer.request_id && <span className="request-id">요청 번호 {answer.request_id}</span>}
     </div>
     <ScrollBox className="result-body">
       <p className="answer-text">{answer.answer}</p>
+      {state === "unsent" && <div className="retry-note" role="status"><p>{RETRY_NOTE}</p>{onRetry && <Button variant="outline" className="primary-action" onClick={onRetry}>다시 묻기</Button>}</div>}
       {answer.ticket && <div className="ticket-number"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p></div>}
       {!!answer.sources?.length && <div className="source-box"><strong className="inline-flex items-center gap-1"><BookOpenText size={15} /> 참고 자료</strong><ul className="mt-2 space-y-1">{answer.sources.map((source, index) => <li key={index}>{source.doc} · {source.section}</li>)}</ul></div>}
       <Agents list={answer.agents ?? []} />
@@ -85,7 +87,7 @@ function StaffAsk({ who }: { who: Who }) {
         {error && <p className="error-box" role="alert">{error}</p>}
         {loading && <div className="loading-card" aria-live="polite"><p>약국 안내 문서에서 찾고 있어요. 잠시만 기다려 주세요.</p><Skeleton className="h-5 w-1/3" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-5/6" /><Skeleton className="h-4 w-2/3" /></div>}
         {!answer && !loading && !error && <div className="soft-card empty-state"><MessageCircle size={35} /><strong>아직 보낸 질문이 없어요</strong><p>질문을 보내면 여기에 답이 나와요.</p></div>}
-        {answer && <ResultCard answer={answer} foot={foot} />}
+        {answer && <ResultCard answer={answer} foot={foot} onRetry={() => void ask.send(question)} />}
         {(answer || error) && <div className="answer-actions"><Button variant="outline" className="primary-action" onClick={ask.askAgain}>새 문의</Button></div>}
       </div>
       <aside className="answer-side">

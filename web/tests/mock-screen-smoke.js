@@ -44,6 +44,23 @@ async (page) => {
   await page.getByText("자동 답변", { exact: true }).first().waitFor({ state: "visible" });
   verify(await page.getByText(/closing-checklist/).isVisible(), "답변 근거 문서 표시");
   await width("질문 답변 화면");
+  // 티켓 없는 이관(응답 오류)은 '전달했습니다'가 아니라 '아직 접수되지 않았어요' + 다시 묻기 → 다시 물으면 접수 번호
+  const band = page.locator(".result-band b");
+  await page.evaluate(() => sessionStorage.setItem("team3-mock-noticket", "1"));
+  await page.getByRole("button", { name: "새 문의" }).click();
+  await page.getByRole("textbox", { name: "질문 내용" }).fill("영수증 용지는 어디에 있어요?");
+  await page.getByRole("button", { name: "보내기", exact: true }).click();
+  await page.getByText("잠시 후 다시 시도해 주세요.").waitFor({ state: "visible" });
+  verify((await band.innerText()).trim() === "아직 접수되지 않았어요" && await page.locator(".ticket-number").count() === 0, "티켓 없는 이관: 아직 접수되지 않았어요 · 접수 번호 없음");
+  await width("티켓 없는 이관 화면");
+  await page.getByRole("button", { name: "다시 묻기" }).click();
+  await page.locator(".ticket-number").waitFor({ state: "visible" });
+  verify((await band.innerText()).trim() === "담당자에게 전달했습니다" && await page.getByText("잠시 후 다시 시도해 주세요.").count() === 0, "다시 묻기 → 접수 번호 + 전달 문구");
+  await page.getByRole("button", { name: "새 문의" }).click();
+  await page.getByRole("textbox", { name: "질문 내용" }).fill("매장 공유기가 죽어서 카드 단말기가 안 돼요");
+  await page.getByRole("button", { name: "보내기", exact: true }).click();
+  await page.getByText("요청은 보관됐어요 · 확인되는 대로 연락드려요").waitFor({ state: "visible" });
+  verify(await page.getByRole("button", { name: "다시 묻기" }).count() === 0 && await page.locator(".ticket-number").count() === 0, "접수 시스템 장애(tickets_down): 보관 문구 · 다시 묻기 없음");
   await page.goto(origin + "/my/");
   await page.locator(".mobile-cards").getByText(example, { exact: true }).first().waitFor({ state: "visible" });
   verify(await page.getByText(/T-2003/).count() > 0, "기존 이관 티켓 표시");

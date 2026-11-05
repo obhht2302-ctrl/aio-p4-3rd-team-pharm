@@ -12,6 +12,7 @@ export type Answer = {
   sources: { doc: string; section: string }[];
   ticket: { ticket_id: string; priority?: string } | null;
   agents?: string[];
+  reason?: string;
 };
 export type RequestItem = { request_id: string; question: string; route: string; created_at: string; ticket: { ticket_id: string; status?: string } | null };
 export type TypeItem = { type: string; label: string; examples: string[] };
