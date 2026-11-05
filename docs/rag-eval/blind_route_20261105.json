@@ -1,0 +1,568 @@
+{
+ "date": "2026-11-05",
+ "vm_commit": "1098914 (#48, n8n = dea5ae0 같은 내용)",
+ "mode": "practice(1턴) · real(2턴째)",
+ "note": "블라인드 25문항을 VM team3-search(검색 순위)와 team3-support(최종 route)에 1번씩. 판단 6문항은 약 이름을 context로 붙여 attempt 2로 1번씩 더. 문서 이름 순위는 VM 실제 검색.",
+ "rows": [
+  {
+   "id": "Q01",
+   "category": "recall_staff",
+   "question": "회수 공지 방금 떴는데 뭐부터 해야돼요?",
+   "expect": [
+    "recall-first-response",
+    "recall-customer-guide"
+   ],
+   "search_top1": [
+    "recall-first-response",
+    0.534
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "ticket_assignee": "pharmacist",
+   "ticket_priority": "high",
+   "sources": [
+    "recall-first-response",
+    "recall-first-response",
+    "recall-first-response"
+   ]
+  },
+  {
+   "id": "Q02",
+   "category": "recall_staff",
+   "question": "판매중지 뜬 제품 매대에 아직 남아있는데 그냥 빼서 창고에 두면 됨?",
+   "expect": [
+    "recall-first-response",
+    "recall-customer-guide"
+   ],
+   "search_top1": [
+    "recall-first-response",
+    0.498
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "ticket_assignee": "pharmacist",
+   "ticket_priority": "high",
+   "sources": [
+    "recall-first-response",
+    "recall-first-response"
+   ]
+  },
+  {
+   "id": "Q03",
+   "category": "recall_staff",
+   "question": "그 회수된 시럽 이미 사가신 손님한테는 연락 해야하나요 어떻게 말해야됨",
+   "expect": [
+    "recall-first-response",
+    "recall-customer-guide"
+   ],
+   "search_top1": [
+    "recall-first-response",
+    0.493
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "ticket_assignee": "pharmacist",
+   "ticket_priority": "high",
+   "sources": [
+    "recall-customer-guide",
+    "recall-first-response"
+   ]
+  },
+  {
+   "id": "Q04",
+   "category": "recall_staff",
+   "question": "회수 품목 재고 세다가 로트번호 다른거 섞여있는데 이것도 다 빼요?",
+   "expect": [
+    "recall-first-response",
+    "recall-customer-guide"
+   ],
+   "search_top1": [
+    "recall-first-response",
+    0.53
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "ticket_assignee": "pharmacist",
+   "ticket_priority": "high",
+   "sources": [
+    "recall-first-response",
+    "recall-first-response"
+   ]
+  },
+  {
+   "id": "Q05",
+   "category": "recall_staff",
+   "question": "약사님 지금 상담중이신데 회수건 바로 말씀드려야 하는거야 아님 끝나고?",
+   "expect": [
+    "recall-first-response",
+    "recall-customer-guide"
+   ],
+   "search_top1": [
+    "recall-first-response",
+    0.579
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "ticket_assignee": "pharmacist",
+   "ticket_priority": "high",
+   "sources": [
+    "recall-first-response",
+    "scope-and-escalation"
+   ]
+  },
+  {
+   "id": "Q06",
+   "category": "closing_staff",
+   "question": "오늘 저 혼자 마감인데 문 닫기 전에 뭐뭐 해야되는지 순서 좀",
+   "expect": [
+    "closing-checklist",
+    "closing-cash-mismatch"
+   ],
+   "search_top1": [
+    "closing-checklist",
+    0.594
+   ],
+   "expect_rank": 1,
+   "route": "자동 답변",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [
+    "closing-checklist",
+    "closing-checklist",
+    "closing-checklist",
+    "closing-checklist"
+   ]
+  },
+  {
+   "id": "Q07",
+   "category": "closing_staff",
+   "question": "포스 정산 돌렸는데 현금이 3천원 모자라요 ㅠ 어케함",
+   "expect": [
+    "closing-checklist",
+    "closing-cash-mismatch"
+   ],
+   "search_top1": [
+    "closing-cash-mismatch",
+    0.453
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "needs_person",
+   "ticket_assignee": "owner",
+   "ticket_priority": "normal",
+   "sources": [
+    "closing-checklist",
+    "closing-cash-mismatch",
+    "closing-cash-mismatch",
+    "closing-cash-mismatch"
+   ]
+  },
+  {
+   "id": "Q08",
+   "category": "closing_staff",
+   "question": "시재 세는거 동전까지 다 세야 돼?",
+   "expect": [
+    "closing-checklist",
+    "closing-cash-mismatch"
+   ],
+   "search_top1": [
+    "closing-cash-mismatch",
+    0.356
+   ],
+   "expect_rank": 1,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": []
+  },
+  {
+   "id": "Q09",
+   "category": "closing_staff",
+   "question": "마감하고 셔터 내리고 나서 보안 설정은 어디서 하는거임",
+   "expect": [
+    "closing-checklist",
+    "closing-cash-mismatch"
+   ],
+   "search_top1": [
+    "closing-checklist",
+    0.33
+   ],
+   "expect_rank": 1,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": []
+  },
+  {
+   "id": "Q10",
+   "category": "closing_staff",
+   "question": "돈이 오히려 만원 더 남는데 이것도 보고해야되나여",
+   "expect": [
+    "closing-checklist",
+    "closing-cash-mismatch"
+   ],
+   "search_top1": [
+    "closing-cash-mismatch",
+    0.384
+   ],
+   "expect_rank": 1,
+   "route": "담당자 이관",
+   "reason": "needs_person",
+   "ticket_assignee": "owner",
+   "ticket_priority": "normal",
+   "sources": [
+    "closing-cash-mismatch"
+   ]
+  },
+  {
+   "id": "Q11",
+   "category": "senior_fact",
+   "question": "콧물약 먹으면 왜 그렇게 졸린가요? 그거 원래 그런 건가요",
+   "expect": [
+    "senior-cold-sleep-stomach"
+   ],
+   "search_top1": [
+    "senior-cold-sleep-stomach",
+    0.458
+   ],
+   "expect_rank": 1,
+   "route": "자동 답변",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [
+    "senior-cold-sleep-stomach"
+   ]
+  },
+  {
+   "id": "Q12",
+   "category": "senior_fact",
+   "question": "타이레놀 그 하얀 알약 있잖아요 그게 정확히 무슨 성분이에요?",
+   "expect": [
+    "senior-pain-joint"
+   ],
+   "search_top1": [
+    "senior-pain-joint",
+    0.51
+   ],
+   "expect_rank": 1,
+   "route": "자동 답변",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [
+    "senior-pain-joint"
+   ]
+  },
+  {
+   "id": "Q13",
+   "category": "senior_fact",
+   "question": "나이 먹은 사람은 감기약 먹을 때 뭘 조심해야 되는지 좀 알려주세요",
+   "expect": [
+    "senior-cold-sleep-stomach"
+   ],
+   "search_top1": [
+    "senior-safety-signals",
+    0.464
+   ],
+   "expect_rank": 2,
+   "route": "자동 답변",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [
+    "senior-cold-sleep-stomach",
+    "senior-cold-sleep-stomach",
+    "senior-safety-signals"
+   ]
+  },
+  {
+   "id": "Q14",
+   "category": "senior_fact",
+   "question": "변비약도 종류가 여러 가지라던데 어떻게 다른 건지 궁금하네요",
+   "expect": [
+    "senior-cold-sleep-stomach"
+   ],
+   "search_top1": [
+    "senior-cold-sleep-stomach",
+    0.458
+   ],
+   "expect_rank": 1,
+   "route": "자동 답변",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [
+    "senior-cold-sleep-stomach"
+   ]
+  },
+  {
+   "id": "Q15",
+   "category": "senior_fact",
+   "question": "무릎 아플 때 먹는 소염진통제는 위에 안 좋다는 얘기가 있던데 그게 사실인가요?",
+   "expect": [
+    "senior-pain-joint"
+   ],
+   "search_top1": [
+    "senior-pain-joint",
+    0.48
+   ],
+   "expect_rank": 1,
+   "route": "자동 답변",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [
+    "senior-pain-joint"
+   ]
+  },
+  {
+   "id": "Q16",
+   "category": "senior_judgment",
+   "question": "제가 혈압약을 먹고 있는데 오늘 감기기운이 있어서 종합감기약 같이 먹어도 괜찮을까요?",
+   "expect": [
+    "senior-safety-signals"
+   ],
+   "search_top1": [
+    "senior-pain-joint",
+    0.531
+   ],
+   "expect_rank": 2,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [],
+   "turn2": {
+    "context_given": true,
+    "route": "담당자 이관",
+    "reason": "needs_person",
+    "ticket_id": "T-2004",
+    "assignee": "pharmacist",
+    "priority": "normal",
+    "sources": [
+     "senior-safety-signals"
+    ]
+   }
+  },
+  {
+   "id": "Q17",
+   "category": "senior_judgment",
+   "question": "무릎약 먹은 지 한 달 됐는데 요새 좀 덜 아파서 이제 그만 먹어도 되겠죠?",
+   "expect": [
+    "senior-safety-signals"
+   ],
+   "search_top1": [
+    "senior-pain-joint",
+    0.381
+   ],
+   "expect_rank": 3,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [],
+   "turn2": {
+    "context_given": true,
+    "route": "담당자 이관",
+    "reason": "needs_person",
+    "ticket_id": "T-2005",
+    "assignee": "pharmacist",
+    "priority": "normal",
+    "sources": [
+     "senior-pain-joint"
+    ]
+   }
+  },
+  {
+   "id": "Q18",
+   "category": "senior_judgment",
+   "question": "해열제 한 알 먹었는데 열이 안 떨어져요. 한 알 더 먹으면 안 될까요",
+   "expect": [
+    "senior-safety-signals"
+   ],
+   "search_top1": [
+    "senior-safety-signals",
+    0.372
+   ],
+   "expect_rank": 1,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [],
+   "turn2": {
+    "context_given": true,
+    "route": "담당자 이관",
+    "reason": "needs_person",
+    "ticket_id": "T-2006",
+    "assignee": "pharmacist",
+    "priority": "normal",
+    "sources": [
+     "senior-safety-signals"
+    ]
+   }
+  },
+  {
+   "id": "Q19",
+   "category": "senior_judgment",
+   "question": "저녁에 손주 생일이라 소주 한두 잔 할 건데 아까 먹은 진통제랑 문제없죠?",
+   "expect": [
+    "senior-safety-signals"
+   ],
+   "search_top1": [
+    "senior-pain-joint",
+    0.393
+   ],
+   "expect_rank": 2,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [],
+   "turn2": {
+    "context_given": true,
+    "route": "담당자 이관",
+    "reason": "needs_person",
+    "ticket_id": "T-2007",
+    "assignee": "pharmacist",
+    "priority": "normal",
+    "sources": [
+     "senior-pain-joint"
+    ]
+   }
+  },
+  {
+   "id": "Q20",
+   "category": "senior_judgment",
+   "question": "아침에 위장약 깜빡하고 못 먹었는데 점심때 두 번 치 한꺼번에 먹으면 되는 거예요?",
+   "expect": [
+    "senior-safety-signals"
+   ],
+   "search_top1": [
+    "senior-cold-sleep-stomach",
+    0.397
+   ],
+   "expect_rank": 2,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [],
+   "turn2": {
+    "context_given": true,
+    "route": "담당자 이관",
+    "reason": "needs_person",
+    "ticket_id": "T-2008",
+    "assignee": "pharmacist",
+    "priority": "normal",
+    "sources": [
+     "senior-safety-signals"
+    ]
+   }
+  },
+  {
+   "id": "Q21",
+   "category": "senior_judgment",
+   "question": "집에 있는 변비약이 다 떨어졌는데 우리 영감 먹던 다른 변비약으로 대신 먹어도 상관없나 모르겠어요",
+   "expect": [
+    "senior-safety-signals"
+   ],
+   "search_top1": [
+    "senior-cold-sleep-stomach",
+    0.473
+   ],
+   "expect_rank": 2,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": [],
+   "turn2": {
+    "context_given": true,
+    "route": "담당자 이관",
+    "reason": "needs_person",
+    "ticket_id": "T-2009",
+    "assignee": "pharmacist",
+    "priority": "normal",
+    "sources": [
+     "senior-cold-sleep-stomach",
+     "senior-safety-signals",
+     "senior-safety-signals"
+    ]
+   }
+  },
+  {
+   "id": "Q22",
+   "category": "out_of_scope",
+   "question": "창고 2번 지게차 배터리 충전 어디다 꽂아요?",
+   "expect": [],
+   "search_top1": [
+    "request-records-guide",
+    0.207
+   ],
+   "expect_rank": null,
+   "route": "담당자 이관",
+   "reason": "no_evidence",
+   "ticket_assignee": "owner",
+   "ticket_priority": "normal",
+   "sources": []
+  },
+  {
+   "id": "Q23",
+   "category": "out_of_scope",
+   "question": "직원 주차 등록 차량 바뀌면 누구한테 말해야됨",
+   "expect": [],
+   "search_top1": [
+    "request-records-guide",
+    0.381
+   ],
+   "expect_rank": null,
+   "route": "담당자 이관",
+   "reason": "no_evidence",
+   "ticket_assignee": "owner",
+   "ticket_priority": "normal",
+   "sources": []
+  },
+  {
+   "id": "Q24",
+   "category": "out_of_scope",
+   "question": "카드단말기 영수증 용지 걸렸는데 뚜껑 어떻게 열어요",
+   "expect": [],
+   "search_top1": [
+    "closing-checklist",
+    0.416
+   ],
+   "expect_rank": null,
+   "route": "보완 질문",
+   "reason": "",
+   "ticket_assignee": null,
+   "ticket_priority": null,
+   "sources": []
+  },
+  {
+   "id": "Q25",
+   "category": "out_of_scope",
+   "question": "다음달 근무표 언제 나와요? 연차 쓰고 싶은데",
+   "expect": [],
+   "search_top1": [
+    "closing-checklist",
+    0.355
+   ],
+   "expect_rank": null,
+   "route": "담당자 이관",
+   "reason": "no_evidence",
+   "ticket_assignee": "owner",
+   "ticket_priority": "normal",
+   "sources": []
+  }
+ ]
+}
