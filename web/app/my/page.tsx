@@ -25,8 +25,11 @@ const FILTERS = [
   { key: "doing", label: "처리 중", test: (item: RequestItem) => !!item.ticket && item.ticket.status !== "처리 완료" },
 ];
 
+// 상태 옆에 누가 무엇을 하고 있는지 한 줄 (화면이 모르는 것은 말하지 않음: "오고 있어요" 같은 말 금지)
+const statusLine: Record<string, string> = { "접수됨": "담당자가 곧 확인해요", "처리 중": "담당자가 보고 있어요", "처리 완료": "처리가 끝났어요" };
 function Status({ status }: { status?: string }) {
-  return <span className={`status-pill tone-${statusTone(status)}`}>{status ?? "접수됨"}</span>;
+  const label = status ?? "접수됨";
+  return <span className="status-wrap"><span className={`status-pill tone-${statusTone(status)}`}>{label}</span>{statusLine[label] && <span className="status-line">{statusLine[label]}</span>}</span>;
 }
 
 export default function MyPage() {
@@ -67,7 +70,7 @@ export default function MyPage() {
         <div className="table-card">
           {loading ? <div className="space-y-4 p-6"><Skeleton className="h-12 w-full" /><Skeleton className="h-12 w-full" /></div> :
             error ? <div className="p-6"><p className="error-box" role="alert">{error}</p></div> :
-            rows.length === 0 ? <div className="empty-state"><strong>{items.length ? "검색 결과가 없습니다." : "문의 기록이 없습니다."}</strong></div> : <>
+            rows.length === 0 ? <div className="empty-state">{items.length ? <strong>검색 결과가 없어요.</strong> : <><strong>아직 물어본 게 없어요</strong><p>궁금한 건 언제든 편하게 물어보세요.</p></>}</div> : <>
               <div className="desktop-table"><Table><TableHeader><TableRow><TableHead className="pl-5">시각</TableHead><TableHead>질문</TableHead><TableHead>결과</TableHead><TableHead>접수 번호</TableHead><TableHead className="pr-5">진행 상태</TableHead></TableRow></TableHeader>
                 <TableBody>{rows.map(item => <TableRow key={item.request_id}><TableCell className="pl-5 text-muted-foreground">{dateLabel(item.created_at)}</TableCell><TableCell className="max-w-96 whitespace-normal"><span className="font-medium">{item.question}</span><div className="request-id">요청 번호 {item.request_id}</div></TableCell><TableCell><RouteBadge route={item.route} /></TableCell><TableCell className="font-bold">{item.ticket ? item.ticket.ticket_id : <span className="font-normal text-muted-foreground">없음</span>}</TableCell><TableCell className="pr-5">{item.ticket ? <Status status={item.ticket.status} /> : <span className="text-muted-foreground">없음</span>}</TableCell></TableRow>)}</TableBody></Table></div>
               <div className="mobile-cards p-3">{rows.map(item => <div className="list-card" key={item.request_id}><div className="meta-line"><RouteBadge route={item.route} /><span className="request-id">{item.request_id}</span></div><p className="font-medium">{item.question}</p><div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"><Clock3 size={14} />{dateLabel(item.created_at)}{item.ticket && <span className="ticket-tag">{item.ticket.ticket_id}</span>}{item.ticket && <Status status={item.ticket.status} />}</div></div>)}</div>

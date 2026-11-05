@@ -64,6 +64,7 @@ function StaffAsk({ who }: { who: Who }) {
         <label htmlFor="question" className="field-label">질문</label>
         <Textarea id="question" aria-label="질문 내용" rows={2} maxLength={500} className="bg-white" value={question} onChange={e => ask.setQuestion(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void ask.send(question); } }} />
         <div className="ask-form-foot"><span className="field-help">{question.length} / 500자 · Enter로 보내기</span><Button type="submit" className="primary-action" disabled={!question.trim() || loading}><Send size={16} /> {loading ? "보내는 중" : "보내기"}</Button></div>
+        <p className="ask-reassure">작은 것도 괜찮아요. 처음엔 다들 물어보면서 배워요.</p>
       </form>
       {!!types.length && <aside>
         <h3 className="rail-title">자주 찾는 문의</h3><p className="rail-sub">항목을 누르면 바로 조회합니다.</p>
@@ -77,7 +78,7 @@ function StaffAsk({ who }: { who: Who }) {
     <div className="stack-tight">
       {question.trim() && <p className="question-echo">“{question}”</p>}
       {error && <p className="error-box" role="alert">{error}</p>}
-      {loading && <div className="loading-card" aria-live="polite"><p>답을 찾고 있어요</p><Skeleton className="h-5 w-1/3" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-5/6" /><Skeleton className="h-4 w-2/3" /></div>}
+      {loading && <div className="loading-card" aria-live="polite"><p>약국 안내 문서에서 찾고 있어요. 잠시만 기다려 주세요.</p><Skeleton className="h-5 w-1/3" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-5/6" /><Skeleton className="h-4 w-2/3" /></div>}
       {!answer && !loading && !error && <div className="soft-card empty-state"><MessageCircle size={35} /><strong>아직 보낸 질문이 없어요</strong><p>질문을 보내면 여기에 답이 나와요.</p></div>}
       {answer && <ResultCard answer={answer}>
         {answer.route === "보완 질문" && <div className="followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" className="field-control" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="상황이나 약 이름 등을 이어서 적어 주세요" /><Button className="primary-action mt-3" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight size={16} /></Button></div>}

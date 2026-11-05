@@ -414,3 +414,23 @@ h1, h2, h3, .brand strong, .senior-title { font-family: var(--font-gowun), var(-
   .tablet-screen { display: block; height: 100%; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border-radius: 0; background: var(--background); scrollbar-width: none; }
   .tablet-screen .site-shell { min-height: 100%; }
 }
+
+/* 다정한 문구 · 인수인계 (11/5) */
+.ask-reassure { margin: 0; font-size: 14px; color: var(--muted-foreground); }
+.status-wrap { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.status-line { font-size: 13px; color: var(--muted-foreground); }
+.senior .status-line { font-size: 18px; }
+.senior .senior-ticket strong { font-size: 2.4rem; letter-spacing: .02em; }
+.senior .ticket-number .ticket-say { margin-top: .3rem; font-size: 1.05rem; font-weight: 700; color: var(--foreground); }
+.handover-note { display: grid; gap: 8px; margin-top: 16px; padding: 14px 16px; border-radius: 12px; background: var(--secondary); }
+.handover-note-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.handover-note-head b { font-size: 15px; }
+.handover-note-head small { font-size: 13px; color: var(--muted-foreground); }
+.handover-text { margin: 0; font-size: 15px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.handover-list { display: grid; gap: 4px; margin: 0; padding-left: 18px; font-size: 14px; }
+.handover-write { display: grid; gap: 10px; }
+.handover-write h2 { margin: 0; font-size: 18px; }
+.handover-sub { margin: 0; font-size: 14px; color: var(--muted-foreground); }
+.handover-open { display: grid; gap: 6px; font-size: 14px; }
+.handover-open ul { display: grid; gap: 6px; margin: 0; padding-left: 18px; }
+.handover-open p { margin: 0; color: var(--muted-foreground); }
