@@ -471,6 +471,32 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 .box-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .login-grid, .forbidden { margin-block: auto; }
 .login-grid { width: 100%; }
+/* 첫 화면(사용자 선택 · 입장 코드): 태블릿 · PC 틀에서 가운데 작게 몰리지 않게 본문 폭(cqi)에 맞춰 키움 — 폰(600 미만)은 그대로 */
+@container page (min-width: 600px) {
+  .login-grid { max-width: min(1240px, 100%); gap: clamp(24px, 4cqi, 64px); align-items: center; padding-inline: clamp(0px, 1.5cqi, 24px); }
+  .login-intro { gap: clamp(12px, 1.8cqi, 22px); padding-top: 0; }
+  .login-kicker { font-size: clamp(14px, 1.5cqi, 18px); }
+  .login-intro h1 { font-size: clamp(30px, 4.6cqi, 54px); line-height: 1.22; }
+  .login-intro p { font-size: clamp(15px, 1.75cqi, 20px); line-height: 1.6; }
+  .login-intro ul { gap: clamp(8px, 1.3cqi, 14px); font-size: clamp(14px, 1.6cqi, 19px); margin-top: clamp(4px, 1cqi, 12px); }
+  .login-intro li svg { width: 1.15em; height: 1.15em; margin-top: .2em; }
+  .login-card { padding: clamp(20px, 2.8cqi, 36px); border-radius: 22px; }
+  .login-title { font-size: clamp(18px, 2.2cqi, 26px); }
+  .role-grid { gap: clamp(10px, 1.4cqi, 16px); margin-top: clamp(12px, 1.8cqi, 20px); }
+  .role-card { min-height: clamp(112px, 17cqi, 188px); padding: clamp(14px, 2cqi, 24px); gap: clamp(8px, 1.1cqi, 12px); border-radius: 18px; }
+  .role-card b { font-size: clamp(16px, 2cqi, 22px); }
+  .role-card small { font-size: clamp(12px, 1.35cqi, 15px); }
+  .role-card > :first-child { width: clamp(40px, 5.4cqi, 60px); height: clamp(40px, 5.4cqi, 60px); }
+  .role-icon svg { width: 50%; height: 50%; }
+  .login-form { gap: clamp(16px, 2cqi, 22px); }
+  .back-link { font-size: clamp(14px, 1.5cqi, 17px); }
+  .person-card { min-height: clamp(48px, 7cqi, 84px); padding: clamp(8px, 1.2cqi, 14px); gap: 6px; font-size: clamp(14px, 1.6cqi, 18px); }
+  .person-card > :first-child { width: clamp(36px, 4.6cqi, 52px); height: clamp(36px, 4.6cqi, 52px); }
+  .login-form .field-control, .login-form .primary-action { min-height: clamp(44px, 5.6cqi, 60px); font-size: clamp(15px, 1.7cqi, 19px); }
+}
+@container page (min-width: 860px) {
+  .login-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); }
+}
 @container page (min-width: 600px) {
   .pager-page > .fit { flex: 1 1 0; min-height: 0; }
 }
