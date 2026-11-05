@@ -100,6 +100,11 @@ async (page) => {
   await page.goto(origin + "/my/");
   await page.locator(".mobile-cards").getByText(followup, { exact: true }).first().waitFor({ state: "visible" });
   verify(await page.getByText(example, { exact: true }).count() === 0, "다른 사용자 문의 숨김");
+  // 한눈에 보기 칸 합 = 전체: 이 고객은 보완 질문 1 + 담당자 이관 1 (예전엔 보완 질문이 어느 칸에도 안 들어가 합이 모자랐음)
+  await page.locator(".pager-wrap ol button").nth(1).click();
+  const kpi = await page.evaluate(() => ({ total: Number(document.querySelector('[data-kpi="total"] b').textContent), parts: [...document.querySelectorAll('[data-kpi="part"] b')].map(b => Number(b.textContent)) }));
+  verify(kpi.total === 2 && kpi.parts.reduce((sum, n) => sum + n, 0) === kpi.total, `한눈에 보기 칸 합 = 전체 ${JSON.stringify(kpi)}`);
+  await page.locator(".pager-wrap ol button").nth(0).click();
   await page.setViewportSize({ width: 1280, height: 900 });
   verify(await page.locator(".desktop-table").isVisible(), "데스크톱 문의 표 표시");
   verify(!(await page.locator(".mobile-cards").isVisible()), "데스크톱에서 모바일 카드 숨김");

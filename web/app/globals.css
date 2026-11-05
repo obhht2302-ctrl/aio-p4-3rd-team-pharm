@@ -660,3 +660,37 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 .senior .senior-note { margin: .6rem 0 0; }
 .senior-card { display: flex; flex-direction: column; flex: 1 0 auto; }
 .senior-actions { margin-top: auto; }
+
+/* 내 문의 한눈에 (11/5 해든 QA): 숫자 카드는 낮게 한 줄(전체 + 경로 4칸, 칸 합 = 전체), 아래는 아직 처리 중인 문의 목록 (상자 안 스크롤) */
+.kpi-ask { color: var(--route-ask); }
+.kpi-other { color: var(--route-denied); }
+.kpi-sub { font-style: normal; font-size: 11px; color: var(--muted-foreground); white-space: nowrap; }
+.kpi-grid.kpi-five .kpi-total { grid-column: 1 / -1; }
+.pending-card { display: flex; flex-direction: column; gap: 8px; min-height: 0; padding: 14px 16px; }
+.pending-card h2 { margin: 0; font-size: 17px; font-weight: 700; }
+.pending-card h2 small { margin-left: 6px; font-family: var(--font-pretendard), sans-serif; font-size: 13px; font-weight: 500; color: var(--muted-foreground); }
+.pending-card .empty-state { padding: 24px 12px; }
+.pending-scroll { display: flex; flex-direction: column; gap: 6px; max-height: 22rem; }
+.pending-scroll .open-row { flex: none; cursor: default; }
+.pending-scroll .open-row:hover { background: var(--muted); }
+.pending-scroll .status-wrap { flex: none; }
+.pending-foot { flex: none; margin: auto 0 0; padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted-foreground); }
+.senior .pending-foot { font-size: 18px; }
+.senior .pending-card h2 { font-size: 20px; }
+.senior .pending-card .open-title, .senior .pending-card .open-id, .senior .kpi-sub { font-size: 18px; }
+@container page (max-width: 599px) {
+  .kpi-grid.kpi-five { gap: 8px; }
+  .kpi-grid.kpi-five .kpi-card { padding: 8px 12px; }
+  .kpi-grid.kpi-five .kpi-card b { font-size: 22px; line-height: 1.2; }
+  .pending-scroll .open-row { flex-wrap: wrap; row-gap: 4px; }
+  .pending-scroll .open-title { flex-basis: 100%; }
+}
+@container page (min-width: 600px) {
+  .kpi-step { grid-template-rows: auto minmax(0, 1fr); }
+  .kpi-step .kpi-grid.kpi-five { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: auto; }
+  .kpi-grid.kpi-five .kpi-total { grid-column: auto; }
+  .kpi-step .kpi-card { padding: 10px 12px; }
+  .kpi-step .kpi-card b { font-size: clamp(1.75rem, 3.4cqi, 2.5rem); }
+  .pending-card { flex: 1; }
+  .pending-scroll { flex: 1; max-height: none; }
+}

@@ -21,9 +21,18 @@ const dateLabel = (value: string) => {
 const statusTone = (status?: string) => status === "처리 완료" ? "done" : status === "처리 중" ? "doing" : "new";
 const FILTERS = [
   { key: "all", label: "전체", test: () => true },
-  { key: "handoff", label: "담당자 전달", test: (item: RequestItem) => !!item.ticket },
+  { key: "handoff", label: "담당자 전달", test: (item: RequestItem) => item.route === "담당자 이관" },
   { key: "doing", label: "처리 중", test: (item: RequestItem) => !!item.ticket && item.ticket.status !== "처리 완료" },
 ];
+
+// 한눈에 보기 칸은 응답 경로(route) 기준: 칸 합 = 전체. 보완 질문 · 권한 없음 · 차단도 문의 기록에 남으므로
+// 자동 · 전달 두 칸만 세면 합이 안 맞았음 (VM 한기철 7건 = 전달 6 + 보완 질문 1). 경로가 없거나 낯선 값은 '기타'로.
+const ROUTE_KPIS = [
+  { label: "자동 답변", route: "자동 답변", tone: "kpi-auto" },
+  { label: "담당자 전달", route: "담당자 이관", tone: "kpi-handoff" },
+  { label: "보완 질문", route: "보완 질문", tone: "kpi-ask" },
+];
+const isPending = (item: RequestItem) => !!item.ticket && item.ticket.status !== "처리 완료";
 
 // 상태 옆에 누가 무엇을 하고 있는지 한 줄 (화면이 모르는 것은 말하지 않음: "오고 있어요" 같은 말 금지)
 const statusLine: Record<string, string> = { "접수됨": "담당자가 곧 확인해요", "처리 중": "담당자가 보고 있어요", "처리 완료": "처리가 끝났어요" };
@@ -52,12 +61,10 @@ export default function MyPage() {
   if (who === undefined) return <Skeleton className="h-72 w-full" />;
   if (!who) return <LoginPanel />;
 
-  const kpis = [
-    { label: "전체", n: items.length, tone: "" },
-    { label: "자동 답변", n: items.filter(item => item.route === "자동 답변").length, tone: "kpi-auto" },
-    { label: "담당자 전달", n: items.filter(item => item.route === "담당자 이관").length, tone: "kpi-handoff" },
-    { label: "아직 처리 중", n: items.filter(item => item.ticket && item.ticket.status !== "처리 완료").length, tone: "kpi-primary" },
-  ];
+  const parts = ROUTE_KPIS.map(kpi => ({ ...kpi, n: items.filter(item => item.route === kpi.route).length }));
+  const other = items.length - parts.reduce((sum, kpi) => sum + kpi.n, 0);
+  const kpis: { label: string; tone: string; n: number; sub?: string }[] = [...parts, { label: "기타", tone: "kpi-other", n: other, sub: "권한 없음 · 차단" }];
+  const pending = items.filter(isPending);
 
   return <div className="app-fill">
     <h1 className="sr-only">내 문의</h1>
@@ -79,8 +86,17 @@ export default function MyPage() {
         {!loading && !error && items.length > 0 && <p className="list-foot">{rows.length}건 · 담당자 전달 건은 처리 완료까지 여기서 확인할 수 있어요</p>}</div>
       </div>
       <div className="kpi-step fit">
-        <div className="kpi-grid">{kpis.map(kpi => <div key={kpi.label} className="kpi-card"><small>{kpi.label}</small><b className={kpi.tone}>{kpi.n}</b></div>)}</div>
-        <div className="soft-note"><b>문의 기록</b> 담당자 전달 건은 처리 완료까지 이 목록에서 확인할 수 있습니다.</div>
+        <div className="kpi-grid kpi-five">
+          <div className="kpi-card kpi-total" data-kpi="total"><small>전체</small><b>{items.length}</b></div>
+          {kpis.map(kpi => <div key={kpi.label} className="kpi-card" data-kpi="part"><small>{kpi.label}</small><b className={kpi.tone}>{kpi.n}</b>{kpi.sub && <em className="kpi-sub">{kpi.sub}</em>}</div>)}
+        </div>
+        <section className="soft-card pending-card" aria-label="아직 처리 중인 문의">
+          <h2>아직 처리 중인 문의 <small>{pending.length}건</small></h2>
+          {loading ? <Skeleton className="h-12 w-full" /> : pending.length ? <ScrollBox className="pending-scroll">{pending.map(item => <div key={item.request_id} className="open-row">
+            <span className="open-title">{item.question}</span><span className="open-id">{item.ticket!.ticket_id}</span><Status status={item.ticket!.status} />
+          </div>)}</ScrollBox> : <div className="empty-state"><strong>처리 중인 문의가 없어요</strong><p>담당자에게 전달된 문의가 생기면 여기서 진행 상태를 볼 수 있어요.</p></div>}
+          <p className="pending-foot">처리가 끝나면 여기서 빠져요 · 지난 문의는 &lsquo;문의 목록&rsquo;에서 볼 수 있어요</p>
+        </section>
       </div>
     </Pager>
   </div>;
