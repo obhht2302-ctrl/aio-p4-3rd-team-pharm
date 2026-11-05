@@ -70,7 +70,8 @@
    "ticket": {
     "ticket_id": "T-2003",
     "priority": "high",
-    "duplicate": false
+    "duplicate": false,
+    "assignee": "pharmacist"
    },
    "agents": [
     "triage",
