@@ -3,6 +3,7 @@
 // 해든: 3004 다정약국의 머리 메뉴(알약 메뉴 · 사용자 · 로그아웃)와 이동 효과를 구성했습니다.
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { motion, MotionConfig } from "motion/react";
 import { Cross } from "lucide-react";
 import { Toaster } from "sonner";
@@ -26,6 +27,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const senior = who?.role === "patient";
   const nav = links.filter(link => link.href !== "/admin/" || isAdmin(who));
   const logout = () => { saveWho(null); router.push("/"); };
+
+  // 메뉴를 옮기면 새 화면의 맨 위부터 보여 줍니다.
+  useEffect(() => {
+    document.querySelector(".tablet-screen")?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <MotionConfig reducedMotion="user" transition={{ duration: 0.24 }}>

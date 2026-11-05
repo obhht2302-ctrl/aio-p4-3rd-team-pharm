@@ -26,7 +26,7 @@ export function TabletFrame({ children }: { children: React.ReactNode }) {
             <BatteryFull className="size-4" />
           </span>
         </div>
-        <div className="tablet-screen">{children}</div>
+        <div className="tablet-clip"><div className="tablet-screen">{children}</div></div>
       </div>
     </div>
   );

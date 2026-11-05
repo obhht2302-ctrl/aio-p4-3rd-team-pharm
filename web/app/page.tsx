@@ -80,13 +80,13 @@ function StaffAsk({ who }: { who: Who }) {
       {loading && <div className="loading-card" aria-live="polite"><p>답을 찾고 있어요</p><Skeleton className="h-5 w-1/3" /><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-5/6" /><Skeleton className="h-4 w-2/3" /></div>}
       {!answer && !loading && !error && <div className="soft-card empty-state"><MessageCircle size={35} /><strong>아직 보낸 질문이 없어요</strong><p>질문을 보내면 여기에 답이 나와요.</p></div>}
       {answer && <ResultCard answer={answer}>
-        {answer.route === "보완 질문" && <div className="followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" className="field-control" value={ask.context} onChange={e => ask.setContext(e.target.value)} placeholder="상황이나 약 이름 등을 이어서 적어 주세요" /><Button className="primary-action mt-3" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight size={16} /></Button></div>}
+        {answer.route === "보완 질문" && <div className="followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" className="field-control" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="상황이나 약 이름 등을 이어서 적어 주세요" /><Button className="primary-action mt-3" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight size={16} /></Button></div>}
         {answer.route === "담당자 이관" && <CallButton who="pharmacist" variant="outline" className="primary-action self-start">약사에게 전화</CallButton>}
       </ResultCard>}
       {ask.recent.length === 0 ? <div className="recent-empty"><History size={20} /> 최근 문의가 없습니다.</div> :
         <div className="recent-list"><span>최근 문의</span>{ask.recent.map(item => <div key={item.request_id} className="recent-row"><RouteBadge route={item.route} /><span className="recent-q">{item.question}</span>{item.ticket && <b>{item.ticket.ticket_id}</b>}</div>)}</div>}
       <p className="recent-link"><ReceiptText size={14} /> 이전 문의는 <Link href="/my/">내 문의</Link>에서 확인할 수 있습니다.</p>
-      <Button variant="outline" className="primary-action justify-self-start" onClick={ask.askAgain}>새 문의</Button>
+      {(answer || error) && <Button variant="outline" className="primary-action justify-self-start" onClick={ask.askAgain}>새 문의</Button>}
     </div>
   </Pager>;
 }

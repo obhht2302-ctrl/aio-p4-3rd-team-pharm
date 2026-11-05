@@ -134,7 +134,7 @@ export default function AdminPage() {
           <div className="recall-count"><small>확인할 티켓</small><b>{tickets.filter(t => t.status !== "처리 완료").length}</b></div>
           {lead.ticket_id && <Button className="primary-action danger-action" onClick={() => open(lead.ticket_id)}>접수 상세 보기</Button>}
         </motion.div> : <div className="soft-card panel-pad text-sm text-muted-foreground">새 알림이 없어요.</div>}
-        {urgentAlerts.length > 0 && <div className="alert-pills">{urgentAlerts.map((alert, index) => <div key={`${alert.ticket_id ?? "alert"}-${index}`} className="alert-pill"><span className="urgent-pill">긴급</span><span>{alert.reason === "urgent" ? "긴급 확인이 필요해요" : alert.reason}<em> · {alert.ticket_id ?? ""}</em></span></div>)}</div>}
+        {urgentAlerts.length > 0 && <div className="alert-pills">{urgentAlerts.map((alert, index) => <button key={`${alert.ticket_id ?? "alert"}-${index}`} type="button" className="alert-pill" onClick={() => open(alert.ticket_id)}><span className="urgent-pill">긴급</span><span>{tickets.find(item => item.ticket_id === alert.ticket_id)?.title ?? alert.message}<em> · {alert.ticket_id ?? ""}</em></span></button>)}</div>}
         <Button variant="outline" className="primary-action mt-4" onClick={() => setPage(1)}>접수 목록 보기</Button>
       </div>
       <div className="table-card">

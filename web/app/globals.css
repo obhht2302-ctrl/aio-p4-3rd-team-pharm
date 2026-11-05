@@ -427,3 +427,18 @@ h1, h2, h3, .brand strong, .senior-title { font-family: var(--font-gowun), var(-
 }
 .senior .who-box button { height: auto; min-height: 48px; padding: 0 14px; font-size: 18px; font-weight: 700; }
 .brand strong { font-weight: 700; }
+/* 해든: 태블릿 틀은 모든 화면에서 같은 크기로 두고, 내용은 틀 안에서 아래로 스크롤합니다. */
+.tablet-clip { display: contents; }
+.person-grid.single { grid-template-columns: minmax(0, 1fr); }
+.person-grid.single .person-card { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 10px 12px; }
+.alert-pill { text-align: left; cursor: pointer; transition: background-color .2s; }
+.alert-pill:hover { background: var(--route-blocked-bg); }
+@media (min-width: 760px) and (min-height: 520px) and (hover: hover) and (pointer: fine) {
+  body { background: var(--stage); overflow: hidden; }
+  .tablet-stage { display: grid; grid-template-columns: minmax(0, 1fr); min-height: 100dvh; place-items: center; padding: 24px; background: radial-gradient(1200px 600px at 50% 0%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 70%), var(--stage); }
+  .tablet-device { display: flex; flex-direction: column; width: min(1180px, 100%); min-width: 0; height: min(calc(100dvh - 48px), 860px); padding: 14px; border-radius: 42px; background: #1d2220; box-shadow: 0 0 0 2px #3a403d inset, 0 30px 80px -20px rgba(0, 0, 0, .45); }
+  .tablet-status { display: flex; flex: none; height: 30px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 22px; border-radius: 28px 28px 0 0; background: var(--background); color: var(--muted-foreground); font-size: 12px; font-weight: 600; }
+  .tablet-clip { display: block; position: relative; flex: 1; min-height: 0; min-width: 0; overflow: hidden; border-radius: 0 0 28px 28px; transform: translateZ(0); }
+  .tablet-screen { display: block; height: 100%; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; border-radius: 0; background: var(--background); scrollbar-width: none; }
+  .tablet-screen .site-shell { min-height: 100%; }
+}

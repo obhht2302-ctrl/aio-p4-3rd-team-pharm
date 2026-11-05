@@ -39,8 +39,13 @@ export function SeniorAsk({ who }: { who: Who }) {
   const urgent = answer?.ticket?.priority === "high";
   const [input, setInput] = useState("");
 
+  // 고른 글씨 크기는 이 탭에서 다시 들어와도 유지합니다.
+  useEffect(() => {
+    try { const saved = Number(sessionStorage.getItem("team3-senior-size")); if (saved) setSize(saved); } catch { /* 사생활 모드 */ }
+  }, []);
   useEffect(() => {
     document.documentElement.style.fontSize = `${size}px`;
+    try { sessionStorage.setItem("team3-senior-size", String(size)); } catch { /* 사생활 모드 */ }
     return () => { document.documentElement.style.fontSize = ""; };
   }, [size]);
 
@@ -59,7 +64,7 @@ export function SeniorAsk({ who }: { who: Who }) {
         <div className="senior-examples">{examples.map((example, index) => <button key={example} type="button" className="example-button" onClick={() => void ask.send(example)}><span>{index + 1}</span>{example}</button>)}</div>
         <form className="senior-form" onSubmit={e => { e.preventDefault(); void ask.send(input); }}>
           <label htmlFor="senior-q" className="sr-only">질문 내용</label>
-          <Textarea id="senior-q" rows={1} maxLength={500} value={input} onChange={e => setInput(e.target.value)} placeholder="궁금하신 내용을 적어 주세요" className="senior-input" />
+          <Textarea id="senior-q" rows={1} maxLength={500} value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void ask.send(input); } }} placeholder="궁금하신 내용을 적어 주세요" className="senior-input" />
           <Button type="submit" className="senior-button senior-submit" disabled={!input.trim() || loading}>물어보기</Button>
         </form>
         <p className="senior-note">AI가 공공 의약품 정보로 안내해 드려요. 복용 판단은 약사가 직접 상담해 드릴게요.</p>
@@ -76,7 +81,7 @@ export function SeniorAsk({ who }: { who: Who }) {
           <p className="senior-answer">{answer.answer}</p>
           {answer.ticket && <div className="ticket-number senior-ticket"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p></div>}
           {!!answer.sources?.length && <p className="senior-source">출처: {answer.sources.map(source => source.doc).join(", ")}</p>}
-          {answer.route === "보완 질문" && <div className="senior-followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" value={ask.context} onChange={e => ask.setContext(e.target.value)} placeholder="약 이름이나 상황을 적어 주세요" className="senior-input" /><Button className="senior-button" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight /></Button></div>}
+          {answer.route === "보완 질문" && <div className="senior-followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="약 이름이나 상황을 적어 주세요" className="senior-input" /><Button className="senior-button" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight /></Button></div>}
           <div className="senior-actions"><ListenButton text={answer.answer} /><Button variant="outline" className="senior-button" onClick={again}><Home /> 다시 질문하기</Button></div>
         </motion.section>}
         {!answer && !loading && <Button variant="outline" className="senior-button mt-4" onClick={again}><Home /> 다시 질문하기</Button>}

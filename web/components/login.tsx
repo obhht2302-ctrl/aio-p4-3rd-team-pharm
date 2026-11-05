@@ -82,16 +82,16 @@ export function LoginPanel() {
           </button>)}
         </div>
       </motion.div> : <motion.form key={role} className="login-form" onSubmit={submit} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-        <button type="button" className="back-link" onClick={() => pickRole(null)}><ArrowLeft size={16} /> 다른 역할 고르기</button>
+        <button type="button" className="back-link" onClick={() => pickRole(null)}><ArrowLeft size={16} /> 사용자 선택으로</button>
         <h2 className="login-title">{role === "patient" ? "어서 오세요" : `${ROLES.find(item => item.role === role)?.title} 로그인`}</h2>
-        <div className="person-grid" role="group" aria-label="사용자">
+        <div className={people.length === 1 ? "person-grid single" : "person-grid"} role="group" aria-label="사용자">
           {people.map(user => <button key={user.name} type="button" aria-pressed={name === user.name} className={name === user.name ? "person-card on" : "person-card"} onClick={() => setName(user.name)}>
             <PersonAvatar name={user.name} className="size-9 text-sm" /><b>{user.name}</b>
           </button>)}
         </div>
-        <div><label className="field-label" htmlFor="code">입장 코드</label><Input id="code" type="password" autoComplete="off" className="field-control" value={code} onChange={e => setCode(e.target.value)} placeholder="입장 코드를 입력해 주세요" /></div>
+        <div><label className="field-label" htmlFor="code">입장 코드</label><Input id="code" type="password" autoComplete="off" autoFocus className="field-control" value={code} onChange={e => setCode(e.target.value)} placeholder="입장 코드를 입력해 주세요" /></div>
         {error && <p className="error-box" role="alert">{error}</p>}
-        <Button type="submit" className="primary-action w-full" disabled={busy}>{busy ? "확인하고 있어요" : `${name} 님으로 들어가기`}</Button>
+        <Button type="submit" className="primary-action w-full" disabled={busy}>{busy ? "확인하고 있어요" : `${name} 님으로 로그인`}</Button>
       </motion.form>}
     </div>
   </div>;

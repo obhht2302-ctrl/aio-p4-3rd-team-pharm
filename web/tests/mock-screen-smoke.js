@@ -21,7 +21,7 @@ async (page) => {
     await page.getByRole("button", { name: new RegExp(`^.*${roles[name]}`) }).first().click();
     await page.locator(".person-card", { hasText: name }).click();
     await page.getByRole("textbox", { name: "입장 코드" }).fill(code);
-    await page.getByRole("button", { name: `${name} 님으로 들어가기` }).click();
+    await page.getByRole("button", { name: `${name} 님으로 로그인` }).click();
     await page.getByRole("button", { name: /로그아웃|나가기/ }).waitFor({ state: "visible" });
     verify(true, `${name}: 입장`);
   };
@@ -33,7 +33,7 @@ async (page) => {
   await page.getByRole("heading", { name: "사용자 선택" }).waitFor({ state: "visible" });
   await width("로그인 화면");
   await page.getByRole("button", { name: /직원/ }).click();
-  await page.getByRole("button", { name: /님으로 들어가기/ }).click();
+  await page.getByRole("button", { name: /님으로 로그인/ }).click();
   verify(await page.getByRole("alert").getByText("입장 코드를 넣어 주세요.").isVisible(), "입장 코드 없이 못 들어감");
 
   await login("김하늘");
@@ -56,7 +56,7 @@ async (page) => {
   await login("이서준");
   await page.goto(origin + "/admin/");
   await page.getByRole("button", { name: "접수 목록 보기" }).click();
-  await page.getByRole("button", { name: "OTC-03 회수 제품 진열 중" }).click();
+  await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).click();
   await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).waitFor({ state: "visible" });
   await page.getByRole("button", { name: "처리 중", exact: true }).click();
   await page.getByRole("button", { name: "상태 저장" }).click();
@@ -73,7 +73,7 @@ async (page) => {
   await login("정민재");
   await page.goto(origin + "/admin/");
   await page.getByRole("button", { name: "접수 목록 보기" }).click();
-  await page.getByRole("button", { name: "OTC-03 회수 제품 진열 중" }).click();
+  await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).click();
   await page.getByText("손님 안내는 약사 계정에서만").waitFor({ state: "visible" });
   verify(await page.getByRole("button", { name: "손님 안내 보내기 (연습)" }).count() === 0, "약국장 회수 안내 제한");
 
@@ -115,7 +115,7 @@ async (page) => {
   verify(true, "보완 질문 티켓이 약사 목록에 표시");
   await page.getByRole("tab", { name: /처리 중/ }).click();
   await page.getByRole("cell", { name: ticketId }).waitFor({ state: "hidden" });
-  verify(await page.getByRole("button", { name: "OTC-03 회수 제품 진열 중" }).isVisible(), "상태 탭 거르기");
+  verify(await page.locator(".ticket-link", { hasText: "OTC-03 회수 제품 진열 중" }).isVisible(), "상태 탭 거르기");
   await width("티켓 필터 화면");
 
   return checks;
