@@ -131,16 +131,17 @@ export function SeniorAsk({ who }: { who: Who }) {
   const again = () => { setInput(""); setSpoken(""); voice.clear(); followVoice.clear(); ask.askAgain(); };
   const sendVoice = () => { const text = spoken.trim(); voice.clear(); setSpoken(""); void ask.send(text); };
 
-  return <div>
+  return <div className="senior-screen">
     <div className="senior-bar">
       <div className="senior-sizes" role="group" aria-label="글씨 크기"><b>글씨 크기</b>{SIZES.map(item => <Button key={item.px} variant={size === item.px ? "default" : "outline"} className="senior-button" aria-pressed={size === item.px} onClick={() => setSize(item.px)}>{item.label}</Button>)}</div>
       <ol className="senior-steps">{["질문하기", "답 보기"].map((label, index) => <li key={label} className={ask.page === index ? "on" : ""}>{index + 1}. {label}{ask.page === index && <motion.span layoutId="senior-step" className="senior-step-bar" />}</li>)}</ol>
       <CallButton who="pharmacist" variant="outline" className="senior-button senior-outline">약사에게 전화</CallButton>
     </div>
     <div className="senior-body">
-      {ask.page === 0 ? <motion.div key="ask" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
+      {ask.page === 0 ? <motion.div key="ask" className="senior-view" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
         <h1 className="senior-title">무엇을 도와드릴까요?</h1>
         <p className="page-description senior-sub">{voice.supported ? "말로 물어보시거나, 아래에서 고르시거나, 직접 적어 주세요." : "아래에서 고르시거나 직접 적어 주세요."}</p>
+        <div className="senior-main">
         {voice.supported && <section className="senior-voice" aria-label="말로 물어보기">
           <button type="button" className={voice.listening ? "senior-mic on" : "senior-mic"} onClick={voice.listening ? voice.stop : voice.start} aria-pressed={voice.listening} disabled={loading}>
             <span className="senior-mic-icon">{voice.listening ? <Square /> : <Mic />}</span>
@@ -156,13 +157,14 @@ export function SeniorAsk({ who }: { who: Who }) {
           </div>}
         </section>}
         <div className="senior-examples">{examples.map((example, index) => <button key={example} type="button" className="example-button" onClick={() => void ask.send(example)}><span>{index + 1}</span>{example}</button>)}</div>
+        </div>
         <form className="senior-form" onSubmit={e => { e.preventDefault(); void ask.send(input); }}>
           <label htmlFor="senior-q" className="sr-only">질문 내용</label>
           <Textarea id="senior-q" rows={1} maxLength={500} value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void ask.send(input); } }} placeholder="궁금하신 내용을 적어 주세요" className="senior-input" />
           <Button type="submit" className="senior-button senior-submit" disabled={!input.trim() || loading}>물어보기</Button>
         </form>
         <p className="senior-note">AI가 공공 의약품 정보로 안내해 드려요. 복용 판단은 약사가 직접 상담해 드릴게요.</p>
-      </motion.div> : <div>
+      </motion.div> : <div className="senior-view">
         {question.trim() && <p className="senior-question">“{question}”</p>}
         {error && <p className="error-box" role="alert">{error}</p>}
         {loading && <div className="loading-card" aria-live="polite"><p>약국 안내 문서에서 찾고 있어요. 잠시만 기다려 주세요.</p><Skeleton className="h-7 w-2/5" /><Skeleton className="h-6 w-full" /><Skeleton className="h-6 w-4/5" /></div>}

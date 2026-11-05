@@ -30,10 +30,6 @@ export function Pager({
       el.scrollLeft = left;
       return;
     }
-    // 단계가 바뀌면 그 단계의 맨 위부터 보여 줘요.
-    const frame = document.querySelector(".tablet-screen");
-    if (frame && frame.scrollHeight > frame.clientHeight) frame.scrollTop = 0;
-    else window.scrollTo({ top: 0 });
     if (Math.abs(el.scrollLeft - left) < 2) return;
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     el.scrollTo({ left, behavior: calm ? "auto" : "smooth" });
@@ -60,20 +56,6 @@ export function Pager({
     return () => ro.disconnect();
   }, []);
 
-  // 칸 높이는 지금 단계 내용에 맞춰요. 짧은 단계 아래에 빈 공간이 남지 않아요.
-  React.useLayoutEffect(() => {
-    const el = box.current;
-    const active = el?.children[index] as HTMLElement | undefined;
-    if (!el || !active) return;
-    const fit = () => {
-      el.style.height = `${active.offsetHeight}px`;
-    };
-    fit();
-    const ro = new ResizeObserver(fit);
-    ro.observe(active);
-    return () => ro.disconnect();
-  }, [index]);
-
   const onScroll = () => {
     clearTimeout(settle.current);
     settle.current = setTimeout(() => {
@@ -87,9 +69,9 @@ export function Pager({
   const arrow = "grid size-12 shrink-0 place-items-center rounded-xl bg-card ring-1 ring-foreground/10 transition-transform active:scale-95 disabled:opacity-30";
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* 스크롤해도 단계 버튼은 위에 남아 있어요 */}
-      <div className="sticky top-0 z-20 -mx-1 flex items-center gap-2 bg-background px-1 py-2">
+    <div className="pager-wrap">
+      {/* 단계 버튼 줄은 위에 고정, 단계 화면은 남은 높이를 꽉 채워요 */}
+      <div className="flex flex-none items-center gap-2">
         <button type="button" aria-label="이전 단계" className={arrow} disabled={index === 0} onClick={() => onIndex(index - 1)}>
           <ChevronLeft className="size-6" />
         </button>
@@ -117,9 +99,37 @@ export function Pager({
       </div>
       <div ref={box} onScroll={onScroll} className="pager">
         {React.Children.map(children, (child) => (
-          <section className="pager-page">{child}</section>
+          <PagerPage>{child}</PagerPage>
         ))}
       </div>
     </div>
   );
+}
+
+// 상자 안 스크롤: 아래에 더 있으면 data-more를 붙여 바닥에 살짝 그림자를 보여 줘요 (태블릿은 스크롤바가 안 보여서).
+export function useMoreBelow<T extends HTMLElement>() {
+  const ref = React.useRef<T>(null);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => el.toggleAttribute("data-more", el.scrollHeight - el.scrollTop - el.clientHeight > 4);
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    const mo = new MutationObserver(check);
+    mo.observe(el, { childList: true, subtree: true, characterData: true });
+    return () => { el.removeEventListener("scroll", check); ro.disconnect(); mo.disconnect(); };
+  }, []);
+  return ref;
+}
+
+export function ScrollBox({ className, ...props }: React.ComponentProps<"div">) {
+  const ref = useMoreBelow<HTMLDivElement>();
+  return <div ref={ref} className={cn("scroll-box", className)} {...props} />;
+}
+
+function PagerPage({ children }: { children: React.ReactNode }) {
+  const ref = useMoreBelow<HTMLElement>();
+  return <section ref={ref} className="pager-page scroll-box">{children}</section>;
 }

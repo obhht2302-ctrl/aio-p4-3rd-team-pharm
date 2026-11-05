@@ -9,7 +9,7 @@ import { CircleAlert, Lock, Send } from "lucide-react";
 import { api } from "@/lib/api";
 import { isAdmin, useWho, type Who } from "@/lib/session";
 import { LoginPanel } from "@/components/login";
-import { Pager } from "@/components/pager";
+import { Pager, ScrollBox } from "@/components/pager";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -62,18 +62,18 @@ function HandoverPage({ who, tickets, memo, onSaved, onOpen, onDone }: { who: Wh
     setNote("");
     toast.success("인계를 남겼어요.", { description: "이 태블릿에서 다음에 들어오면 맨 위에 보여요." });
   };
-  return <div className="stack-tight">
+  return <div className={memo ? "handover-step fit two" : "handover-step fit"}>
     {memo && <HandoverNote memo={memo} onOpen={onOpen} onDone={onDone} />}
     <section className="soft-card panel-pad handover-write">
       <h2>퇴근 인수인계</h2>
       <p className="handover-sub">다음 근무 약사님께 남길 말을 적어 주세요. 아직 안 끝난 접수 건은 저절로 붙어요.</p>
       <label htmlFor="handover-note" className="field-label">남길 말</label>
-      <Textarea id="handover-note" rows={3} maxLength={500} className="bg-white" value={note} onChange={e => setNote(e.target.value)} placeholder="예: 회수 건 손님 연락이 한 분 남았어요" />
+      <Textarea id="handover-note" rows={2} maxLength={500} className="bg-white" value={note} onChange={e => setNote(e.target.value)} placeholder="예: 회수 건 손님 연락이 한 분 남았어요" />
       <div className="handover-open"><b>열린 건 {openTickets.length}개 자동 첨부</b>
-        {openTickets.length ? <ul>{openTickets.map(item => <li key={item.ticket_id}>{item.ticket_id} · {item.title} <StatusPill status={item.status} /></li>)}</ul> : <p>열린 건이 없어요.</p>}
+        {openTickets.length ? <ScrollBox className="handover-open-list"><ul>{openTickets.map(item => <li key={item.ticket_id}>{item.ticket_id} · {item.title} <StatusPill status={item.status} /></li>)}</ul></ScrollBox> : <p>열린 건이 없어요.</p>}
       </div>
-      <Button className="primary-action justify-self-start" onClick={leave} disabled={!note.trim() && openTickets.length === 0}>인계 남기기</Button>
-      <p className="field-help">이 태블릿에만 저장돼요.</p>
+      <div className="box-foot"><Button className="primary-action" onClick={leave} disabled={!note.trim() && openTickets.length === 0}>인계 남기기</Button>
+      <p className="field-help">이 태블릿에만 저장돼요.</p></div>
     </section>
   </div>;
 }
@@ -108,18 +108,22 @@ function TicketDetail({ ticket, who, onSaved }: { ticket: Ticket; who: Who; onSa
   };
 
   return <motion.div className="detail" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
+    <div className="detail-info">
     <div className="detail-head"><span className="detail-id">{ticket.ticket_id}</span>{ticket.priority === "high" && <span className="urgent-pill">긴급</span>}<StatusPill status={ticket.status} /></div>
     <h3 className="detail-title">{ticket.title}</h3>
     <dl className="kv"><dt>요청</dt><dd>{ticket.requester} · {timeLabel(ticket.created_at)}</dd><dt>분류</dt><dd>{categoryNames[ticket.category] ?? ticket.category}</dd>{ticket.product && <><dt>제품</dt><dd>{ticket.product}</dd></>}</dl>
+    {ticket.category === "recall" && who.role === "pharmacist" && <div className="notice-box"><div><b>손님 안내 보내기</b><p>이 제품을 산 손님 중 동의한 분만 기록해요. 실제로 발송되지 않아요.</p></div><Button className="primary-action danger-action" disabled={sending} onClick={notify}><Send size={16} /> {sending ? "기록하는 중" : "손님 안내 보내기 (연습)"}</Button></div>}
+    {ticket.category === "recall" && who.role === "owner" && <p className="callout"><b>권한 안내</b> 손님 안내는 약사 계정에서만 할 수 있어요.</p>}
+    {notice && <div className="notice-result" aria-live="polite"><strong>연습 기록 · 실제 발송 없음</strong><p>동의한 손님 {notice.count}명에게 안내한 것으로 기록했어요.</p><p>가린 번호: {notice.notices.map(item => item.phone).join(", ")}</p></div>}
+    </div>
+    <div className="detail-work">
     {error && <p className="error-box" role="alert">{error}</p>}
     <h4 className="section-label">처리 상태</h4>
     <div className="status-switch">{STATUS.map(item => <button key={item} type="button" aria-pressed={status === item} className={status === item ? "on" : ""} onClick={() => setStatus(item)}>{status === item && <motion.span layoutId={`status-${ticket.ticket_id}`} className="status-switch-bg" transition={{ duration: 0.2 }} />}<span className="relative">{item}</span></button>)}</div>
     <label htmlFor="memo" className="field-label mt-1">메모</label>
     <Textarea id="memo" rows={2} className="bg-white" value={note} onChange={e => setNote(e.target.value)} />
-    <Button className="primary-action" disabled={saving} onClick={save}>{saving ? "저장하는 중" : "상태 저장"}</Button>
-    {ticket.category === "recall" && who.role === "pharmacist" && <div className="notice-box"><div><b>손님 안내 보내기</b><p>이 제품을 산 손님 중 동의한 분만 기록해요. 실제로 발송되지 않아요.</p></div><Button className="primary-action danger-action" disabled={sending} onClick={notify}><Send size={16} /> {sending ? "기록하는 중" : "손님 안내 보내기 (연습)"}</Button></div>}
-    {ticket.category === "recall" && who.role === "owner" && <p className="callout"><b>권한 안내</b> 손님 안내는 약사 계정에서만 할 수 있어요.</p>}
-    {notice && <div className="notice-result" aria-live="polite"><strong>연습 기록 · 실제 발송 없음</strong><p>동의한 손님 {notice.count}명에게 안내한 것으로 기록했어요.</p><p>가린 번호: {notice.notices.map(item => item.phone).join(", ")}</p></div>}
+    <Button className="primary-action box-foot" disabled={saving} onClick={save}>{saving ? "저장하는 중" : "상태 저장"}</Button>
+    </div>
   </motion.div>;
 }
 
@@ -166,29 +170,40 @@ export default function AdminPage() {
   const urgentAlerts = alerts.filter(alert => alert.severity === "high" || alert.severity === "critical");
   const lead = urgentAlerts[0];
   const leadTicket = tickets.find(item => item.ticket_id === lead?.ticket_id);
+  const openTickets = tickets.filter(item => item.status !== "처리 완료");
 
-  return <div>
+  return <div className="app-fill">
     {error && <p className="error-box mb-4" role="alert">{error}</p>}
     {loading && !loaded ? <div className="stack" aria-live="polite" aria-label="목록을 불러오고 있어요"><Skeleton className="h-12 w-full" /><Skeleton className="h-28 w-full" /><Skeleton className="h-44 w-full" /></div> :
     !loaded ? <Button variant="outline" className="secondary-action" onClick={() => void load(who)}>다시 불러오기</Button> :
     <Pager steps={["오늘 알림", "접수 목록", "접수 상세", "인수인계"]} index={page} onIndex={setPage}>
-      <div>
+      <div className="alerts-step fit">
         <div className="sr-only"><h1>약사 업무 화면</h1></div>
         {lead ? <motion.div className="recall-banner" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           <span className="recall-icon"><CircleAlert size={24} /></span>
           <div className="recall-text"><span>{leadTicket?.category === "recall" ? "회수 공표 · 연습" : "긴급 확인이 필요해요"}</span><b>{leadTicket?.title ?? lead.message}</b>{lead.ticket_id && <small>접수 {lead.ticket_id}{lead.at ? ` · ${timeLabel(lead.at)}` : ""}</small>}</div>
-          <div className="recall-count"><small>확인할 티켓</small><b>{tickets.filter(t => t.status !== "처리 완료").length}</b></div>
+          <div className="recall-count"><small>확인할 티켓</small><b>{openTickets.length}</b></div>
           {lead.ticket_id && <Button className="primary-action danger-action" onClick={() => open(lead.ticket_id)}>접수 상세 보기</Button>}
         </motion.div> : <div className="soft-card panel-pad text-sm text-muted-foreground">새 알림이 없어요. 급한 건이 들어오면 여기에 가장 먼저 보여 드릴게요.</div>}
-        {handover && <HandoverNote memo={handover} onOpen={open} onDone={clearHandover} />}
-        {urgentAlerts.length > 0 && <div className="alert-pills">{urgentAlerts.map((alert, index) => <button key={`${alert.ticket_id ?? "alert"}-${index}`} type="button" className="alert-pill" onClick={() => open(alert.ticket_id)}><span className="urgent-pill">긴급</span><span>{tickets.find(item => item.ticket_id === alert.ticket_id)?.title ?? alert.message}<em> · {alert.ticket_id ?? ""}</em></span></button>)}</div>}
-        <Button variant="outline" className="primary-action mt-4" onClick={() => setPage(1)}>접수 목록 보기</Button>
+        <div className={handover || urgentAlerts.length ? "alerts-grid two" : "alerts-grid"}>
+          <section className="soft-card alerts-open" aria-label="지금 열린 접수">
+            <h2>지금 열린 접수 <small>{openTickets.length}건 · 누르면 상세</small></h2>
+            {openTickets.length ? <ScrollBox className="open-scroll">{openTickets.map(item => <button key={item.ticket_id} type="button" className={item.priority === "high" ? "open-row high" : "open-row"} onClick={() => open(item.ticket_id)}>
+              {item.priority === "high" && <span className="urgent-pill small">긴급</span>}<span className="open-title">{item.title}</span><span className="open-id">{item.ticket_id}</span><StatusPill status={item.status} />
+            </button>)}</ScrollBox> : <div className="empty-state"><strong>열린 접수가 없어요</strong><p>새 접수가 들어오면 여기에 보여 드릴게요.</p></div>}
+          </section>
+          {(handover || urgentAlerts.length > 0) && <div className="alerts-side">
+            {handover && <HandoverNote memo={handover} onOpen={open} onDone={clearHandover} />}
+            {urgentAlerts.length > 0 && <div className="alert-pills">{urgentAlerts.map((alert, index) => <button key={`${alert.ticket_id ?? "alert"}-${index}`} type="button" className="alert-pill" onClick={() => open(alert.ticket_id)}><span className="urgent-pill">긴급</span><span>{tickets.find(item => item.ticket_id === alert.ticket_id)?.title ?? alert.message}<em> · {alert.ticket_id ?? ""}</em></span></button>)}</div>}
+          </div>}
+        </div>
+        <Button variant="outline" className="primary-action next-action" onClick={() => setPage(1)}>접수 목록 보기</Button>
       </div>
-      <div className="table-card">
+      <div className="table-card fit">
         <div className="table-head"><h2>접수 목록 <small>긴급 먼저</small></h2>
           <Tabs value={filter} onValueChange={value => setFilter(String(value))}><TabsList className="ticket-tab-list">{FILTERS.map(item => <TabsTrigger key={item.key} value={item.key} className="ticket-tab">{item.label} {tickets.filter(item.test).length}{filter === item.key && <motion.span layoutId="ticket-tab-underline" className="ticket-tab-underline" />}</TabsTrigger>)}</TabsList></Tabs>
         </div>
-        {shown.length === 0 ? <div className="empty-state"><strong>표시할 티켓이 없어요</strong><p>다른 항목을 확인해 주세요.</p></div> :
+        <ScrollBox className="table-scroll">{shown.length === 0 ? <div className="empty-state"><strong>표시할 티켓이 없어요</strong><p>다른 항목을 확인해 주세요.</p></div> :
           <Table className="ticket-table"><TableHeader><TableRow><TableHead className="pl-4">번호</TableHead><TableHead>제목</TableHead><TableHead className="hide-sm">분류</TableHead><TableHead className="hide-sm">요청</TableHead><TableHead className="pr-4">상태</TableHead></TableRow></TableHeader>
             <TableBody>{shown.map(item => <MotionRow key={item.ticket_id} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} onClick={() => open(item.ticket_id)} className={`ticket-row ${item.priority === "high" ? "high" : ""} ${item.ticket_id === selected ? "selected" : ""}`}>
               <TableCell className="pl-4 font-bold">{item.ticket_id}</TableCell>
@@ -196,9 +211,10 @@ export default function AdminPage() {
               <TableCell className="hide-sm">{categoryNames[item.category] ?? item.category}</TableCell>
               <TableCell className="hide-sm">{item.requester}</TableCell>
               <TableCell className="pr-4"><StatusPill status={item.status} /></TableCell>
-            </MotionRow>)}</TableBody></Table>}
+            </MotionRow>)}</TableBody></Table>}</ScrollBox>
+        <p className="list-foot">{shown.length}건 · 열린 건 {openTickets.length}개 · 줄을 누르면 접수 상세로 넘어가요</p>
       </div>
-      <div className="detail-card">{ticket ? <TicketDetail key={ticket.ticket_id} ticket={ticket} who={who} onSaved={(id, status, note) => setTickets(current => current.map(item => item.ticket_id === id ? { ...item, status, note } : item))} /> : <div className="empty-state"><strong>목록에서 접수 건을 골라 주세요</strong></div>}</div>
+      <div className="detail-card fit">{ticket ? <TicketDetail key={ticket.ticket_id} ticket={ticket} who={who} onSaved={(id, status, note) => setTickets(current => current.map(item => item.ticket_id === id ? { ...item, status, note } : item))} /> : <div className="empty-state"><strong>목록에서 접수 건을 골라 주세요</strong></div>}</div>
       <HandoverPage who={who} tickets={tickets} memo={handover} onSaved={setHandover} onOpen={open} onDone={clearHandover} />
     </Pager>}
   </div>;
