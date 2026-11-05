@@ -1,7 +1,6 @@
 "use client";
 
 // 해든: 3004의 역할 카드 로그인을 명세의 사용자 선택 + 입장 코드로 연결했습니다. 코드는 들어갈 때 API로 바로 확인합니다.
-import { BRAND } from "@/lib/brand";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -59,7 +58,7 @@ export function LoginPanel() {
 
   return <div className="login-grid">
     <section className="login-intro">
-      <h1>{BRAND.pharmacy}<br />매장 업무 태블릿</h1>
+      <h1>오늘도<br /> 건강한 하루 보내세요</h1>
       <p>매장 문의 확인, 약사 상담 연결, 회수 · 접수 처리를 한곳에서 합니다.</p>
       <ul>
         <li><MapPin size={16} /> 마감 · 접수 건 · 매장 문의 확인</li>
@@ -75,7 +74,7 @@ export function LoginPanel() {
           {ROLES.map(item => <button key={item.role} type="button" className="role-card" onClick={() => pickRole(item.role)}>
             {item.role === "pharmacist" ? <PersonAvatar name="이서준" className="size-10" /> :
               item.role === "owner" ? <PersonAvatar name="정민재" className="size-10" /> :
-              <span className="role-icon">{item.role === "staff" ? <IdCard size={20} /> : <UserRound size={20} />}</span>}
+                <span className="role-icon">{item.role === "staff" ? <IdCard size={20} /> : <UserRound size={20} />}</span>}
             <b>{item.title}</b>
             <small>{item.desc}</small>
           </button>)}

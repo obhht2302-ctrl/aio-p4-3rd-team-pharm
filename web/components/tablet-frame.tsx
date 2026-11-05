@@ -18,11 +18,11 @@ export function TabletFrame({ children }: { children: React.ReactNode }) {
       <div className="tablet-device">
         <div className="tablet-status" aria-hidden>
           <span className="tabular-nums">{now ?? ""}</span>
-          <span className="truncate">매장 업무 태블릿</span>
+          <span />
           <span className="flex items-center gap-1.5">
             <Wifi className="size-3.5" />
-            <span className="tabular-nums">87%</span>
-            <BatteryFull className="size-4" />
+            <span className="tabular-nums text-emerald-700">87%</span>
+            <BatteryFull className="size-4 text-emerald-700" />
           </span>
         </div>
         <div className="tablet-clip"><div className="tablet-screen">{children}</div></div>
