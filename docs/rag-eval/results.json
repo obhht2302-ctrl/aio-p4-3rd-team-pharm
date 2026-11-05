@@ -1384,5 +1384,375 @@
   "usd_per_1m": 0.13,
   "price_source": "https://openai.com/api/pricing/ (text-embedding-3-large $0.13 / 1M tokens)",
   "measured": "2026-11-03, OpenAI /v1/embeddings usage.prompt_tokens"
+ },
+ "senior_boundary": {
+  "date": "2026-11-05",
+  "chunking": "section",
+  "top_k": 4,
+  "score_min": 0.37,
+  "regression": {
+   "n": 12,
+   "hit1": 12,
+   "hit4": 12,
+   "leaks": 0,
+   "in_scope_top1": [
+    0.391,
+    0.399,
+    0.439,
+    0.444,
+    0.444,
+    0.47,
+    0.549,
+    0.556,
+    0.58,
+    0.588,
+    0.591,
+    0.641
+   ]
+  },
+  "rows": [
+   {
+    "id": "SB-F1",
+    "kind": "fact",
+    "q": "클로르페니라민은 어디에 쓰는 성분이에요?",
+    "expect": "senior-cold-sleep-stomach",
+    "ranked": [
+     [
+      "senior-cold-sleep-stomach",
+      "2. 감기 · 콧물 약 성분",
+      0.441
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "3. 잠 오는 약 · 위장 약 · 변비약 성",
+      0.328
+     ],
+     [
+      "senior-pain-joint",
+      "2. 관절 · 통증 소염진통제",
+      0.299
+     ],
+     [
+      "senior-pain-joint",
+      "3. 어르신 주의 (노인주의)",
+      0.282
+     ]
+    ],
+    "top1": "senior-cold-sleep-stomach",
+    "top1_score": 0.441,
+    "hit1": true,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-F2",
+    "kind": "fact",
+    "q": "잠 오는 약은 어르신이 왜 조심해야 해요?",
+    "expect": "senior-cold-sleep-stomach",
+    "ranked": [
+     [
+      "senior-cold-sleep-stomach",
+      "1. 이 문서는",
+      0.56
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "4. 출처와 기준일",
+      0.554
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "3. 잠 오는 약 · 위장 약 · 변비약 성",
+      0.518
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "2. 감기 · 콧물 약 성분",
+      0.431
+     ]
+    ],
+    "top1": "senior-cold-sleep-stomach",
+    "top1_score": 0.56,
+    "hit1": true,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-F3",
+    "kind": "fact",
+    "q": "아세트아미노펜은 술 마시는 사람이 조심할 게 있어요?",
+    "expect": "senior-pain-joint",
+    "ranked": [
+     [
+      "senior-pain-joint",
+      "1. 열 · 통증 약 — 아세트아미노펜",
+      0.434
+     ],
+     [
+      "senior-pain-joint",
+      "3. 어르신 주의 (노인주의)",
+      0.393
+     ],
+     [
+      "senior-safety-signals",
+      "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+      0.314
+     ],
+     [
+      "senior-pain-joint",
+      "2. 관절 · 통증 소염진통제",
+      0.297
+     ]
+    ],
+    "top1": "senior-pain-joint",
+    "top1_score": 0.434,
+    "hit1": true,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-F4",
+    "kind": "fact",
+    "q": "변비약 비사코딜에는 어떤 주의사항이 있어요?",
+    "expect": "senior-cold-sleep-stomach",
+    "ranked": [
+     [
+      "senior-pain-joint",
+      "3. 어르신 주의 (노인주의)",
+      0.474
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "3. 잠 오는 약 · 위장 약 · 변비약 성",
+      0.472
+     ],
+     [
+      "senior-safety-signals",
+      "4. AI 안내의 한계",
+      0.431
+     ],
+     [
+      "senior-safety-signals",
+      "2. 같이 먹어도 되나 묻기 전에",
+      0.409
+     ]
+    ],
+    "top1": "senior-pain-joint",
+    "top1_score": 0.474,
+    "hit1": false,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-F5",
+    "kind": "fact",
+    "q": "관절 소염진통제는 어르신한테 어떤 주의가 있어요?",
+    "expect": "senior-pain-joint",
+    "ranked": [
+     [
+      "senior-pain-joint",
+      "3. 어르신 주의 (노인주의)",
+      0.517
+     ],
+     [
+      "senior-pain-joint",
+      "4. 같이 먹어도 되나 — 출처와 기준일",
+      0.515
+     ],
+     [
+      "senior-pain-joint",
+      "2. 관절 · 통증 소염진통제",
+      0.468
+     ],
+     [
+      "senior-pain-joint",
+      "1. 열 · 통증 약 — 아세트아미노펜",
+      0.427
+     ]
+    ],
+    "top1": "senior-pain-joint",
+    "top1_score": 0.517,
+    "hit1": true,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-J1",
+    "kind": "judgment",
+    "q": "혈압약이랑 감기약 같이 먹어도 돼요?",
+    "expect": "senior-safety-signals",
+    "ranked": [
+     [
+      "senior-pain-joint",
+      "4. 같이 먹어도 되나 — 출처와 기준일",
+      0.552
+     ],
+     [
+      "senior-safety-signals",
+      "2. 같이 먹어도 되나 묻기 전에",
+      0.528
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "2. 감기 · 콧물 약 성분",
+      0.448
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "1. 이 문서는",
+      0.441
+     ]
+    ],
+    "top1": "senior-pain-joint",
+    "top1_score": 0.552,
+    "hit1": false,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-J2",
+    "kind": "judgment",
+    "q": "제 경우에 진통제를 하루에 더 먹어도 돼요?",
+    "expect": "senior-safety-signals",
+    "ranked": [
+     [
+      "senior-pain-joint",
+      "4. 같이 먹어도 되나 — 출처와 기준일",
+      0.486
+     ],
+     [
+      "senior-pain-joint",
+      "2. 관절 · 통증 소염진통제",
+      0.419
+     ],
+     [
+      "senior-pain-joint",
+      "1. 열 · 통증 약 — 아세트아미노펜",
+      0.418
+     ],
+     [
+      "senior-safety-signals",
+      "2. 같이 먹어도 되나 묻기 전에",
+      0.4
+     ]
+    ],
+    "top1": "senior-pain-joint",
+    "top1_score": 0.486,
+    "hit1": false,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-J3",
+    "kind": "judgment",
+    "q": "먹던 관절약을 이제 끊어도 될까요?",
+    "expect": "senior-safety-signals",
+    "ranked": [
+     [
+      "senior-pain-joint",
+      "4. 같이 먹어도 되나 — 출처와 기준일",
+      0.411
+     ],
+     [
+      "senior-pain-joint",
+      "3. 어르신 주의 (노인주의)",
+      0.409
+     ],
+     [
+      "senior-pain-joint",
+      "2. 관절 · 통증 소염진통제",
+      0.396
+     ],
+     [
+      "senior-safety-signals",
+      "4. AI 안내의 한계",
+      0.342
+     ]
+    ],
+    "top1": "senior-pain-joint",
+    "top1_score": 0.411,
+    "hit1": false,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-J4",
+    "kind": "judgment",
+    "q": "약 먹고 숨이 차고 가슴이 답답해요",
+    "expect": "senior-safety-signals",
+    "ranked": [
+     [
+      "senior-safety-signals",
+      "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+      0.472
+     ],
+     [
+      "senior-safety-signals",
+      "2. 같이 먹어도 되나 묻기 전에",
+      0.428
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "1. 이 문서는",
+      0.402
+     ],
+     [
+      "senior-cold-sleep-stomach",
+      "2. 감기 · 콧물 약 성분",
+      0.398
+     ]
+    ],
+    "top1": "senior-safety-signals",
+    "top1_score": 0.472,
+    "hit1": true,
+    "hit4": true,
+    "leak": false
+   },
+   {
+    "id": "SB-J5",
+    "kind": "judgment",
+    "q": "와파린 먹는데 파스 붙여도 돼요?",
+    "expect": "senior-safety-signals",
+    "ranked": [
+     [
+      "senior-safety-signals",
+      "2. 같이 먹어도 되나 묻기 전에",
+      0.282
+     ],
+     [
+      "senior-safety-signals",
+      "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+      0.272
+     ],
+     [
+      "senior-pain-joint",
+      "4. 같이 먹어도 되나 — 출처와 기준일",
+      0.26
+     ],
+     [
+      "senior-pain-joint",
+      "2. 관절 · 통증 소염진통제",
+      0.241
+     ]
+    ],
+    "top1": "senior-safety-signals",
+    "top1_score": 0.282,
+    "hit1": true,
+    "hit4": true,
+    "leak": false
+   }
+  ],
+  "fact": {
+   "n": 5,
+   "hit1": 4,
+   "hit4": 5,
+   "below_score_min": 0
+  },
+  "judgment": {
+   "n": 5,
+   "hit1": 2,
+   "hit4": 5,
+   "below_score_min": 1
+  }
  }
 }
