@@ -339,6 +339,24 @@ h1, h2, h3, .brand strong, .senior-title { font-family: var(--font-gowun), var(-
 .senior .example-button:hover { border-color: var(--primary); }
 .senior .example-button span { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--primary); color: #fff; font-size: 1rem; }
 .senior-form { display: flex; flex-wrap: wrap; gap: .6rem; }
+/* 말로 묻기 (마이크) — 첫 화면에서 가장 큰 버튼 */
+.senior-voice { display: grid; gap: .8rem; margin-bottom: 1.2rem; }
+.senior .senior-mic { display: flex; align-items: center; gap: 1rem; width: 100%; min-height: 5.5rem; padding: 1rem 1.4rem; border: 0; border-radius: 1.2rem; background: var(--primary); color: var(--primary-foreground); text-align: left; cursor: pointer; box-shadow: 0 .4rem 1.2rem -.5rem color-mix(in oklch, var(--primary) 70%, transparent); }
+.senior .senior-mic:hover { background: color-mix(in oklch, var(--primary) 88%, #000); }
+.senior .senior-mic:focus-visible { outline: 3px solid var(--foreground); outline-offset: 3px; }
+.senior .senior-mic:disabled { opacity: .6; cursor: default; }
+.senior .senior-mic.on { background: var(--route-blocked); }
+.senior-mic-icon { display: grid; place-items: center; flex: none; width: 3.6rem; height: 3.6rem; border-radius: 50%; background: rgba(255, 255, 255, .22); }
+.senior-mic-icon svg { width: 2rem; height: 2rem; }
+.senior-mic.on .senior-mic-icon { animation: senior-mic-pulse 1.4s ease-in-out infinite; }
+@keyframes senior-mic-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .55); } 50% { box-shadow: 0 0 0 .7rem rgba(255, 255, 255, 0); } }
+@media (prefers-reduced-motion: reduce) { .senior-mic.on .senior-mic-icon { animation: none; } }
+.senior-mic-text { display: grid; gap: .2rem; min-width: 0; }
+.senior .senior-mic b { font-size: 1.5rem; font-weight: 800; line-height: 1.25; }
+.senior .senior-mic small { font-size: 1.05rem; font-weight: 500; opacity: .92; }
+.senior .senior-heard { margin: 0; padding: 1rem 1.2rem; border: 2px dashed var(--primary); border-radius: 1rem; background: var(--card); font-size: 1.35rem; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+.senior-heard-box { display: grid; gap: .6rem; }
+.senior-voice-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 .senior .senior-input { flex: 1 1 14rem; min-height: 3.4rem; padding: .7rem 1rem; font-size: 1.1rem; border: 2px solid color-mix(in oklch, var(--foreground) 40%, transparent); border-radius: .8rem; background: var(--card); }
 .senior .senior-submit { min-height: 3.4rem; padding: 0 2rem; font-size: 1.15rem; }
 .senior .senior-note { margin: 1.2rem 0 0; padding: .7rem 1rem; border-radius: .8rem; background: #fff8dc; font-size: 1rem; color: var(--foreground); }
