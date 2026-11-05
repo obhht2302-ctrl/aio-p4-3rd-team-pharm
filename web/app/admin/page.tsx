@@ -34,6 +34,14 @@ const timeLabel = (value?: string) => {
 };
 const statusTone = (status: string) => status === "처리 완료" ? "done" : status === "처리 중" ? "doing" : "new";
 const StatusPill = ({ status }: { status: string }) => <span className={`status-pill tone-${statusTone(status)}`}>{status}</span>;
+// n8n이 보낸 날 문구('[other] owner에게 이관 ·' 같은 꼴)는 사람 말로 바꿉니다. 티켓이 있으면 티켓 제목을 씁니다.
+const ROLE_WORDS: Record<string, string> = { owner: "약국장", pharmacist: "약사", staff: "직원" };
+const alertText = (alert: Alert, ticket?: Ticket) => {
+  if (ticket) return ticket.title;
+  const routed = alert.message.match(/^\[[^\]]*\]\s*(\w+)에게 이관/);
+  if (routed) return `${ROLE_WORDS[routed[1]] ?? "담당자"}에게 넘어간 문의가 있어요`;
+  return alert.message.replace(/^\[[^\]]*\]\s*/, "").replace(/\s*·\s*$/, "").trim() || "확인이 필요한 알림이 있어요";
+};
 
 // 퇴근 인수인계: 남길 말 + 아직 안 끝난 접수 건을 이 태블릿(localStorage)에 남기고, 다음에 들어온 약사에게 맨 위에 보여 줍니다.
 // 매장 태블릿 한 대를 같이 쓰는 연습용이라 서버에는 저장하지 않습니다 (다른 기기에서는 안 보임).
@@ -167,10 +175,19 @@ export default function AdminPage() {
   const open = (id?: string) => { if (id) { setSelected(id); setPage(2); } };
   const shown = tickets.filter(FILTERS.find(item => item.key === filter)!.test);
   const ticket = tickets.find(item => item.ticket_id === selected);
-  const urgentAlerts = alerts.filter(alert => alert.severity === "high" || alert.severity === "critical");
-  const lead = urgentAlerts[0];
-  const leadTicket = tickets.find(item => item.ticket_id === lead?.ticket_id);
   const openTickets = tickets.filter(item => item.status !== "처리 완료");
+  const urgentAlerts = alerts.filter(alert => alert.severity === "high" || alert.severity === "critical");
+  // 맨 위 배너: 아직 안 끝난 티켓이 달린 긴급 알림 먼저
+  const lead = urgentAlerts.find(alert => openTickets.some(item => item.ticket_id === alert.ticket_id)) ?? urgentAlerts[0];
+  const leadTicket = tickets.find(item => item.ticket_id === lead?.ticket_id);
+  // 오른쪽 '그 밖의 알림': 왼쪽 열린 접수 목록에 이미 있는 건 빼고, 같은 문구는 한 줄로 묶음
+  const others: { text: string; count: number; at?: string; ticket_id?: string }[] = [];
+  for (const alert of urgentAlerts) {
+    if (alert === lead || openTickets.some(item => item.ticket_id === alert.ticket_id)) continue;
+    const text = alertText(alert, tickets.find(item => item.ticket_id === alert.ticket_id));
+    const same = others.find(item => item.text === text);
+    if (same) same.count += 1; else others.push({ text, count: 1, at: alert.at, ticket_id: alert.ticket_id });
+  }
 
   return <div className="app-fill">
     {error && <p className="error-box mb-4" role="alert">{error}</p>}
@@ -181,21 +198,23 @@ export default function AdminPage() {
         <div className="sr-only"><h1>약사 업무 화면</h1></div>
         {lead ? <motion.div className="recall-banner" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           <span className="recall-icon"><CircleAlert size={24} /></span>
-          <div className="recall-text"><span>{leadTicket?.category === "recall" ? "회수 공표 · 연습" : "긴급 확인이 필요해요"}</span><b>{leadTicket?.title ?? lead.message}</b>{lead.ticket_id && <small>접수 {lead.ticket_id}{lead.at ? ` · ${timeLabel(lead.at)}` : ""}</small>}</div>
+          <div className="recall-text"><span>{leadTicket?.category === "recall" ? "회수 공표 · 연습" : "긴급 확인이 필요해요"}</span><b>{alertText(lead, leadTicket)}</b>{lead.ticket_id && <small>접수 {lead.ticket_id}{lead.at ? ` · ${timeLabel(lead.at)}` : ""}</small>}</div>
           <div className="recall-count"><small>확인할 티켓</small><b>{openTickets.length}</b></div>
           {lead.ticket_id && <Button className="primary-action danger-action" onClick={() => open(lead.ticket_id)}>접수 상세 보기</Button>}
         </motion.div> : <div className="soft-card panel-pad text-sm text-muted-foreground">새 알림이 없어요. 급한 건이 들어오면 여기에 가장 먼저 보여 드릴게요.</div>}
-        <div className={handover || urgentAlerts.length ? "alerts-grid two" : "alerts-grid"}>
+        <div className={handover || others.length ? "alerts-grid two" : "alerts-grid"}>
           <section className="soft-card alerts-open" aria-label="지금 열린 접수">
             <h2>지금 열린 접수 <small>{openTickets.length}건 · 누르면 상세</small></h2>
             {openTickets.length ? <ScrollBox className="open-scroll">{openTickets.map(item => <button key={item.ticket_id} type="button" className={item.priority === "high" ? "open-row high" : "open-row"} onClick={() => open(item.ticket_id)}>
               {item.priority === "high" && <span className="urgent-pill small">긴급</span>}<span className="open-title">{item.title}</span><span className="open-id">{item.ticket_id}</span><StatusPill status={item.status} />
             </button>)}</ScrollBox> : <div className="empty-state"><strong>열린 접수가 없어요</strong><p>새 접수가 들어오면 여기에 보여 드릴게요.</p></div>}
           </section>
-          {(handover || urgentAlerts.length > 0) && <div className="alerts-side">
+          {(handover || others.length > 0) && <ScrollBox className="alerts-side">
             {handover && <HandoverNote memo={handover} onOpen={open} onDone={clearHandover} />}
-            {urgentAlerts.length > 0 && <div className="alert-pills">{urgentAlerts.map((alert, index) => <button key={`${alert.ticket_id ?? "alert"}-${index}`} type="button" className="alert-pill" onClick={() => open(alert.ticket_id)}><span className="urgent-pill">긴급</span><span>{tickets.find(item => item.ticket_id === alert.ticket_id)?.title ?? alert.message}<em> · {alert.ticket_id ?? ""}</em></span></button>)}</div>}
-          </div>}
+            {others.length > 0 && <section className="side-card" aria-label="그 밖의 긴급 알림"><h3>그 밖의 긴급 알림 <small>열린 접수에 없는 것 {others.length}건</small></h3>
+              {others.map(item => <div key={item.text} className="side-row"><span className="urgent-pill small">긴급</span><span className="side-row-text">{item.text}{item.ticket_id && <em> · {item.ticket_id}</em>}</span>{item.count > 1 && <b className="side-row-count">{item.count}건</b>}{item.at && <small>{timeLabel(item.at)}</small>}</div>)}
+            </section>}
+          </ScrollBox>}
         </div>
         <Button variant="outline" className="primary-action next-action" onClick={() => setPage(1)}>접수 목록 보기</Button>
       </div>

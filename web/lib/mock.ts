@@ -16,21 +16,49 @@ let serial = 0;
 const seniorFollowupQuestion = "혈압약이랑 관절약 같이 먹어도 돼요?";
 const seniorDisclosure = "AI가 공공 의약품 정보를 정리한 안내예요. 복용 전 약사와 확인해 주세요.";
 
+// 바쁜 날 연습 데이터: sessionStorage team3-mock-busy=1이면 실제 VM처럼 열린 접수 · 알림을 10건 남짓으로 늘립니다 (화면 시험용).
+// 실제 알림에는 티켓 없는 n8n 날 문구('[other] owner에게 이관 ·')도 섞여 옵니다.
+function seedBusy() {
+  const at = (minute: number) => `2026-11-05T${String(9 + Math.floor(minute / 60)).padStart(2, "0")}:${String(minute % 60).padStart(2, "0")}:00+09:00`;
+  const rows: [string, string, string, string, string][] = [
+    ["T-2005", "마감 때 계산대 현금은 어떤 순서로 맞춰요?", "closing", "normal", "접수됨"],
+    ["T-2006", "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요. 제 마감 차액 건(R-1001)도 어떻게 됐나요?", "recall", "high", "처리 중"],
+    ["T-2007", "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.", "recall", "high", "접수됨"],
+    ["T-2008", "마감 차액은 얼마까지 승인 없이 처리해요?", "closing", "normal", "처리 완료"],
+    ["T-2009", "약품 냉장고 온도가 9도로 올라가 있어요", "other", "high", "접수됨"],
+    ["T-2010", "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.", "senior", "high", "접수됨"],
+    ["T-2011", "뉴스에 나온 OTC-03 시럽이 아직 진열돼 있어요. 어떻게 해야 하나요?", "recall", "high", "접수됨"],
+    ["T-2012", "혈압약과 골다공증약을 같이 먹어도 되나?", "senior", "normal", "접수됨"],
+    ["T-2013", "포스 단말기 카드 결제가 자꾸 끊겨요", "other", "normal", "처리 완료"],
+    ["T-2014", "마감이 안 돼요", "closing", "normal", "접수됨"],
+  ];
+  rows.forEach(([ticket_id, title, category, priority, status], index) => tickets.unshift({ ticket_id, key: `busy-${index}`, title, requester: "김하늘", category, priority, status, product: category === "recall" ? "OTC-03" : "", created_at: at(index * 7) }));
+  const raw = (minute: number) => ({ workflow: "team3-handoff", severity: "high", reason: "handoff", message: "[other] owner에게 이관 ·", at: at(minute) });
+  alerts.unshift(
+    ...rows.filter(row => row[3] === "high").map(([ticket_id, title], index) => ({ workflow: "team3-handoff", severity: "high", reason: "urgent", message: `[긴급] ${title}`, ticket_id, at: at(60 - index) })),
+    raw(30), raw(20),
+    { workflow: "team3-errors", severity: "warning", reason: "llm_retry", message: "[warning] 답변 작성 다시 시도", at: at(10) },
+    { workflow: "team3-handoff", severity: "high", reason: "urgent", message: "[긴급] 마감 차액은 얼마까지 승인 없이 처리해요?", ticket_id: "T-2008", at: at(5) },
+  );
+}
+
 function hydrate() {
   if (hydrated) return;
   hydrated = true;
   try {
     const stored = sessionStorage.getItem("team3-mock");
+    if (!stored && sessionStorage.getItem("team3-mock-busy") === "1") { seedBusy(); persist(); }
     if (!stored) return;
-    const state = JSON.parse(stored) as { requests: Record<string, RequestItem[]>; tickets: Ticket[] };
+    const state = JSON.parse(stored) as { requests: Record<string, RequestItem[]>; tickets: Ticket[]; alerts?: unknown[] };
     requests.clear();
     for (const [name, items] of Object.entries(state.requests)) requests.set(name, items);
     tickets.splice(0, tickets.length, ...state.tickets);
+    if (state.alerts) alerts.splice(0, alerts.length, ...state.alerts);
   } catch { /* 저장소를 사용할 수 없으면 메모리로 진행 */ }
 }
 
 function persist() {
-  try { sessionStorage.setItem("team3-mock", JSON.stringify({ requests: Object.fromEntries(requests), tickets })); }
+  try { sessionStorage.setItem("team3-mock", JSON.stringify({ requests: Object.fromEntries(requests), tickets, alerts })); }
   catch { /* 사생활 모드에서는 메모리로만 진행 */ }
 }
 

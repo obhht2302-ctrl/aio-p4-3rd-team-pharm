@@ -448,7 +448,7 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 .who-box button { position: relative; min-height: 40px; }
 .page-container { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-block: 8px 12px; container: page / inline-size; }
 .site-footer { padding: 6px 16px; font-size: 11px; line-height: 1.4; }
-.app-fill { display: flex; flex-direction: column; flex: 1 0 auto; min-height: 0; }
+.app-fill { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; }
 .pager-wrap { display: flex; flex-direction: column; flex: 1; min-height: 0; gap: 8px; }
 .pager { flex: 1; min-height: 0; align-items: stretch; }
 .pager-page { display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior-y: contain; }
@@ -546,7 +546,18 @@ body { word-break: keep-all; overflow-wrap: break-word; }
 .open-row:hover { background: var(--secondary); }
 .open-row.high { box-shadow: inset 3px 0 0 var(--urgent); }
 .open-title { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; }
-.open-id { font-size: 13px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+.open-id { flex: none; font-size: 13px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.open-row .status-pill, .open-row .urgent-pill { flex: none; white-space: nowrap; }
+/* 오늘 알림 오른쪽 칸: 알약 말고 카드 행 */
+.side-card { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: var(--card); box-shadow: 0 0 0 1px rgba(36, 33, 63, .1); }
+.side-card h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.side-card h3 small { margin-left: 6px; font-family: var(--font-pretendard), sans-serif; font-size: 13px; font-weight: 500; color: var(--muted-foreground); }
+.side-row { display: flex; align-items: center; gap: 8px 10px; min-height: 48px; padding: 8px 12px; border-radius: 10px; background: var(--muted); }
+.side-row-text { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; }
+.side-row-text em { font-style: normal; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; }
+.side-row-count { flex: none; font-size: 13px; color: var(--route-blocked); }
+.side-row small { flex: none; font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
+.alerts-side { min-height: 0; }
 @container page (min-width: 600px) {
   .alerts-grid { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr); align-content: stretch; }
   .alerts-grid.two { grid-template-rows: minmax(0, 1fr) auto; }
