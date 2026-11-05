@@ -722,3 +722,14 @@ body { word-break: keep-all; overflow-wrap: break-word; }
   .person-card { min-height: clamp(48px, min(7cqi, 9dvh), 84px); }
   .login-form .field-control, .login-form .primary-action { min-height: clamp(44px, min(5.6cqi, 7.5dvh), 60px); }
 }
+
+/* 단계 버튼 (11/5 해든 QA): 좁은 폭(본문 600 미만, 폰)에선 이름이 '오.' '접.'처럼 잘리지 않게 — 화살표는 숨기고(손가락 넘김 · 단계 버튼으로 이동) 번호 위 · 이름 아래로 쌓음 */
+@container page (max-width: 599px) {
+  .pager-wrap .pager-arrow { display: none; }
+  .pager-steps { gap: 6px; }
+  .pager-step { flex-direction: column; gap: 0; padding-inline: 2px; line-height: 1.2; }
+  .pager-step .step-no { font-size: 12px; opacity: .85; }
+  .pager-step .step-name { overflow: visible; text-overflow: clip; white-space: nowrap; font-size: 14px; }
+  .senior .pager-step .step-no { font-size: 15px; }
+  .senior .pager-step .step-name { font-size: 18px; }
+}
