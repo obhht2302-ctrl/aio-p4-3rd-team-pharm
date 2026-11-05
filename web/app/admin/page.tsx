@@ -122,7 +122,9 @@ function TicketDetail({ ticket, who, onSaved }: { ticket: Ticket; who: Who; onSa
     <div className="detail-head"><span className="detail-id">{ticket.ticket_id}</span>{ticket.priority === "high" && <span className="urgent-pill">긴급</span>}<StatusPill status={ticket.status} /></div>
     <h3 className="detail-title">{ticket.title}</h3>
     <dl className="kv"><dt>요청</dt><dd>{ticket.requester} · {timeLabel(ticket.created_at)}</dd><dt>분류</dt><dd>{categoryNames[ticket.category] ?? ticket.category}</dd>{ticket.product && <><dt>제품</dt><dd>{ticket.product}</dd></>}</dl>
-    {ticket.category === "recall" && who.role === "pharmacist" && <div className="notice-box"><div><b>회수 손님 안내</b><p>이 제품을 산 손님 중 동의한 분만 기록해요. 실제로 발송되지 않아요.</p></div><Button className="primary-action danger-action" disabled={sending} onClick={notify}><Send size={16} /> {sending ? "기록하는 중" : "손님 안내 보내기"}</Button></div>}
+    {/* 제품을 모르는 회수 티켓은 안내 대상 손님을 고를 수 없으니 버튼 대신 한 줄 (다영 QA 11/5) */}
+    {ticket.category === "recall" && who.role === "pharmacist" && !ticket.product?.trim() && <p className="callout"><b>손님 안내</b> 제품이 확인되지 않아 손님 안내를 보낼 수 없어요</p>}
+    {ticket.category === "recall" && who.role === "pharmacist" && !!ticket.product?.trim() && <div className="notice-box"><div><b>회수 손님 안내</b><p>이 제품을 산 손님 중 동의한 분만 기록해요. 실제로 발송되지 않아요.</p></div><Button className="primary-action danger-action" disabled={sending} onClick={notify}><Send size={16} /> {sending ? "기록하는 중" : "손님 안내 보내기"}</Button></div>}
     {ticket.category === "recall" && who.role === "owner" && <p className="callout"><b>권한 안내</b> 손님 안내는 약사 계정에서만 할 수 있어요.</p>}
     {notice && <div className="notice-result" aria-live="polite"><strong>연습 기록 · 실제 발송 없음</strong><p>동의한 손님 {notice.count}명에게 안내한 것으로 기록했어요.</p><p>가린 번호: {notice.notices.map(item => item.phone).join(", ")}</p></div>}
     </ScrollBox>

@@ -85,6 +85,13 @@ async (page) => {
   verify(await notice.getByText("연습 기록 · 실제 발송 없음").isVisible(), "회수 안내는 연습 기록");
   verify((await notice.textContent()).includes("010-****-"), "연락처 가림 표시");
   verify(!(await notice.textContent()).includes("OTC-03"), "연락처와 약 이름 분리");
+  // 제품 정보 없는 회수 티켓: 손님 안내 버튼 대신 '제품이 확인되지 않아' 한 줄
+  await page.evaluate(() => { const st = JSON.parse(sessionStorage.getItem("team3-mock")); st.tickets.unshift({ ticket_id: "T-NOPROD", key: "noprod", title: "회수 공표 제품 확인 필요", requester: "김하늘", category: "recall", priority: "high", status: "접수됨", product: "", created_at: new Date().toISOString() }); sessionStorage.setItem("team3-mock", JSON.stringify(st)); });
+  await page.goto(origin + "/admin/");
+  await page.getByRole("button", { name: "접수 목록 보기" }).click();
+  await page.locator(".ticket-link", { hasText: "회수 공표 제품 확인 필요" }).click();
+  await page.getByText("제품이 확인되지 않아 손님 안내를 보낼 수 없어요").waitFor({ state: "visible" });
+  verify(await page.getByRole("button", { name: "손님 안내 보내기", exact: true }).count() === 0, "제품 없는 회수 티켓: 손님 안내 버튼 없음");
   await width("약사 화면");
 
   await login("정민재");
