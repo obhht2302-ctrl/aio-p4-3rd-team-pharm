@@ -710,3 +710,15 @@ body { word-break: keep-all; overflow-wrap: break-word; }
   .detail-work { min-height: 0; }
   .detail-work textarea { flex: 1 1 0; min-height: 3rem; }
 }
+
+/* 첫 화면 (11/5 해든 QA): 역할 카드는 폭(cqi)과 함께 창 높이(dvh)에도 맞춰 낮은 PC 창에서 안 가리게 */
+@container page (min-width: 600px) {
+  .login-card { padding: clamp(16px, min(2.8cqi, 3dvh), 36px); }
+  .role-grid { gap: clamp(10px, min(1.4cqi, 1.8dvh), 16px); margin-top: clamp(10px, min(1.8cqi, 2.2dvh), 20px); }
+  .role-card { min-height: clamp(96px, min(17cqi, 20dvh), 188px); padding: clamp(12px, min(2cqi, 2.6dvh), 24px); gap: clamp(6px, min(1.1cqi, 1.4dvh), 12px); }
+  .role-card b { font-size: clamp(16px, min(2cqi, 3dvh), 22px); }
+  .role-card > :first-child { width: clamp(36px, min(5.4cqi, 7dvh), 60px); height: clamp(36px, min(5.4cqi, 7dvh), 60px); }
+  .login-form { gap: clamp(12px, min(2cqi, 2.6dvh), 22px); }
+  .person-card { min-height: clamp(48px, min(7cqi, 9dvh), 84px); }
+  .login-form .field-control, .login-form .primary-action { min-height: clamp(44px, min(5.6cqi, 7.5dvh), 60px); }
+}

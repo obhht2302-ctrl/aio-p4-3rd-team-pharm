@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion, MotionConfig } from "motion/react";
-import { Cross } from "lucide-react";
 import { Toaster } from "sonner";
 import { PersonAvatar } from "@/components/avatar";
 import { TabletFrame } from "@/components/tablet-frame";
@@ -18,6 +17,13 @@ const links = [
   { href: "/my/", label: "내 문의" },
   { href: "/admin/", label: "약사 화면" },
 ];
+// 로고: 알약(lucide pill 선) + 작은 하트를 그림 하나로 (병원 십자 대신, 해든 QA 11/5)
+function BrandMark({ size }: { size: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z" /><path d="m8.5 8.5 7 7" />
+    <path transform="translate(1 .85) scale(.3)" fill="currentColor" stroke="none" d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+  </svg>;
+}
 const roleNames: Record<string, string> = { staff: "직원", pharmacist: "책임 약사", owner: "약국장", patient: "고객" };
 // 하단 '연습 모드' 표시는 연습(mock) 빌드에서만 (실제 모드 VM에서는 빼기)
 const PRACTICE = (process.env.NEXT_PUBLIC_API_MODE || "mock") === "mock";
@@ -42,7 +48,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className="site-header">
           <div className="header-inner">
             <Link href="/" className="brand" aria-label={`${BRAND.pharmacy}, 질문하기`}>
-              <span className="brand-mark"><Cross size={senior ? 24 : 20} fill="currentColor" /></span>
+              <span className="brand-mark"><BrandMark size={senior ? 28 : 23} /></span>
               <span><strong>{BRAND.pharmacy}</strong><small>{senior ? "고객 안내 · 큰 글씨" : BRAND.service}</small></span>
             </Link>
             {who && <nav aria-label="주 메뉴" className="main-nav">
@@ -64,7 +70,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <motion.main key={pathname} className="page-container" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}>
           {children}
         </motion.main>
-        <footer className="site-footer">{BRAND.pharmacy}{PRACTICE ? " · 연습 모드" : ""} · 사람과 제품, 연락처는 가상 데이터이며 실제 문자는 발송되지 않습니다</footer>
+        <footer className="site-footer">{PRACTICE ? "연습 모드 · " : ""}사람과 제품, 연락처는 가상 데이터이며 실제 문자는 발송되지 않습니다</footer>
         <Toaster position="bottom-center" richColors closeButton />
       </div></TabletFrame>
     </MotionConfig>

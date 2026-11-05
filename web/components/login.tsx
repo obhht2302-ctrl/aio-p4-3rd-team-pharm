@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { ArrowLeft, ClipboardList, IdCard, MapPin, Stethoscope, UserRound } from "lucide-react";
 import { api } from "@/lib/api";
-import { BRAND } from "@/lib/brand";
 import { saveWho } from "@/lib/session";
 import { PersonAvatar } from "@/components/avatar";
 import { Button } from "@/components/ui/button";
@@ -59,9 +58,9 @@ export function LoginPanel() {
 
   return <div className="login-grid">
     <section className="login-intro">
-      <span className="login-kicker">{BRAND.pharmacy} · {BRAND.service}</span>
-      <h1>{BRAND.pharmacy}<br />매장 업무 태블릿</h1>
-      <p>매장 문의 확인, 약사 상담 연결, 회수 · 접수 처리를 한곳에서 합니다.</p>
+      {/* 약국 이름은 위 로고에만 (해든 QA 11/5: 한 화면에 5번 반복) — 큰 제목은 인사말, 설명은 할 일 한 줄 */}
+      <h1>어서 오세요</h1>
+      <p>쓰실 분을 고르고 입장 코드를 넣어 주세요.</p>
       <ul>
         <li><MapPin size={16} /> 마감 · 접수 건 · 매장 문의 확인</li>
         <li><Stethoscope size={16} /> 복약 판단은 약사 상담으로 연결</li>
@@ -83,7 +82,7 @@ export function LoginPanel() {
         </div>
       </motion.div> : <motion.form key={role} className="login-form" onSubmit={submit} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
         <button type="button" className="back-link" onClick={() => pickRole(null)}><ArrowLeft size={16} /> 사용자 선택으로</button>
-        <h2 className="login-title">{role === "patient" ? "어서 오세요" : `${ROLES.find(item => item.role === role)?.title} 로그인`}</h2>
+        <h2 className="login-title">{role === "patient" ? "고객으로 들어가기" : `${ROLES.find(item => item.role === role)?.title} 로그인`}</h2>
         <div className={people.length === 1 ? "person-grid single" : "person-grid"} role="group" aria-label="사용자">
           {people.map(user => <button key={user.name} type="button" aria-pressed={name === user.name} className={name === user.name ? "person-card on" : "person-card"} onClick={() => setName(user.name)}>
             <PersonAvatar name={user.name} className="size-9 text-sm" /><b>{user.name}</b>
