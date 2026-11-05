@@ -1,0 +1,293 @@
+# 인수인계 서버 저장 — 실제 VM 증빙
+
+- 일시: 2026-11-05 14:30:57 +0900
+- 대상: https://aio-t3.isitsoft.kr
+- 입장 코드: `$TEAM3_ENTRY_CODE` (파일에는 쓰지 않음)
+- 시험: 남기기 → 다른 사람(정민재) 조회 → 보임 → 확인(done) → 다시 조회 null
+- 당시 열린 티켓 12건이 서버에서 자동 첨부됨
+- 저장소: PostgreSQL — 응답 `at`이 마이크로초 + `+00:00` 표기(`PgStore`). 메모리 저장소는 `+0900` 형식이라 구분됨
+
+## 0) 시작 상태 — 확인 안 한 인수인계 조회 (이서준)
+
+```bash
+$ curl -s -H "X-Entry-Code: $TEAM3_ENTRY_CODE" -H "X-User: %EC%9D%B4%EC%84%9C%EC%A4%80" "https://aio-t3.isitsoft.kr/api/admin/handover"
+```
+
+HTTP 200
+
+```json
+{
+  "item": null
+}
+```
+
+## 1) 남기기 (이서준)
+
+```bash
+$ curl -s -X POST -H "X-Entry-Code: $TEAM3_ENTRY_CODE" -H "X-User: %EC%9D%B4%EC%84%9C%EC%A4%80" -H 'Content-Type: application/json' -d '{"note": "인수인계 서버 저장 증빙 확인용 (11/5)"}' "https://aio-t3.isitsoft.kr/api/admin/handover"
+```
+
+HTTP 200
+
+```json
+{
+  "item": {
+    "id": 3,
+    "by": "이서준",
+    "note": "인수인계 서버 저장 증빙 확인용 (11/5)",
+    "open": [
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요. 제 마감 차액 건(R-1001)도 어떻게 됐나요?",
+        "status": "처리 중",
+        "ticket_id": "T-2006"
+      },
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2007"
+      },
+      {
+        "title": "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2010"
+      },
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2011"
+      },
+      {
+        "title": "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2012"
+      },
+      {
+        "title": "마감이 안 돼요",
+        "status": "접수됨",
+        "ticket_id": "T-2001"
+      },
+      {
+        "title": "직원 휴게실 정수기가 고장 났어요",
+        "status": "접수됨",
+        "ticket_id": "T-2002"
+      },
+      {
+        "title": "마감 차액은 얼마까지 승인 없이 처리해요?",
+        "status": "접수됨",
+        "ticket_id": "T-2003"
+      },
+      {
+        "title": "직원 휴게실 정수기가 고장 났어요",
+        "status": "접수됨",
+        "ticket_id": "T-2004"
+      },
+      {
+        "title": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+        "status": "접수됨",
+        "ticket_id": "T-2005"
+      },
+      {
+        "title": "안녕하세요",
+        "status": "접수됨",
+        "ticket_id": "T-2008"
+      },
+      {
+        "title": "약사님께 직접 여쭤보고 싶어요. 화면 말고 사람이랑 상담할게요.",
+        "status": "접수됨",
+        "ticket_id": "T-2009"
+      }
+    ],
+    "at": "2026-11-05T05:30:56.830242+00:00",
+    "done_at": null,
+    "done_by": null
+  }
+}
+```
+
+## 2) 다른 사람으로 조회 (정민재)
+
+```bash
+$ curl -s -H "X-Entry-Code: $TEAM3_ENTRY_CODE" -H "X-User: %EC%A0%95%EB%AF%BC%EC%9E%AC" "https://aio-t3.isitsoft.kr/api/admin/handover"
+```
+
+HTTP 200
+
+```json
+{
+  "item": {
+    "id": 3,
+    "by": "이서준",
+    "note": "인수인계 서버 저장 증빙 확인용 (11/5)",
+    "open": [
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요. 제 마감 차액 건(R-1001)도 어떻게 됐나요?",
+        "status": "처리 중",
+        "ticket_id": "T-2006"
+      },
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2007"
+      },
+      {
+        "title": "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2010"
+      },
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2011"
+      },
+      {
+        "title": "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2012"
+      },
+      {
+        "title": "마감이 안 돼요",
+        "status": "접수됨",
+        "ticket_id": "T-2001"
+      },
+      {
+        "title": "직원 휴게실 정수기가 고장 났어요",
+        "status": "접수됨",
+        "ticket_id": "T-2002"
+      },
+      {
+        "title": "마감 차액은 얼마까지 승인 없이 처리해요?",
+        "status": "접수됨",
+        "ticket_id": "T-2003"
+      },
+      {
+        "title": "직원 휴게실 정수기가 고장 났어요",
+        "status": "접수됨",
+        "ticket_id": "T-2004"
+      },
+      {
+        "title": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+        "status": "접수됨",
+        "ticket_id": "T-2005"
+      },
+      {
+        "title": "안녕하세요",
+        "status": "접수됨",
+        "ticket_id": "T-2008"
+      },
+      {
+        "title": "약사님께 직접 여쭤보고 싶어요. 화면 말고 사람이랑 상담할게요.",
+        "status": "접수됨",
+        "ticket_id": "T-2009"
+      }
+    ],
+    "at": "2026-11-05T05:30:56.830242+00:00",
+    "done_at": null,
+    "done_by": null
+  }
+}
+```
+
+## 3) 확인 처리 (정민재)
+
+```bash
+$ curl -s -X POST -H "X-Entry-Code: $TEAM3_ENTRY_CODE" -H "X-User: %EC%A0%95%EB%AF%BC%EC%9E%AC" "https://aio-t3.isitsoft.kr/api/admin/handover/3/done"
+```
+
+HTTP 200
+
+```json
+{
+  "item": {
+    "id": 3,
+    "by": "이서준",
+    "note": "인수인계 서버 저장 증빙 확인용 (11/5)",
+    "open": [
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요. 제 마감 차액 건(R-1001)도 어떻게 됐나요?",
+        "status": "처리 중",
+        "ticket_id": "T-2006"
+      },
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2007"
+      },
+      {
+        "title": "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2010"
+      },
+      {
+        "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2011"
+      },
+      {
+        "title": "지금 숨이 차고 가슴이 아파요. 119 버튼을 눌렀어요.",
+        "status": "접수됨",
+        "ticket_id": "T-2012"
+      },
+      {
+        "title": "마감이 안 돼요",
+        "status": "접수됨",
+        "ticket_id": "T-2001"
+      },
+      {
+        "title": "직원 휴게실 정수기가 고장 났어요",
+        "status": "접수됨",
+        "ticket_id": "T-2002"
+      },
+      {
+        "title": "마감 차액은 얼마까지 승인 없이 처리해요?",
+        "status": "접수됨",
+        "ticket_id": "T-2003"
+      },
+      {
+        "title": "직원 휴게실 정수기가 고장 났어요",
+        "status": "접수됨",
+        "ticket_id": "T-2004"
+      },
+      {
+        "title": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+        "status": "접수됨",
+        "ticket_id": "T-2005"
+      },
+      {
+        "title": "안녕하세요",
+        "status": "접수됨",
+        "ticket_id": "T-2008"
+      },
+      {
+        "title": "약사님께 직접 여쭤보고 싶어요. 화면 말고 사람이랑 상담할게요.",
+        "status": "접수됨",
+        "ticket_id": "T-2009"
+      }
+    ],
+    "at": "2026-11-05T05:30:56.830242+00:00",
+    "done_at": "2026-11-05T05:30:57.364471+00:00",
+    "done_by": "정민재"
+  }
+}
+```
+
+## 4) 다시 접속 (이서준)
+
+```bash
+$ curl -s -H "X-Entry-Code: $TEAM3_ENTRY_CODE" -H "X-User: %EC%9D%B4%EC%84%9C%EC%A4%80" "https://aio-t3.isitsoft.kr/api/admin/handover"
+```
+
+HTTP 200
+
+```json
+{
+  "item": null
+}
+```
+
+## 판정
+
+- 통과: 시작 상태가 비어 있음
+- 통과: 남기기 200 + id
+- 통과: 정민재에게 보임
+- 통과: 정민재가 확인함
+- 통과: 다시 접속하면 없음
