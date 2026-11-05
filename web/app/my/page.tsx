@@ -1,57 +1,83 @@
 "use client";
 
-// 해든: 사용자별 문의 내역과 이관 티켓 상태를 데스크톱 표와 모바일 카드로 보여 줍니다.
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ClipboardList, Clock3, ArrowRight } from "lucide-react";
+// 해든: 3004의 내 문의(문의 목록 → 한눈에 보기)를 /api/my-requests로 연결했습니다.
+import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
+import { Clock3 } from "lucide-react";
 import { api } from "@/lib/api";
-import { BRAND } from "@/lib/brand";
-import { loadWho } from "@/lib/session";
+import { useWho } from "@/lib/session";
+import type { RequestItem } from "@/lib/use-ask";
+import { LoginPanel } from "@/components/login";
+import { Pager } from "@/components/pager";
 import { RouteBadge } from "@/components/route-badge";
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-type Item = { request_id: string; question: string; route: string; created_at: string; ticket: { ticket_id: string; status?: string } | null };
 const dateLabel = (value: string) => {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("ko-KR", { dateStyle: "medium", timeStyle: "short" }).format(date);
+  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false }).format(date);
 };
-// API는 담당자 이름을 주지 않아서 상태만 사람 말로 바꿔 보여 줍니다.
-const statusWords: Record<string, string> = { "접수됨": "담당자에게 전했어요", "처리 중": "담당자가 보고 있어요", "처리 완료": "처리를 마쳤어요" };
-const statusLabel = (status?: string) => statusWords[status ?? "접수됨"] ?? status;
+const statusTone = (status?: string) => status === "처리 완료" ? "done" : status === "처리 중" ? "doing" : "new";
+const FILTERS = [
+  { key: "all", label: "전체", test: () => true },
+  { key: "handoff", label: "담당자 전달", test: (item: RequestItem) => !!item.ticket },
+  { key: "doing", label: "처리 중", test: (item: RequestItem) => !!item.ticket && item.ticket.status !== "처리 완료" },
+];
+
+function Status({ status }: { status?: string }) {
+  return <span className={`status-pill tone-${statusTone(status)}`}>{status ?? "접수됨"}</span>;
+}
 
 export default function MyPage() {
-  const [items, setItems] = useState<Item[]>([]);
-  const [name, setName] = useState("");
-  const [senior, setSenior] = useState(false);
+  const who = useWho();
+  const [items, setItems] = useState<RequestItem[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
-    const who = loadWho();
-    if (!who) { setError("질문하기 화면에서 먼저 들어와 주세요."); setLoading(false); return; }
-    setName(who.name);
-    setSenior(who.role === "patient");
-    api<{ items: Item[] }>("GET", `/api/my-requests?user=${encodeURIComponent(who.name)}`, who)
+    if (!who) return;
+    api<{ items: RequestItem[] }>("GET", `/api/my-requests?user=${encodeURIComponent(who.name)}`, who)
       .then(result => setItems(result.items)).catch(e => setError(e.message)).finally(() => setLoading(false));
-  }, []);
+  }, [who]);
 
-  return <div className={senior ? "senior" : ""}>
-    <div className="page-intro"><p className="eyebrow">{BRAND.service}</p><h1 className="page-title">내 문의</h1><p className="page-description">{name ? `${name}님이 남긴 질문과 담당자 접수 상태를 확인하세요.` : "내가 남긴 질문과 접수 상태를 확인하세요."}</p></div>
-    <Card className="soft-card gap-0">
-      <CardContent className="p-0">
-        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-5"><div><h2 className="section-heading">문의 내역</h2><p className="section-sub">최근 질문부터 보여 드려요.</p></div>{!loading && <span className="status-pill">{items.length}건</span>}</div>
-        {loading ? <div className="space-y-4 p-6"><Skeleton className="h-16 w-full" /><Skeleton className="h-16 w-full" /></div> :
-          error ? <div className="p-6"><p className="error-box" role="alert">{error}</p><Link className={buttonVariants({ className: "primary-action mt-4" })} href="/">질문하기로 가기 <ArrowRight size={16} /></Link></div> :
-          items.length === 0 ? <div className="empty-state"><ClipboardList size={36} /><strong>아직 물어본 게 없어요</strong><p>궁금한 건 언제든 편하게 물어보세요.</p><Link className={buttonVariants({ className: "primary-action mt-4" })} href="/">질문하기 <ArrowRight size={16} /></Link></div> :
-          <>
-            <div className="desktop-table"><Table><TableHeader><TableRow><TableHead className="pl-6">질문</TableHead><TableHead>결과</TableHead><TableHead>접수 상태</TableHead><TableHead className="pr-6 text-right">문의한 때</TableHead></TableRow></TableHeader>
-              <TableBody>{items.map(item => <TableRow key={item.request_id}><TableCell className="max-w-96 py-5 pl-6"><p className="font-medium whitespace-normal">{item.question}</p><span className="request-id">{item.request_id}</span></TableCell><TableCell><RouteBadge route={item.route} /></TableCell><TableCell>{item.ticket ? <div><span className="status-pill">{statusLabel(item.ticket.status)}</span><p className="request-id mt-1">{item.ticket.ticket_id}</p></div> : <span className="text-sm text-muted-foreground">—</span>}</TableCell><TableCell className="pr-6 text-right text-sm text-muted-foreground">{dateLabel(item.created_at)}</TableCell></TableRow>)}</TableBody></Table></div>
-            <div className="mobile-cards p-4">{items.map(item => <div className="list-card soft-card" key={item.request_id}><div className="meta-line"><RouteBadge route={item.route} /><span className="request-id">{item.request_id}</span></div><p className="font-medium">{item.question}</p><div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"><Clock3 size={14} />{dateLabel(item.created_at)}{item.ticket && <span className="ticket-tag">{item.ticket.ticket_id} · {statusLabel(item.ticket.status)}</span>}</div></div>)}</div>
-          </>}
-      </CardContent>
-    </Card>
+  const rows = useMemo(() => items.filter(FILTERS.find(item => item.key === filter)!.test).filter(item => item.question.includes(search.trim())), [items, filter, search]);
+
+  if (who === undefined) return <Skeleton className="h-72 w-full" />;
+  if (!who) return <LoginPanel />;
+
+  const kpis = [
+    { label: "전체", n: items.length, tone: "" },
+    { label: "자동 답변", n: items.filter(item => item.route === "자동 답변").length, tone: "kpi-auto" },
+    { label: "담당자 전달", n: items.filter(item => item.route === "담당자 이관").length, tone: "kpi-handoff" },
+    { label: "아직 처리 중", n: items.filter(item => item.ticket && item.ticket.status !== "처리 완료").length, tone: "kpi-primary" },
+  ];
+
+  return <div>
+    <div className="page-head"><h1>내 문의</h1></div>
+    <Pager steps={["문의 목록", "한눈에 보기"]} index={page} onIndex={setPage}>
+      <div>
+        <div className="list-tools">
+          <Tabs value={filter} onValueChange={value => setFilter(String(value))}><TabsList className="ticket-tab-list">{FILTERS.map(item => <TabsTrigger key={item.key} value={item.key} className="ticket-tab">{item.label}{filter === item.key && <motion.span layoutId="my-tab-underline" className="ticket-tab-underline" />}</TabsTrigger>)}</TabsList></Tabs>
+          <input type="search" className="search-box" value={search} onChange={e => setSearch(e.target.value)} placeholder="질문 검색" aria-label="질문 검색" />
+        </div>
+        <div className="table-card">
+          {loading ? <div className="space-y-4 p-6"><Skeleton className="h-12 w-full" /><Skeleton className="h-12 w-full" /></div> :
+            error ? <div className="p-6"><p className="error-box" role="alert">{error}</p></div> :
+            rows.length === 0 ? <div className="empty-state"><strong>{items.length ? "검색 결과가 없습니다." : "문의 기록이 없습니다."}</strong></div> : <>
+              <div className="desktop-table"><Table><TableHeader><TableRow><TableHead className="pl-5">시각</TableHead><TableHead>질문</TableHead><TableHead>결과</TableHead><TableHead>접수 번호</TableHead><TableHead className="pr-5">진행 상태</TableHead></TableRow></TableHeader>
+                <TableBody>{rows.map(item => <TableRow key={item.request_id}><TableCell className="pl-5 text-muted-foreground">{dateLabel(item.created_at)}</TableCell><TableCell className="max-w-96 whitespace-normal"><span className="font-medium">{item.question}</span><div className="request-id">요청 번호 {item.request_id}</div></TableCell><TableCell><RouteBadge route={item.route} /></TableCell><TableCell className="font-bold">{item.ticket ? item.ticket.ticket_id : <span className="font-normal text-muted-foreground">없음</span>}</TableCell><TableCell className="pr-5">{item.ticket ? <Status status={item.ticket.status} /> : <span className="text-muted-foreground">없음</span>}</TableCell></TableRow>)}</TableBody></Table></div>
+              <div className="mobile-cards p-3">{rows.map(item => <div className="list-card" key={item.request_id}><div className="meta-line"><RouteBadge route={item.route} /><span className="request-id">{item.request_id}</span></div><p className="font-medium">{item.question}</p><div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground"><Clock3 size={14} />{dateLabel(item.created_at)}{item.ticket && <span className="ticket-tag">{item.ticket.ticket_id}</span>}{item.ticket && <Status status={item.ticket.status} />}</div></div>)}</div>
+            </>}
+        </div>
+      </div>
+      <div className="stack-tight">
+        <div className="kpi-grid">{kpis.map(kpi => <div key={kpi.label} className="kpi-card"><small>{kpi.label}</small><b className={kpi.tone}>{kpi.n}</b></div>)}</div>
+        <div className="soft-note"><b>문의 기록</b> 담당자 전달 건은 처리 완료까지 이 목록에서 확인할 수 있습니다.</div>
+      </div>
+    </Pager>
   </div>;
 }

@@ -4,16 +4,31 @@
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 
-const classes: Record<string, string> = {
-  "자동 답변": "route-auto",
-  "보완 질문": "route-ask",
-  "담당자 이관": "route-handoff",
-  "권한 없음": "route-denied",
-  "차단": "route-blocked",
+const tones: Record<string, string> = {
+  "자동 답변": "auto",
+  "보완 질문": "ask",
+  "담당자 이관": "handoff",
+  "권한 없음": "denied",
+  "차단": "blocked",
+};
+export const routeTone = (route: string) => tones[route] ?? "denied";
+export const routeLine: Record<string, string> = {
+  "자동 답변": "매장 규정 기준 안내",
+  "보완 질문": "추가 정보가 필요합니다",
+  "담당자 이관": "담당자에게 전달했습니다",
+  "권한 없음": "열람 권한이 없습니다",
+  "차단": "처리할 수 없는 요청입니다",
+};
+export const seniorLine: Record<string, string> = {
+  "자동 답변": "찾아 드렸어요",
+  "보완 질문": "조금만 더 알려 주세요",
+  "담당자 이관": "약사에게 전해 드렸어요",
+  "권한 없음": "이 내용은 약사에게 여쭤봐 주세요",
+  "차단": "이 요청은 도와드리기 어려워요",
 };
 
 export function RouteBadge({ route }: { route: string }) {
-  return <motion.span initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 420, damping: 28 }}>
-    <Badge className={`route-badge ${classes[route] ?? "route-denied"}`}>{route}</Badge>
+  return <motion.span className="inline-flex" initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.2 }}>
+    <Badge className={`route-badge tone-${routeTone(route)}`}><i className="route-dot" />{route}</Badge>
   </motion.span>;
 }

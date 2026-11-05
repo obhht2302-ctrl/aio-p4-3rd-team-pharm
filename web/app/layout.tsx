@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-// 해든: 외부 CDN 없이 Pretendard를 적용하고 공통 화면 틀을 연결합니다.
+// 해든: Pretendard는 패키지에서, 제목용 고운돋움은 빌드할 때 받아 앱 안에 넣습니다 (실행 중 외부 요청 없음).
 import localFont from "next/font/local";
+import { Gowun_Dodum } from "next/font/google";
 import { AppShell } from "@/components/app-shell";
 import "./globals.css";
 
@@ -10,6 +11,7 @@ const pretendard = localFont({
   display: "swap",
   weight: "100 900",
 });
+const gowun = Gowun_Dodum({ weight: "400", subsets: ["latin"], variable: "--font-gowun", preload: false });
 
 export const metadata: Metadata = {
   title: "다정약국 · 다정 상담창구",
@@ -17,5 +19,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="ko"><body className={pretendard.variable}><AppShell>{children}</AppShell></body></html>;
+  return <html lang="ko"><body className={`${pretendard.variable} ${gowun.variable}`}><AppShell>{children}</AppShell></body></html>;
 }
