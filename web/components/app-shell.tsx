@@ -17,11 +17,14 @@ const links = [
   { href: "/my/", label: "내 문의" },
   { href: "/admin/", label: "약사 화면" },
 ];
-// 로고: 알약(lucide pill 선) + 작은 하트를 그림 하나로 (병원 십자 대신, 해든 QA 11/5)
+// 로고: 해든 시안 '하트를 비워 낸 알약'(11/5 팀 투표) — 라벤더 둥근 사각형(.brand-mark) 안에 흰 알약, 한쪽은 옅게, 진한 쪽에 하트 구멍
 function BrandMark({ size }: { size: number }) {
-  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z" /><path d="m8.5 8.5 7 7" />
-    <path transform="translate(1 .85) scale(.3)" fill="currentColor" stroke="none" d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+  return <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
+    <g transform="rotate(-45 12 12)">
+      <rect x="3" y="8" width="18" height="8" rx="4" fill="#fff" fillOpacity=".5" />
+      <path d="M7 8h5v8H7a4 4 0 0 1 0-8z" fill="#fff" />
+    </g>
+    <path d="M8.9 16.9c-1.4-1.1-2.3-1.9-2.3-2.9a1.15 1.15 0 0 1 2.3-.45 1.15 1.15 0 0 1 2.3.45c0 1-.9 1.8-2.3 2.9z" fill="var(--primary)" />
   </svg>;
 }
 const roleNames: Record<string, string> = { staff: "직원", pharmacist: "책임 약사", owner: "약국장", patient: "고객" };
