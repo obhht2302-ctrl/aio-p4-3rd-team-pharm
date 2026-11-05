@@ -18,7 +18,7 @@
 git clone https://github.com/twlaude/aio-p4-3rd-team-pharm.git ~/aio-p4-3rd-team-pharm
 cd ~/aio-p4-3rd-team-pharm && git pull
 
-# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77 (80일차 키트가 나오면 77 → 80)
+# 2) 샘 키트 받기 — 지금 기준 ~/aio-01d4-stu/Last3Mon/77
 cd ~/aio-01d4-stu && git pull
 
 # 3) n8n 켜기 (수업 때와 같음) → 브라우저 http://localhost:5678
@@ -51,11 +51,10 @@ git push -u origin rag/search        # 그다음 GitHub 레포 화면에서 'Com
 | `OpenAI (.env)` | 채팅 `gpt-4.1-mini` · 임베딩 `text-embedding-3-large` (수업 때 각자 받은 키 그대로, 팀 VM은 리드가 넣음) |
 | `team3WebhookKey` | 팀 웹훅 Header Auth (머리글 `X-Team-Key`, 값은 팀 키) |
 | `team3ApiKey` | n8n이 FastAPI(`POST /tickets` · `/alerts`)를 호출할 때 보내는 머리글 `X-Api-Key` (값은 팀 키) |
-| `dataApiKey` | data-api로 나가는 호출의 `X-Api-Key` (80일차 키트에서 요구 — 키트 확인) |
 
 - `team3WebhookKey` · `team3ApiKey`는 `bash tools/setup.sh`가 `infra/.env`의 팀 키로 등록해요. 직접 만들 필요는 없어요.
 - `flow.py check`의 `credential '…' must use a course id ['openAiCourse0001']` 오류: 우리 `tools/flow.py`(샘 77판 복사 + 팀 Credential 허용)는 팀 Credential(`team3WebhookKey` · `team3ApiKey` · Jira · Slack)을 알아서 이 오류가 안 나요. 샘 키트 폴더의 `flow.py`로 돌리면 이 오류가 나고 **push도 막히니** 레포의 `tools/flow.py`를 쓰세요. Credential id는 그대로 두세요 (`openAiCourse0001`로 바꾸면 인증이 깨짐).
-- 지금 샘 시험 도구(77일차 `flow.py`)는 웹훅 키를 보내지 않아요. 그래서 노트북에서 시험할 땐 웹훅 노드 Authentication을 `None`으로 둬요. 샘이 키를 보내는 도구를 주면 그때 Header Auth(`team3WebhookKey`)로 바꾸고, 터미널에서 `export FLOW_WEBHOOK_KEY=<팀 키>`를 하면 돼요. 바꿀 때가 되면 리드가 디코로 알려요 (키트 확인). 가짜 웹훅(`workflows/stubs/`)은 처음부터 인증이 없어요.
+- 입구 웹훅(`team3-support`)은 Header Auth(`team3WebhookKey`)가 켜져 있어요. 레포 `tools/flow.py`는 웹훅을 부를 때 `X-Team-Key`를 붙여요 — 값은 `FLOW_WEBHOOK_KEY` 환경 변수, 비어 있으면 `infra/.env`의 `TEAM3_KEY`. 그래서 `setup.sh`를 돌린 노트북 · 팀 VM은 따로 할 일이 없어요. 키 없이 부르면 n8n이 403(`Authorization data is wrong!`)을 돌려줘요. 안쪽 웹훅(`team3-search` · `team3-handoff` · `team3-index`)과 가짜 웹훅(`workflows/stubs/`)은 인증이 없어요.
 
 처음 보는 말은 [README 용어 표](../README.md#용어)에 있어요. 공통 시나리오 번호 뜻 (`cases/common.json`, 자세히는 `00-DESIGN.md` 7절): WF-01 문서로 답 · WF-02/02b 정보 부족 → 보완 질문, 3번째면 이관 · WF-03 문서에 없는 일 → 이관 · WF-04 티켓 API 장애 → DLQ · 알림 · WF-05 권한 밖 문서 (약국장 전용) · WF-06 남의 접수 건 · WF-07 연락처 가림 · WF-08 주입 공격 차단 · WF-09 같은 요청 두 번 → 티켓 1건 · WF-10 LLM 멈춤 · WF-11 접수 조회 지연 · WF-12 회수 긴급 + 접수 조회 · WF-13 잘못된 입력 → 400.
 

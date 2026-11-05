@@ -4,10 +4,11 @@
 # ///
 """Course helper: check, push and test the n8n workflows that a CLI coding agent wrote.
 
-3팀판 (샘 77일차 tools/flow.py 복사본, 팀 레포 뿌리에서 실행: uv run tools/flow.py ...). 샘 판과 다른 곳은 3개뿐:
+3팀판 (샘 77일차 tools/flow.py 복사본, 팀 레포 뿌리에서 실행: uv run tools/flow.py ...). 샘 판과 다른 곳은 4개뿐:
   1) TEAM_CREDENTIALS — 우리 팀 Credential(웹훅 키 · FastAPI 키 · Jira · Slack)도 허용해 check · push가 막히지 않음
   2) runs/ 보고서 · cases · requests 경로 = 팀 레포 (ROOT = 레포 뿌리)
   3) 샘 키트에 있는 것(n8n 설치 .env · llm 장애 스크립트 · budget.json)은 SAM_LAST3MON (기본 ~/aio-01d4-stu/Last3Mon)에서 찾음
+  4) 팀 웹훅 Header Auth — 웹훅 부를 때 X-Team-Key = FLOW_WEBHOOK_KEY, 비면 infra/.env 의 TEAM3_KEY
 
   uv run tools/flow.py doctor                          # is everything ready?
   uv run tools/flow.py check my-work/helpdesk.json     # find mistakes before n8n sees the file
@@ -89,6 +90,19 @@ def find_container() -> str:
 
 CONTAINER = find_container()
 N8N_URL = os.getenv("N8N_URL", "http://localhost:5678").rstrip("/")
+
+
+def team_webhook_key() -> str:  # 3팀판: 팀 웹훅 Header Auth 키 = FLOW_WEBHOOK_KEY, 없으면 infra/.env 의 TEAM3_KEY
+    key = os.getenv("FLOW_WEBHOOK_KEY", "").strip()
+    env_file = ROOT / "infra/.env"
+    if not key and env_file.exists():
+        for row in env_file.read_text(encoding="utf-8").splitlines():
+            if row.startswith("TEAM3_KEY="):
+                key = re.sub(r"\s#.*$", "", row.split("=", 1)[1]).strip().strip("'\"")
+    return key
+
+
+WEBHOOK_KEY = team_webhook_key()
 
 # Versions written in AGENTS.md. Other versions still work if n8n knows them (warning only).
 RECOMMENDED = {
@@ -176,7 +190,10 @@ def container_running() -> bool:
 
 def http(method: str, url: str, body: object | None = None, timeout: float = 300) -> tuple[int, object, float]:
     data = None if body is None else json.dumps(body, ensure_ascii=False).encode("utf-8")
-    request = urllib.request.Request(url, data=data, method=method, headers={"Content-Type": "application/json"})
+    headers = {"Content-Type": "application/json"}
+    if WEBHOOK_KEY and url.startswith(f"{N8N_URL}/webhook/"):  # 3팀판: 팀 웹훅에만 X-Team-Key (data-api 주소엔 안 보냄)
+        headers["X-Team-Key"] = WEBHOOK_KEY
+    request = urllib.request.Request(url, data=data, method=method, headers=headers)
     start = time.monotonic()
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:

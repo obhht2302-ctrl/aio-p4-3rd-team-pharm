@@ -8,13 +8,20 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "team3-support",
+        "authentication": "headerAuth",
         "responseMode": "responseNode",
         "options": {}
       },
       "position": [
         0,
         300
-      ]
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "team3WebhookKey",
+          "name": "team3WebhookKey"
+        }
+      }
     },
     {
       "name": "Support settings",
