@@ -1,9 +1,9 @@
 "use client";
 
 // 해든: 3004의 고객(어르신) 화면입니다. 글씨 크기 단계가 rem으로 화면 전체를 키우고, 예시는 /api/types 값을 씁니다.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Home, PhoneCall, Volume2 } from "lucide-react";
+import { ArrowRight, Home, Mic, PhoneCall, Square, Volume2 } from "lucide-react";
 import { useAsk, useTypes } from "@/lib/use-ask";
 import type { Who } from "@/lib/session";
 import { CallButton } from "@/components/call";
@@ -30,6 +30,82 @@ function ListenButton({ text }: { text: string }) {
   return <Button className="senior-button" onClick={toggle} aria-pressed={speaking}><Volume2 /> {speaking ? "그만 듣기" : "소리로 듣기"}</Button>;
 }
 
+// 말로 묻기: 브라우저 내장 음성 인식 (크롬 · 사파리, 키 · 서버 없음). 말소리는 브라우저의 음성 인식 서비스로 가서 글자로만 돌아옵니다.
+// 지원하지 않는 브라우저(파이어폭스 등)에서는 마이크 버튼을 숨깁니다.
+type SpeechResult = { isFinal: boolean; 0: { transcript: string } };
+type Recognition = {
+  lang: string; interimResults: boolean; continuous: boolean; maxAlternatives: number;
+  onresult: ((event: { resultIndex: number; results: ArrayLike<SpeechResult> }) => void) | null;
+  onerror: ((event: { error: string }) => void) | null;
+  onend: (() => void) | null;
+  start(): void; stop(): void; abort(): void;
+};
+type RecognitionClass = new () => Recognition;
+
+function recognitionClass(): RecognitionClass | null {
+  if (typeof window === "undefined") return null;
+  const speech = window as unknown as { SpeechRecognition?: RecognitionClass; webkitSpeechRecognition?: RecognitionClass };
+  return speech.SpeechRecognition ?? speech.webkitSpeechRecognition ?? null;
+}
+
+const MIC_ERRORS: Record<string, string> = {
+  "not-allowed": "마이크를 쓸 수 있게 허락해 주세요. 주소창 옆 마이크 표시를 눌러 '허용'을 고르시면 돼요.",
+  "service-not-allowed": "이 브라우저에서는 말로 묻기를 쓸 수 없어요. 아래에 글로 적어 주세요.",
+  "no-speech": "말씀이 들리지 않았어요. 버튼을 다시 누르고 말씀해 주세요.",
+  "audio-capture": "마이크를 찾지 못했어요. 마이크가 연결돼 있는지 봐 주세요.",
+  "network": "인터넷이 불안정해서 알아듣지 못했어요. 버튼을 다시 눌러 주세요.",
+};
+
+function useSpeech(onText: (text: string) => void) {
+  const [supported, setSupported] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [heard, setHeard] = useState("");
+  const [error, setError] = useState("");
+  const current = useRef<Recognition | null>(null);
+  useEffect(() => {
+    setSupported(!!recognitionClass());
+    return () => current.current?.abort();
+  }, []);
+
+  const start = () => {
+    const Speech = recognitionClass();
+    if (!Speech) return;
+    try { window.speechSynthesis?.cancel(); } catch { /* 읽어 주기가 없는 브라우저 */ }
+    current.current?.abort();
+    const recognition = new Speech();
+    recognition.lang = "ko-KR";
+    recognition.interimResults = true;
+    recognition.continuous = false; // 말이 멈추면 저절로 끝남
+    recognition.maxAlternatives = 1;
+    let done = "";
+    let latest = "";
+    recognition.onresult = event => {
+      let partial = "";
+      for (let index = event.resultIndex; index < event.results.length; index++) {
+        const result = event.results[index];
+        if (result.isFinal) done += result[0].transcript; else partial += result[0].transcript;
+      }
+      latest = (done + partial).trim();
+      onText(latest);
+    };
+    recognition.onerror = event => { if (event.error !== "aborted") setError(MIC_ERRORS[event.error] ?? "알아듣지 못했어요. 버튼을 다시 눌러 주세요."); };
+    recognition.onend = () => {
+      setListening(false);
+      current.current = null;
+      const text = done.trim() || latest;
+      if (text) { onText(text); setHeard(text); }
+    };
+    setHeard("");
+    setError("");
+    current.current = recognition;
+    setListening(true);
+    try { recognition.start(); } catch { setListening(false); current.current = null; setError("말로 묻기를 시작하지 못했어요. 버튼을 다시 눌러 주세요."); }
+  };
+  const stop = () => current.current?.stop();
+  const clear = () => { current.current?.abort(); setHeard(""); setError(""); };
+  return { supported, listening, heard, error, start, stop, clear };
+}
+
 export function SeniorAsk({ who }: { who: Who }) {
   const ask = useAsk(who);
   const types = useTypes();
@@ -38,6 +114,8 @@ export function SeniorAsk({ who }: { who: Who }) {
   const examples = types.find(item => item.type === "senior")?.examples ?? [];
   const urgent = answer?.ticket?.priority === "high";
   const [input, setInput] = useState("");
+  const voice = useSpeech(setInput);
+  const followVoice = useSpeech(ask.setContext);
 
   // 고른 글씨 크기는 이 탭에서 다시 들어와도 유지합니다.
   useEffect(() => {
@@ -49,7 +127,8 @@ export function SeniorAsk({ who }: { who: Who }) {
     return () => { document.documentElement.style.fontSize = ""; };
   }, [size]);
 
-  const again = () => { setInput(""); ask.askAgain(); };
+  const again = () => { setInput(""); voice.clear(); followVoice.clear(); ask.askAgain(); };
+  const sendVoice = () => { const text = input.trim(); voice.clear(); void ask.send(text); };
 
   return <div>
     <div className="senior-bar">
@@ -60,7 +139,22 @@ export function SeniorAsk({ who }: { who: Who }) {
     <div className="senior-body">
       {ask.page === 0 ? <motion.div key="ask" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
         <h1 className="senior-title">무엇을 도와드릴까요?</h1>
-        <p className="page-description senior-sub">아래에서 고르시거나 직접 적어 주세요.</p>
+        <p className="page-description senior-sub">{voice.supported ? "말로 물어보시거나, 아래에서 고르시거나, 직접 적어 주세요." : "아래에서 고르시거나 직접 적어 주세요."}</p>
+        {voice.supported && <section className="senior-voice" aria-label="말로 물어보기">
+          <button type="button" className={voice.listening ? "senior-mic on" : "senior-mic"} onClick={voice.listening ? voice.stop : voice.start} aria-pressed={voice.listening} disabled={loading}>
+            <span className="senior-mic-icon">{voice.listening ? <Square /> : <Mic />}</span>
+            <span className="senior-mic-text"><b>{voice.listening ? "듣고 있어요" : "말로 물어보기"}</b><small>{voice.listening ? "말씀이 끝나면 저절로 멈춰요" : "누르고 궁금한 것을 말씀하세요"}</small></span>
+          </button>
+          {voice.listening && <p className="senior-heard" aria-live="polite">{input || "말씀해 주세요…"}</p>}
+          {voice.error && <p className="error-box" role="alert">{voice.error}</p>}
+          {!voice.listening && voice.heard && <div className="senior-heard-box">
+            <p className="senior-heard" aria-live="polite">“{input}”</p>
+            <div className="senior-voice-actions">
+              <Button className="senior-button senior-submit" onClick={sendVoice} disabled={!input.trim() || loading}>이대로 물어보기 <ArrowRight /></Button>
+              <Button variant="outline" className="senior-button senior-outline" onClick={voice.start}><Mic /> 다시 말하기</Button>
+            </div>
+          </div>}
+        </section>}
         <div className="senior-examples">{examples.map((example, index) => <button key={example} type="button" className="example-button" onClick={() => void ask.send(example)}><span>{index + 1}</span>{example}</button>)}</div>
         <form className="senior-form" onSubmit={e => { e.preventDefault(); void ask.send(input); }}>
           <label htmlFor="senior-q" className="sr-only">질문 내용</label>
@@ -81,7 +175,7 @@ export function SeniorAsk({ who }: { who: Who }) {
           <p className="senior-answer">{answer.answer}</p>
           {answer.ticket && <div className="ticket-number senior-ticket"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p></div>}
           {!!answer.sources?.length && <p className="senior-source">출처: {answer.sources.map(source => source.doc).join(", ")}</p>}
-          {answer.route === "보완 질문" && <div className="senior-followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="약 이름이나 상황을 적어 주세요" className="senior-input" /><Button className="senior-button" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight /></Button></div>}
+          {answer.route === "보완 질문" && <div className="senior-followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="약 이름이나 상황을 적어 주세요" className="senior-input" />{followVoice.supported && <Button variant="outline" className="senior-button senior-outline" onClick={followVoice.listening ? followVoice.stop : followVoice.start} aria-pressed={followVoice.listening}>{followVoice.listening ? <><Square /> 듣고 있어요</> : <><Mic /> 말로 하기</>}</Button>}{followVoice.error && <p className="error-box" role="alert">{followVoice.error}</p>}<Button className="senior-button" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight /></Button></div>}
           <div className="senior-actions"><ListenButton text={answer.answer} /><Button variant="outline" className="senior-button" onClick={again}><Home /> 다시 질문하기</Button></div>
         </motion.section>}
         {!answer && !loading && <Button variant="outline" className="senior-button mt-4" onClick={again}><Home /> 다시 질문하기</Button>}

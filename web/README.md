@@ -46,7 +46,18 @@ API는 기본으로 `http://localhost:3000`만 허용합니다. 화면을 3100�
 $env:npm_config_cache = (Join-Path (Get-Location) '.npm-cache')
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke open http://localhost:3100
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke run-code --filename tests/mock-screen-smoke.js
+npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke run-code --filename tests/voice-ask-smoke.js
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke close
 ```
+
+## 말로 묻기 (고객 화면 마이크)
+
+고객(어르신) 화면 첫 화면에 큰 "말로 물어보기" 버튼이 있고, 답 화면의 "조금 더 알려 주세요" 칸에도 "말로 하기" 버튼이 있습니다.
+
+- 브라우저에 들어 있는 음성 인식(`SpeechRecognition` · `webkitSpeechRecognition`, 한국어)을 씁니다. 키 · 서버가 필요 없고 크롬 · 사파리에서 됩니다. 지원하지 않는 브라우저(파이어폭스 등)에서는 버튼이 보이지 않습니다.
+- 알아들은 문장을 크게 보여 주고 [이대로 물어보기] · [다시 말하기]를 고르게 합니다. 잘못 알아들은 채로 약 질문이 바로 가지 않게 하려는 것입니다.
+- 말소리는 브라우저의 음성 인식 서비스(크롬은 Google, 사파리는 Apple)로 가서 글자로만 돌아옵니다. 연습용 기능이며, 실제 운영이라면 고객 동의나 자체 음성 인식이 필요합니다.
+- 마이크는 https 주소(팀 VM)나 localhost에서만 켜집니다. 처음 누르면 브라우저가 마이크 허용을 묻습니다.
+- `tests/voice-ask-smoke.js`는 가짜 음성 인식을 넣어 누르기 → 듣기 → 문장 표시 → 물어보기 → 보완 질문 → 말로 하기 → 이어서 답하기를 확인합니다 (연습 모드).
 
 375px 화면 캡처는 `../docs/images/screen-{ask,my,admin}-375.png`에 있습니다. 캡처의 이름과 연락처는 가렸습니다.
