@@ -80,7 +80,7 @@ async (page) => {
     }
     // 어색한 줄바꿈: 짧은 이름표(버튼 · 탭 · 단계 · 배지)가 꺾이면 실패. 띄어쓰기 없는 낱말은 1줄, 있으면 2줄까지
     const wraps = [];
-    for (const el of document.querySelectorAll(".site-header a, .site-header button, button, [role=tab], .senior-steps li, .status-pill, .route-badge, .urgent-pill, th, .kpi-card small")) {
+    for (const el of document.querySelectorAll(".site-header a, .site-header button, button, [role=tab], .senior-steps li, .status-pill, .route-badge, .urgent-pill, th, .kpi-card small, .open-id, .side-row small, .side-row-text em")) {
       if (!roots.some(root => root.contains(el))) continue;
       const text = (el.innerText || "").trim().replace(/\s+/g, " ");
       if (!text || text.length > 14) continue;
@@ -135,9 +135,9 @@ async (page) => {
       for (const b of bad) fails.push(`${vp.name} ${screen}: ${b}`);
     };
     const step = async (index) => { await p.locator(".pager-wrap ol button").nth(index).click(); await p.waitForTimeout(400); };
-    const login = async (role, name, screens = false) => {
+    const login = async (role, name, screens = false, busy = false) => {
       await p.goto(origin + "/");
-      await p.evaluate(() => sessionStorage.clear());
+      await p.evaluate(on => { sessionStorage.clear(); if (on) sessionStorage.setItem("team3-mock-busy", "1"); }, busy);
       await p.goto(origin + "/");
       await p.getByRole("heading", { name: "사용자 선택" }).waitFor();
       if (screens) await check("login-role");
@@ -202,6 +202,19 @@ async (page) => {
     await check("senior-answer-22", { strict: false });
     await p.locator(".senior-sizes").getByRole("button", { name: "크게", exact: true }).click();
     await check("senior-answer-18", { strict: false });
+    // 바쁜 날(실제 VM처럼 열린 접수 · 알림 10건 남짓, 티켓 없는 n8n 날 문구 포함): 오늘 알림 · 접수 목록
+    await login("책임 약사", "이서준", false, true);
+    await p.goto(origin + "/admin/");
+    await p.getByRole("button", { name: "접수 목록 보기" }).waitFor();
+    const busyText = await p.locator(".alerts-step").innerText();
+    if (/\[[a-z]+\]|owner|에게 이관 ·/.test(busyText)) fails.push(`${vp.name} admin-alerts-busy: n8n 날 문구가 보임`);
+    const sideIds = await p.locator(".alerts-side .side-row-text em").allInnerTexts();
+    const openIds = await p.locator(".open-id").allInnerTexts();
+    const dup = sideIds.map(t => t.replace(/[^\w-]/g, "")).filter(id => openIds.includes(id));
+    if (dup.length) fails.push(`${vp.name} admin-alerts-busy: 왼쪽 목록과 겹치는 알림 ${dup.join(", ")}`);
+    await check("admin-alerts-busy");
+    await step(1);
+    await check("admin-list-busy");
     if (pageErrors.length) fails.push(`${vp.name}: 화면 오류 ${pageErrors.slice(0, 2).join(" / ")}`);
     await ctx.close();
   }
