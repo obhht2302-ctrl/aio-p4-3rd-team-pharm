@@ -1442,7 +1442,29 @@
     "top1_score": 0.441,
     "hit1": true,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "자동 답변",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [
+      {
+       "doc": "senior-cold-sleep-stomach",
+       "score": 0.441
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "total_ms": 3190,
+     "cached": false
+    }
    },
    {
     "id": "SB-F2",
@@ -1475,7 +1497,29 @@
     "top1_score": 0.56,
     "hit1": true,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "자동 답변",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [
+      {
+       "doc": "senior-cold-sleep-stomach",
+       "score": 0.518
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "total_ms": 3197,
+     "cached": false
+    }
    },
    {
     "id": "SB-F3",
@@ -1508,7 +1552,29 @@
     "top1_score": 0.434,
     "hit1": true,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "자동 답변",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [
+      {
+       "doc": "senior-pain-joint",
+       "score": 0.434
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "total_ms": 3059,
+     "cached": false
+    }
    },
    {
     "id": "SB-F4",
@@ -1541,7 +1607,33 @@
     "top1_score": 0.474,
     "hit1": false,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "자동 답변",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [
+      {
+       "doc": "senior-cold-sleep-stomach",
+       "score": 0.472
+      },
+      {
+       "doc": "senior-safety-signals",
+       "score": 0.431
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "total_ms": 3190,
+     "cached": false
+    }
    },
    {
     "id": "SB-F5",
@@ -1574,7 +1666,29 @@
     "top1_score": 0.517,
     "hit1": true,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "자동 답변",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [
+      {
+       "doc": "senior-pain-joint",
+       "score": 0.517
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "total_ms": 4243,
+     "cached": false
+    }
    },
    {
     "id": "SB-J1",
@@ -1607,7 +1721,21 @@
     "top1_score": 0.552,
     "hit1": false,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "보완 질문",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [],
+     "agents": [
+      "triage"
+     ],
+     "total_ms": 932,
+     "cached": false
+    }
    },
    {
     "id": "SB-J2",
@@ -1640,7 +1768,21 @@
     "top1_score": 0.486,
     "hit1": false,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "보완 질문",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [],
+     "agents": [
+      "triage"
+     ],
+     "total_ms": 735,
+     "cached": false
+    }
    },
    {
     "id": "SB-J3",
@@ -1673,7 +1815,21 @@
     "top1_score": 0.411,
     "hit1": false,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "보완 질문",
+     "reason": "",
+     "ticket_id": null,
+     "ticket_assignee": null,
+     "ticket_priority": null,
+     "sources": [],
+     "agents": [
+      "triage"
+     ],
+     "total_ms": 884,
+     "cached": false
+    }
    },
    {
     "id": "SB-J4",
@@ -1706,7 +1862,30 @@
     "top1_score": 0.472,
     "hit1": true,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "ticket_id": "T-2015",
+     "ticket_assignee": "pharmacist",
+     "ticket_priority": "high",
+     "sources": [
+      {
+       "doc": "senior-safety-signals",
+       "score": 0.473
+      }
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier",
+      "handoff"
+     ],
+     "total_ms": 3683,
+     "cached": false
+    }
    },
    {
     "id": "SB-J5",
@@ -1739,7 +1918,23 @@
     "top1_score": 0.282,
     "hit1": true,
     "hit4": true,
-    "leak": false
+    "leak": false,
+    "run": {
+     "http": 200,
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "ticket_id": "T-2016",
+     "ticket_assignee": "pharmacist",
+     "ticket_priority": "high",
+     "sources": [],
+     "agents": [
+      "triage",
+      "retriever",
+      "handoff"
+     ],
+     "total_ms": 2394,
+     "cached": false
+    }
    }
   ],
   "fact": {
@@ -1753,6 +1948,23 @@
    "hit1": 2,
    "hit4": 5,
    "below_score_min": 1
+  },
+  "run_summary": {
+   "evidence_found": "9/10",
+   "run_sources_attached": "6/10",
+   "handoff_executed_judgment": "2/5",
+   "judgment_clarify_first": "3/5",
+   "judgment_auto_answered": "0/5",
+   "fact_wrongly_handed_off": "0/5",
+   "cached": 0,
+   "defs": {
+    "evidence_found": "검색 시험(위 ranked): top-1 점수 >= 0.37 이고 기대 문서가 top-4 안",
+    "run_sources_attached": "실제 실행 응답 sources가 1개 이상 (보완 질문은 검색 전에 끝나 sources 없음)",
+    "handoff_executed_judgment": "판단 5문항 중 route=담당자 이관 + 티켓 번호가 생긴 수"
+   },
+   "at": "2026-11-05T14:38:21+09:00",
+   "vm_commit": "f05f277",
+   "how": "팀 VM uv run tools/flow.py call team3-support, 문항당 1회, attempt 1, 사실=최영순 · 판단=한기철 (patient)"
   }
  }
 }
