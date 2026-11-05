@@ -733,3 +733,9 @@ body { word-break: keep-all; overflow-wrap: break-word; }
   .senior .pager-step .step-no { font-size: 15px; }
   .senior .pager-step .step-name { font-size: 18px; }
 }
+
+/* 티켓 없는 이관: 접수됨처럼 보이지 않게 '잠시 후 다시 시도' + 다시 묻기 */
+.retry-note { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0 16px; padding: 12px 16px; border-radius: 12px; border: 1px dashed var(--route-ask); background: var(--route-ask-bg); }
+.retry-note p { margin: 0; font-weight: 700; color: var(--foreground); }
+.senior-retry { margin: .6rem 1.2rem; }
+.senior .retry-note p { font-size: 1.05rem; }

@@ -7,7 +7,7 @@ import { ArrowRight, Home, Mic, PhoneCall, Square, Volume2 } from "lucide-react"
 import { useAsk, useTypes } from "@/lib/use-ask";
 import type { Who } from "@/lib/session";
 import { EmergencyCall } from "@/components/call";
-import { RouteBadge, routeTone, seniorLine } from "@/components/route-badge";
+import { HELD_LINE, RETRY_NOTE, RouteBadge, UNSENT_LINE, handoffState, routeTone, seniorLine } from "@/components/route-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -113,6 +113,7 @@ export function SeniorAsk({ who }: { who: Who }) {
   const { question, answer, error, loading } = ask;
   const examples = types.find(item => item.type === "senior")?.examples ?? [];
   const urgent = answer?.ticket?.priority === "high";
+  const state = answer ? handoffState(answer) : "sent";
   const [input, setInput] = useState("");
   const [spoken, setSpoken] = useState(""); // 말로 받은 문장은 입력칸과 따로 둠 (입력칸에 남지 않게)
   const voice = useSpeech(setSpoken);
@@ -172,8 +173,9 @@ export function SeniorAsk({ who }: { who: Who }) {
           <EmergencyCall ticketId={answer.ticket?.ticket_id} />
         </motion.section>}
         {answer && <motion.section key={answer.request_id ?? answer.answer} className="senior-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-          <div className={`senior-band band-${routeTone(answer.route)}`}><RouteBadge route={answer.route} /><b>{seniorLine[answer.route] ?? answer.route}</b></div>
+          <div className={`senior-band band-${routeTone(answer.route)}`}><RouteBadge route={answer.route} /><b>{state === "unsent" ? UNSENT_LINE : state === "held" ? HELD_LINE : seniorLine[answer.route] ?? answer.route}</b></div>
           <p className="senior-answer">{answer.answer}</p>
+          {state === "unsent" && <div className="retry-note senior-retry" role="status"><p>{RETRY_NOTE}</p><Button className="senior-button" disabled={loading} onClick={() => void ask.send(question)}>다시 묻기 <ArrowRight /></Button></div>}
           {answer.ticket && <div className="ticket-number senior-ticket"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p><p className="ticket-say">카운터에서 이 번호를 말씀해 주세요</p></div>}
           {!!answer.sources?.length && <p className="senior-source">출처: {answer.sources.map(source => source.doc).join(", ")}</p>}
           {answer.route === "보완 질문" && <div className="senior-followup"><label className="field-label" htmlFor="context">조금 더 알려 주세요</label><Input id="context" value={ask.context} onChange={e => ask.setContext(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing && ask.context.trim()) void ask.followUp(); }} placeholder="약 이름이나 상황을 적어 주세요" className="senior-input" />{followVoice.supported && <Button variant="outline" className="senior-button senior-outline" onClick={followVoice.listening ? followVoice.stop : followVoice.start} aria-pressed={followVoice.listening}>{followVoice.listening ? <><Square /> 듣고 있어요</> : <><Mic /> 말로 하기</>}</Button>}{followVoice.error && <p className="error-box" role="alert">{followVoice.error}</p>}<Button className="senior-button" disabled={!ask.context.trim() || loading} onClick={() => void ask.followUp()}>이어서 답하기 <ArrowRight /></Button></div>}
