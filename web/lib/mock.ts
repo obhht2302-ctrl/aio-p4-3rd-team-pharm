@@ -10,6 +10,8 @@ const copy = <T>(key: string): T => structuredClone(examples[key].response) as T
 const initialRequests = copy<{ items: RequestItem[] }>("GET /api/my-requests?user=김하늘").items;
 const requests = new Map<string, RequestItem[]>([["김하늘", initialRequests]]);
 const tickets = copy<{ items: Ticket[] }>("GET /api/admin/tickets").items;
+type Handover = { id: number; by: string; note: string; open: { ticket_id: string; title: string; status: string }[]; at: string; done_at: string | null; done_by: string | null };
+const handovers: Handover[] = []; // 연습 모드의 '서버' 저장 (sessionStorage team3-mock에 같이 남음)
 const alerts = copy<{ items: unknown[] }>("GET /api/admin/alerts").items;
 let hydrated = false;
 let serial = 0;
@@ -49,16 +51,17 @@ function hydrate() {
     const stored = sessionStorage.getItem("team3-mock");
     if (!stored && sessionStorage.getItem("team3-mock-busy") === "1") { seedBusy(); persist(); }
     if (!stored) return;
-    const state = JSON.parse(stored) as { requests: Record<string, RequestItem[]>; tickets: Ticket[]; alerts?: unknown[] };
+    const state = JSON.parse(stored) as { requests: Record<string, RequestItem[]>; tickets: Ticket[]; alerts?: unknown[]; handovers?: Handover[] };
     requests.clear();
     for (const [name, items] of Object.entries(state.requests)) requests.set(name, items);
     tickets.splice(0, tickets.length, ...state.tickets);
     if (state.alerts) alerts.splice(0, alerts.length, ...state.alerts);
+    handovers.splice(0, handovers.length, ...(state.handovers ?? []));
   } catch { /* 저장소를 사용할 수 없으면 메모리로 진행 */ }
 }
 
 function persist() {
-  try { sessionStorage.setItem("team3-mock", JSON.stringify({ requests: Object.fromEntries(requests), tickets, alerts })); }
+  try { sessionStorage.setItem("team3-mock", JSON.stringify({ requests: Object.fromEntries(requests), tickets, alerts, handovers })); }
   catch { /* 사생활 모드에서는 메모리로만 진행 */ }
 }
 
@@ -131,5 +134,25 @@ export function mock(method: string, path: string, body?: unknown, who?: Who | n
     return structuredClone(ticket);
   }
   if (method === "POST" && cleanPath.endsWith("/recall-notice")) return copy("POST /api/admin/tickets/{id}/recall-notice");
+  // 인수인계: api/app/main.py · store.py와 같은 모양 (열린 티켓은 서버가 붙임, 둘 다 비면 400)
+  if (method === "GET" && cleanPath === "/api/admin/handover") return { item: structuredClone([...handovers].reverse().find(item => !item.done_at) ?? null) };
+  if (method === "POST" && cleanPath === "/api/admin/handover") {
+    const note = String((body as { note?: string } | undefined)?.note ?? "").trim().slice(0, 500);
+    const open = tickets.filter(t => t.status !== "처리 완료").map(t => ({ ticket_id: t.ticket_id, title: String(t.title ?? ""), status: t.status }));
+    if (!note && !open.length) throw new Error("남길 말이나 열린 접수 건이 있어야 해요");
+    const item: Handover = { id: handovers.length + 1, by: who!.name, note, open, at: new Date().toISOString(), done_at: null, done_by: null };
+    handovers.push(item);
+    persist();
+    return { item: structuredClone(item) };
+  }
+  const handoverDone = cleanPath.match(/^\/api\/admin\/handover\/(\d+)\/done$/);
+  if (method === "POST" && handoverDone) {
+    const item = handovers.find(row => row.id === Number(handoverDone[1]));
+    if (!item) throw new Error("없는 인수인계예요");
+    item.done_at = new Date().toISOString();
+    item.done_by = who!.name;
+    persist();
+    return { item: structuredClone(item) };
+  }
   throw new Error("요청을 처리할 수 없어요.");
 }

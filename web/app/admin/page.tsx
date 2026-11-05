@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { CircleAlert, Lock, Send } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, doneHandover, getHandover, leaveHandover, type Handover } from "@/lib/api";
 import { isAdmin, useWho, type Who } from "@/lib/session";
 import { LoginPanel } from "@/components/login";
 import { Pager, ScrollBox } from "@/components/pager";
@@ -43,13 +43,8 @@ const alertText = (alert: Alert, ticket?: Ticket) => {
   return alert.message.replace(/^\[[^\]]*\]\s*/, "").replace(/\s*·\s*$/, "").trim() || "확인이 필요한 알림이 있어요";
 };
 
-// 퇴근 인수인계: 남길 말 + 아직 안 끝난 접수 건을 이 태블릿(localStorage)에 남기고, 다음에 들어온 약사에게 맨 위에 보여 줍니다.
-// 매장 태블릿 한 대를 같이 쓰는 연습용이라 서버에는 저장하지 않습니다 (다른 기기에서는 안 보임).
-type Handover = { note: string; by: string; at: string; open: { ticket_id: string; title: string; status: string }[] };
-const HANDOVER_KEY = "team3-handover";
-const readHandover = (): Handover | null => {
-  try { const raw = localStorage.getItem(HANDOVER_KEY); return raw ? JSON.parse(raw) as Handover : null; } catch { return null; }
-};
+// 퇴근 인수인계: 남길 말을 서버(/api/admin/handover)에 저장하면 서버가 아직 안 끝난 접수 건을 붙이고, 다음에 들어온 약사 · 약국장에게 어느 태블릿에서나 맨 위에 보여 줍니다.
+const SAVE_FAIL = "저장하지 못했어요. 다시 눌러 주세요.";
 
 function HandoverNote({ memo, onOpen, onDone }: { memo: Handover; onOpen: (id: string) => void; onDone: () => void }) {
   return <section className="handover-note" aria-label="지난 근무 인계">
@@ -62,13 +57,17 @@ function HandoverNote({ memo, onOpen, onDone }: { memo: Handover; onOpen: (id: s
 
 function HandoverPage({ who, tickets, memo, onSaved, onOpen, onDone }: { who: Who; tickets: Ticket[]; memo: Handover | null; onSaved: (memo: Handover) => void; onOpen: (id: string) => void; onDone: () => void }) {
   const [note, setNote] = useState("");
+  const [saving, setSaving] = useState(false);
   const openTickets = tickets.filter(item => item.status !== "처리 완료");
-  const leave = () => {
-    const next: Handover = { note: note.trim(), by: who.name, at: new Date().toISOString(), open: openTickets.map(({ ticket_id, title, status }) => ({ ticket_id, title, status })) };
-    try { localStorage.setItem(HANDOVER_KEY, JSON.stringify(next)); } catch { toast.error("이 태블릿에 저장하지 못했어요. 다시 눌러 주세요."); return; }
-    onSaved(next);
-    setNote("");
-    toast.success("인계를 남겼어요.", { description: "이 태블릿에서 다음에 들어오면 맨 위에 보여요." });
+  const leave = async () => {
+    setSaving(true);
+    try {
+      const { item } = await leaveHandover(who, note.trim());
+      onSaved(item);
+      setNote("");
+      toast.success("인계를 남겼어요.", { description: "다음 근무 약사님이 들어오면 맨 위에 보여요." });
+    } catch { toast.error(SAVE_FAIL); }
+    finally { setSaving(false); }
   };
   return <div className={memo ? "handover-step fit two" : "handover-step fit"}>
     {memo && <HandoverNote memo={memo} onOpen={onOpen} onDone={onDone} />}
@@ -80,8 +79,8 @@ function HandoverPage({ who, tickets, memo, onSaved, onOpen, onDone }: { who: Wh
       <div className="handover-open"><b>열린 건 {openTickets.length}개 자동 첨부</b>
         {openTickets.length ? <ScrollBox className="handover-open-list"><ul>{openTickets.map(item => <li key={item.ticket_id}>{item.ticket_id} · {item.title} <StatusPill status={item.status} /></li>)}</ul></ScrollBox> : <p>열린 건이 없어요.</p>}
       </div>
-      <div className="box-foot"><Button className="primary-action" onClick={leave} disabled={!note.trim() && openTickets.length === 0}>인계 남기기</Button>
-      <p className="field-help">이 태블릿에만 저장돼요.</p></div>
+      <div className="box-foot"><Button className="primary-action" onClick={() => void leave()} disabled={saving || (!note.trim() && openTickets.length === 0)}>{saving ? "남기는 중" : "인계 남기기"}</Button>
+      <p className="field-help">약국 서버에 저장돼요. 다른 태블릿에서 들어와도 보여요.</p></div>
     </section>
   </div>;
 }
@@ -146,8 +145,11 @@ export default function AdminPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [handover, setHandover] = useState<Handover | null>(null);
-  useEffect(() => { setHandover(readHandover()); }, []);
-  const clearHandover = () => { try { localStorage.removeItem(HANDOVER_KEY); } catch { /* 사생활 모드 */ } setHandover(null); };
+  const clearHandover = async () => {
+    if (!handover || !who) return;
+    try { await doneHandover(who, handover.id); setHandover(null); }
+    catch { toast.error(SAVE_FAIL); }
+  };
 
   const load = async (me: Who) => {
     setLoading(true);
@@ -162,6 +164,8 @@ export default function AdminPage() {
       setSelected(current => current ?? sorted[0]?.ticket_id ?? null);
       setLoaded(true);
       setError("");
+      // 인수인계는 따로: 못 불러와도 나머지 화면은 그대로 씀
+      setHandover(await getHandover(me).then(result => result.item, () => null));
     } catch (e) { setError(e instanceof Error ? e.message : "목록을 불러오지 못했어요."); }
     finally { setLoading(false); }
   };
@@ -210,7 +214,7 @@ export default function AdminPage() {
             </button>)}</ScrollBox> : <div className="empty-state"><strong>열린 접수가 없어요</strong><p>새 접수가 들어오면 여기에 보여 드릴게요.</p></div>}
           </section>
           {(handover || others.length > 0) && <ScrollBox className="alerts-side">
-            {handover && <HandoverNote memo={handover} onOpen={open} onDone={clearHandover} />}
+            {handover && <HandoverNote memo={handover} onOpen={open} onDone={() => void clearHandover()} />}
             {others.length > 0 && <section className="side-card" aria-label="그 밖의 긴급 알림"><h3>그 밖의 긴급 알림 <small>열린 접수에 없는 것 {others.length}건</small></h3>
               {others.map(item => <div key={item.text} className="side-row"><span className="urgent-pill small">긴급</span><span className="side-row-text">{item.text}{item.ticket_id && <em> · {item.ticket_id}</em>}</span>{item.count > 1 && <b className="side-row-count">{item.count}건</b>}{item.at && <small>{timeLabel(item.at)}</small>}</div>)}
             </section>}
@@ -234,7 +238,7 @@ export default function AdminPage() {
         <p className="list-foot">{shown.length}건 · 열린 건 {openTickets.length}개 · 줄을 누르면 접수 상세로 넘어가요</p>
       </div>
       <div className="detail-card fit">{ticket ? <TicketDetail key={ticket.ticket_id} ticket={ticket} who={who} onSaved={(id, status, note) => setTickets(current => current.map(item => item.ticket_id === id ? { ...item, status, note } : item))} /> : <div className="empty-state"><strong>목록에서 접수 건을 골라 주세요</strong></div>}</div>
-      <HandoverPage who={who} tickets={tickets} memo={handover} onSaved={setHandover} onOpen={open} onDone={clearHandover} />
+      <HandoverPage who={who} tickets={tickets} memo={handover} onSaved={setHandover} onOpen={open} onDone={() => void clearHandover()} />
     </Pager>}
   </div>;
 }

@@ -26,3 +26,9 @@ export async function api<T = unknown>(method: string, path: string, who: Who | 
   }
   return data as T;
 }
+
+// 퇴근 인수인계 (서버 저장): 남길 말을 보내면 서버가 지금 열린 접수 건(번호 · 제목 · 상태)을 붙여 저장 → 어느 태블릿에서 들어와도 보임
+export type Handover = { id: number; by: string; note: string; open: { ticket_id: string; title: string; status: string }[]; at: string; done_at: string | null; done_by: string | null };
+export const getHandover = (who: Who) => api<{ item: Handover | null }>("GET", "/api/admin/handover", who);
+export const leaveHandover = (who: Who, note: string) => api<{ item: Handover }>("POST", "/api/admin/handover", who, { note });
+export const doneHandover = (who: Who, id: number) => api<{ item: Handover }>("POST", `/api/admin/handover/${id}/done`, who);
