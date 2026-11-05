@@ -37,6 +37,7 @@ services:
     volumes:
       - ../data:/srv/repo/data:ro
       - ../config:/srv/repo/config:ro
+      - ../knowledge:/srv/repo/knowledge:ro   # /api/rules (이관 규칙 문서)
     ports:
       - "${BIND_HOST:-127.0.0.1}:${API_PORT:-8000}:8000"
     networks: [n8n]

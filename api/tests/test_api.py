@@ -110,3 +110,30 @@ def test_admin_requests_blocked_masked_and_summary(client):
     assert summary["questions"] == 3 and summary["by_route"] == {"차단": 1, "권한 없음": 1, "자동 답변": 1}
     assert {"tickets_open", "tickets_urgent_open", "tickets_by_status", "date"} <= set(summary)
     assert client.get("/api/admin/summary", headers=as_user("최영순")).status_code == 403
+
+
+def test_handover_saved_on_server_with_open_tickets(client):
+    client.post("/tickets", json={"key": "h-1", "title": "OTC-03 회수 · 010-2222-3333", "requester": "김하늘", "category": "recall", "priority": "high"})
+    assert client.get("/api/admin/handover", headers=as_user("김하늘")).status_code == 403
+    assert client.get("/api/admin/handover", headers=as_user("이서준")).json()["item"] is None
+    item = client.post("/api/admin/handover", json={"note": "손님 연락 한 분 남았어요 010-1111-2222"}, headers=as_user("이서준")).json()["item"]
+    assert item["by"] == "이서준" and "010-****-2222" in item["note"] and len(item["open"]) == 1
+    assert "3333" not in json.dumps(item["open"], ensure_ascii=False) or "010-****-3333" in json.dumps(item["open"], ensure_ascii=False)
+    latest = client.get("/api/admin/handover", headers=as_user("정민재")).json()["item"]
+    assert latest["id"] == item["id"]
+    assert client.post(f"/api/admin/handover/{item['id']}/done", headers=as_user("정민재")).json()["item"]["done_by"] == "정민재"
+    assert client.get("/api/admin/handover", headers=as_user("이서준")).json()["item"] is None
+
+
+def test_today_rules_and_top_questions(client):
+    client.post("/tickets", json={"key": "r-1", "title": "OTC-03 회수", "requester": "김하늘", "category": "recall", "priority": "high"})
+    client.post("/tickets", json={"key": "c-1", "title": "윤서아 마감 차액", "requester": "윤서아", "category": "closing", "priority": "normal"})
+    today = client.get("/api/today", headers=as_user("김하늘")).json()
+    assert [t["title"] for t in today["recall_open"]] == ["OTC-03 회수"] and today["urgent_open"] == 1
+    assert client.get("/api/today", headers=as_user("최영순")).status_code == 403
+    rules = client.get("/api/rules", headers=H).json()
+    assert rules["doc"] == "scope-and-escalation" and rules["markdown"].startswith("#")
+    for i in range(3):
+        main.STORE.add_request({"request_id": f"q-{i}", "user": "김하늘", "question": "마감 때 현금은  어떤 순서로 맞춰요?", "route": "자동 답변", "ticket": None})
+    top = client.get("/api/admin/summary", headers=as_user("정민재")).json()["top_questions_week"]
+    assert top == [{"question": "마감 때 현금은 어떤 순서로 맞춰요?", "count": 3}]

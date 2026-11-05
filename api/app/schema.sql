@@ -40,3 +40,12 @@ CREATE TABLE IF NOT EXISTS notices (     -- 회수 손님 안내 연습 기록 (
   at          timestamptz NOT NULL DEFAULT now(),
   UNIQUE (ticket_id, customer_id)
 );
+CREATE TABLE IF NOT EXISTS handovers (   -- 약사 퇴근 인수인계: 남길 말 + 그때 열린 티켓 번호 · 제목 (손님 정보 없음)
+  id           bigserial PRIMARY KEY,
+  by_name      text NOT NULL,
+  note         text NOT NULL DEFAULT '',
+  open_tickets jsonb NOT NULL DEFAULT '[]',
+  at           timestamptz NOT NULL DEFAULT now(),
+  done_at      timestamptz,
+  done_by      text
+);

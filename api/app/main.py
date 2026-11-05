@@ -183,10 +183,63 @@ def admin_summary(x_entry_code: str | None = Header(default=None), x_user: str |
     rows = STORE.list_requests(None, start)
     tickets = STORE.list_tickets(None)
     open_tickets = [t for t in tickets if t.get("status") != "처리 완료"]
-    return {"date": start.date().isoformat(), "questions": len(rows),
+    week = Counter(" ".join(str(r.get("question", "")).split()) for r in STORE.list_requests(None, start - timedelta(days=6)))
+    top = [{"question": mask_text(q), "count": n} for q, n in week.most_common(5) if q and n >= 2]
+    return {"date": start.date().isoformat(), "questions": len(rows), "top_questions_week": top,
             "by_route": dict(Counter(r.get("route") or "기타" for r in rows)),
             "tickets_open": len(open_tickets), "tickets_urgent_open": sum(t.get("priority") == "high" for t in open_tickets),
             "tickets_by_status": dict(Counter(t.get("status") for t in tickets))}
+
+
+@app.get("/api/admin/handover")
+def handover_latest(x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+    """아직 확인 안 한 마지막 퇴근 인수인계 (없으면 item: null)."""
+    need_entry(x_entry_code)
+    need_role(x_user, ADMIN_ROLES)
+    return {"item": STORE.latest_handover()}
+
+
+@app.post("/api/admin/handover")
+def handover_add(payload: dict, x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+    """남길 말 + 지금 열린 티켓(번호 · 제목 · 상태)을 서버가 붙여 저장. 손님 정보 · 연락처는 넣지 않음."""
+    need_entry(x_entry_code)
+    person = need_role(x_user, ADMIN_ROLES)
+    note = mask_text(str(payload.get("note") or "").strip())[:500]
+    open_tickets = [{"ticket_id": t["ticket_id"], "title": mask_text(t.get("title", "")), "status": t.get("status")}
+                    for t in STORE.list_tickets(None) if t.get("status") != "처리 완료"]
+    if not note and not open_tickets:
+        raise HTTPException(400, "남길 말이나 열린 접수 건이 있어야 해요")
+    return {"item": STORE.add_handover(person["name"], note, open_tickets)}
+
+
+@app.post("/api/admin/handover/{handover_id}/done")
+def handover_done(handover_id: int, x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+    need_entry(x_entry_code)
+    person = need_role(x_user, ADMIN_ROLES)
+    row = STORE.done_handover(handover_id, person["name"])
+    if not row:
+        raise HTTPException(404, "없는 인수인계예요")
+    return {"item": row}
+
+
+@app.get("/api/today")
+def today(x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
+    """직원 출근 화면용 오늘 알림 요약 — 매장 전체 회수 공지(열린 것) 제목과 긴급 열린 건 수만. 남의 접수 건 내용은 주지 않음."""
+    need_entry(x_entry_code)
+    need_role(x_user, {"staff", "pharmacist", "owner"})
+    open_tickets = [t for t in STORE.list_tickets(None) if t.get("status") != "처리 완료"]
+    return {"recall_open": [{"ticket_id": t["ticket_id"], "title": mask_text(t.get("title", ""))} for t in open_tickets if t.get("category") == "recall"],
+            "urgent_open": sum(t.get("priority") == "high" for t in open_tickets)}
+
+
+@app.get("/api/rules")
+def rules(x_entry_code: str | None = Header(default=None)):
+    """이관 규칙표 — 화면이 글을 옮겨 적지 않고 지식 문서(scope-and-escalation)를 그대로 받음."""
+    need_entry(x_entry_code)
+    path = REPO / "knowledge" / "scope-and-escalation.md"
+    if not path.exists():
+        raise HTTPException(404, "규칙 문서가 없어요")
+    return {"doc": "scope-and-escalation", "markdown": path.read_text(encoding="utf-8")}
 
 
 @app.post("/api/admin/tickets/{ticket_id}/recall-notice")
