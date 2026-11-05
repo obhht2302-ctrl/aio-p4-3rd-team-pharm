@@ -162,6 +162,33 @@ def test_handover_saved_on_server_with_open_tickets(client):
     assert client.get("/api/admin/handover", headers=as_user("이서준")).json()["item"] is None
 
 
+def test_handover_next_visit_new_client(client, request, monkeypatch):
+    """남기기 → 다음 접속(새 클라이언트) 조회 → 보임 → done → null.
+
+    PostgreSQL은 새 PgStore 연결로 바꿔 끼워 '서버가 다시 뜬 다음'을 흉내 낸다.
+    """
+    kind = request.node.callspec.params["client"]
+    ticket_id = client.post("/tickets", json={
+        "key": "h-next", "title": "OTC-03 회수", "requester": "김하늘", "category": "recall", "priority": "high",
+    }).json()["ticket_id"]
+    left = client.post("/api/admin/handover", json={"note": "다음 근무자에게 010-1111-2222"}, headers=as_user("이서준")).json()["item"]
+
+    def next_client():
+        if kind == "postgres":
+            monkeypatch.setattr(main, "STORE", PgStore(os.environ["DATABASE_URL"]))  # 새 연결 = 새 서버 프로세스
+        return TestClient(main.app)
+
+    seen = next_client().get("/api/admin/handover", headers=as_user("정민재")).json()["item"]
+    assert seen["id"] == left["id"] and seen["by"] == "이서준"
+    assert seen["note"] == "다음 근무자에게 010-****-2222"
+    assert [row["ticket_id"] for row in seen["open"]] == [ticket_id]
+
+    done = next_client().post(f"/api/admin/handover/{left['id']}/done", headers=as_user("정민재")).json()["item"]
+    assert done["done_by"] == "정민재" and done["done_at"]
+
+    assert next_client().get("/api/admin/handover", headers=as_user("이서준")).json()["item"] is None
+
+
 def test_today_rules_and_top_questions(client):
     client.post("/tickets", json={"key": "r-1", "title": "OTC-03 회수", "requester": "김하늘", "category": "recall", "priority": "high"})
     client.post("/tickets", json={"key": "c-1", "title": "윤서아 마감 차액", "requester": "윤서아", "category": "closing", "priority": "normal"})

@@ -169,6 +169,66 @@
    "note": "진열대 3병 회수 상자로 옮김"
   }
  },
+ "GET /api/admin/handover": {
+  "response": {
+   "item": {
+    "id": 1,
+    "by": "이서준",
+    "note": "회수 건 손님 연락이 한 분 남았어요",
+    "open": [
+     {
+      "ticket_id": "T-2003",
+      "title": "OTC-03 회수 제품 진열 중",
+      "status": "접수됨"
+     }
+    ],
+    "at": "2026-11-05T18:05:41+09:00",
+    "done_at": null,
+    "done_by": null
+   }
+  }
+ },
+ "POST /api/admin/handover": {
+  "request": {
+   "note": "회수 건 손님 연락이 한 분 남았어요"
+  },
+  "response": {
+   "item": {
+    "id": 1,
+    "by": "이서준",
+    "note": "회수 건 손님 연락이 한 분 남았어요",
+    "open": [
+     {
+      "ticket_id": "T-2003",
+      "title": "OTC-03 회수 제품 진열 중",
+      "status": "접수됨"
+     }
+    ],
+    "at": "2026-11-05T18:05:41+09:00",
+    "done_at": null,
+    "done_by": null
+   }
+  }
+ },
+ "POST /api/admin/handover/{id}/done": {
+  "response": {
+   "item": {
+    "id": 1,
+    "by": "이서준",
+    "note": "회수 건 손님 연락이 한 분 남았어요",
+    "open": [
+     {
+      "ticket_id": "T-2003",
+      "title": "OTC-03 회수 제품 진열 중",
+      "status": "접수됨"
+     }
+    ],
+    "at": "2026-11-05T18:05:41+09:00",
+    "done_at": "2026-11-05T18:30:00+09:00",
+    "done_by": "정민재"
+   }
+  }
+ },
  "GET /api/admin/alerts": {
   "response": {
    "items": [
