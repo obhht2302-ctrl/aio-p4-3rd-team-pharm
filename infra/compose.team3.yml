@@ -34,6 +34,7 @@ services:
       - TEAM3_REPO=/srv/repo
       - TEAM3_API_KEY=${TEAM3_KEY:-}
       - N8N_WEBHOOK_KEY=${TEAM3_KEY:-}
+      - DATA_API_URL=http://data-api:8800   # 화면 알림(GET /api/admin/alerts)은 data-api GET /alerts가 원본
     volumes:
       - ../data:/srv/repo/data:ro
       - ../config:/srv/repo/config:ro
