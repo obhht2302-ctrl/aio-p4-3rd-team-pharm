@@ -72,36 +72,18 @@ button:disabled { cursor: not-allowed; }
 .main-nav { display: flex; align-items: stretch; gap: 28px; align-self: stretch; }
 .nav-link { display: inline-flex; position: relative; align-items: center; gap: 7px; color: var(--muted-foreground); text-decoration: none; font-size: 14px; white-space: nowrap; }
 .nav-link.active { color: var(--primary); font-weight: 700; }
-.nav-underline { position: absolute; height: 3px; bottom: 0; left: 0; right: 0; border-radius: 3px 3px 0 0; background: var(--primary); }
 .page-container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 46px 28px 84px; flex: 1; }
 .site-footer { border-top: 1px solid var(--border); padding: 20px; text-align: center; font-size: 12px; color: var(--muted-foreground); }
-.eyebrow { color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; margin: 0 0 10px; }
-.page-title { font-size: clamp(29px, 4vw, 38px); line-height: 1.22; font-weight: 760; letter-spacing: -.045em; margin: 0; }
 .page-description { color: var(--muted-foreground); margin: 12px 0 0; line-height: 1.6; }
-.page-intro { margin-bottom: 30px; }
-.content-grid { display: grid; grid-template-columns: minmax(0, 1fr) 310px; align-items: start; gap: 22px; }
 .stack { display: grid; gap: 20px; min-width: 0; }
 .soft-card { border: 1px solid var(--border); background: #fff; border-radius: 18px; box-shadow: 0 5px 22px rgba(28, 48, 36, .035); min-width: 0; }
 .panel-pad { padding: 27px; }
-.section-heading { font-size: 20px; line-height: 1.3; letter-spacing: -.025em; font-weight: 720; margin: 0; }
 .section-sub { color: var(--muted-foreground); font-size: 14px; margin: 6px 0 0; }
 .field-label { display: block; font-size: 14px; font-weight: 650; margin-bottom: 8px; }
 .field-help { color: var(--muted-foreground); font-size: 12px; }
-.field-stack { display: grid; gap: 16px; }
 .field-control { min-height: 46px; background: #fff; }
 .primary-action { min-height: 46px; gap: 8px; font-weight: 700; }
 .secondary-action { min-height: 42px; }
-.hint-card { background: var(--secondary); border: 1px solid var(--border); border-radius: 16px; padding: 23px; }
-.hint-card h3 { color: var(--secondary-foreground); font-weight: 700; margin: 0 0 8px; }
-.hint-card p { color: var(--muted-foreground); font-size: 13px; margin: 0; }
-.hint-list { display: grid; gap: 10px; padding: 0; margin: 20px 0 0; list-style: none; }
-.hint-list li { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: var(--secondary-foreground); }
-.hint-list svg { flex: none; margin-top: 2px; }
-.role-line { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 13px 16px; background: var(--secondary); border-radius: 12px; margin-bottom: 20px; }
-.role-line strong { font-size: 14px; }
-.role-line span { font-size: 13px; color: var(--muted-foreground); }
-.role-line button { flex: none; }
-.example-list { display: grid; gap: 9px; }
 .example-button { width: 100%; text-align: left; justify-content: flex-start; white-space: normal; height: auto; min-height: 46px; padding: 10px 14px; }
 .answer-text { white-space: pre-wrap; line-height: 1.75; margin: 18px 0; }
 .meta-line { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -109,11 +91,6 @@ button:disabled { cursor: not-allowed; }
 .source-box { border-top: 1px solid var(--border); padding-top: 17px; color: var(--muted-foreground); font-size: 13px; }
 .source-box strong { color: var(--secondary-foreground); }
 .route-badge { border: 0; color: #fff; font-size: 12px; padding: 5px 9px; }
-.route-auto { background: var(--route-auto); }
-.route-ask { background: var(--route-ask); }
-.route-handoff { background: var(--route-handoff); }
-.route-denied { background: var(--route-denied); }
-.route-blocked { background: var(--route-blocked); }
 .error-box { border: 1px solid #edc9c7; background: #fff5f4; color: #9d3734; padding: 12px 14px; border-radius: 10px; font-size: 14px; }
 .empty-state { text-align: center; padding: 48px 22px; color: var(--muted-foreground); }
 .empty-state svg { margin: 0 auto 12px; color: var(--primary); }
@@ -123,15 +100,9 @@ button:disabled { cursor: not-allowed; }
 .list-card + .list-card { margin-top: 11px; }
 .ticket-tag { font-size: 12px; color: var(--secondary-foreground); background: var(--secondary); border-radius: 6px; padding: 3px 6px; }
 .urgent { border-color: #e3a7a3 !important; }
-.alert-card { display: flex; gap: 13px; align-items: flex-start; padding: 18px 20px; }
-.alert-card svg { color: #b64e46; flex: none; margin-top: 2px; }
-.alert-card p { margin: 3px 0 0; color: var(--muted-foreground); font-size: 14px; }
-.ticket-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-.ticket-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
 .ticket-tab-list { background: transparent; border-bottom: 1px solid var(--border); border-radius: 0; padding: 0; }
 .ticket-tab { position: relative; min-height: 38px; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
 .ticket-tab-underline { position: absolute; height: 2px; background: var(--primary); bottom: 0; left: 0; right: 0; }
-.ticket-actions button { width: auto; }
 .status-pill { background: var(--secondary); color: var(--secondary-foreground); border-radius: 99px; padding: 5px 9px; font-size: 12px; }
 .notice-result { margin-top: 18px; padding: 18px; background: var(--secondary); border-radius: 12px; font-size: 13px; }
 .notice-result strong { display: block; margin-bottom: 6px; }
@@ -141,10 +112,9 @@ button:disabled { cursor: not-allowed; }
 .senior { font-size: 18px; }
 .senior button { min-height: 48px; }
 .senior textarea, .senior input { font-size: 18px; }
-.senior .page-description, .senior .section-sub, .senior .field-label, .senior .hint-card p, .senior .hint-list li, .senior .soft-card p, .senior .role-line span, .senior .source-box { font-size: 18px; }
+.senior .page-description, .senior .section-sub, .senior .field-label, .senior .soft-card p, .senior .source-box { font-size: 18px; }
 .senior .example-button { font-size: 18px; }
 @media (max-width: 800px) {
-  .content-grid { grid-template-columns: 1fr; }
   .header-inner { padding: 0 18px; }
   .page-container { padding: 33px 18px 65px; }
   .desktop-table { display: none; }
@@ -158,22 +128,14 @@ button:disabled { cursor: not-allowed; }
   .nav-link svg { width: 15px; }
   .page-container { padding: 30px 14px 55px; }
   .panel-pad { padding: 21px 17px; }
-  .page-title { font-size: 29px; }
-  .ticket-actions { display: grid; grid-template-columns: 1fr 1fr; }
-  .ticket-toolbar { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .ticket-toolbar [data-slot="tabs-list"] { width: 100%; }
-  .ticket-actions button { width: 100%; }
-  .ticket-actions button:last-child:nth-child(odd) { grid-column: span 2; }
 }
 .question-echo { background: var(--secondary); border-radius: 12px; padding: 13px 16px; font-weight: 650; margin: 0; }
-.answer-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .danger-action { background: var(--destructive); color: #fff; }
 /* 옆으로 넘기는 단계 화면: 높이는 지금 단계에 맞추고, 위아래는 화면 전체가 스크롤됩니다. */
 .pager { display: flex; align-items: flex-start; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .pager::-webkit-scrollbar { display: none; }
 .pager-page { flex: 0 0 100%; min-width: 0; padding: 2px; scroll-snap-align: start; scroll-snap-stop: always; }
-.senior .eyebrow, .senior .request-id, .senior .field-help, .senior .status-pill, .senior .ticket-tag, .senior .text-sm, .senior .question-echo, .senior button, .senior [data-slot="table"], .senior th, .senior td { font-size: 18px; }
-.senior .role-line strong { font-size: 18px; }
+.senior .request-id, .senior .field-help, .senior .status-pill, .senior .ticket-tag, .senior .text-sm, .senior .question-echo, .senior button, .senior [data-slot="table"], .senior th, .senior td { font-size: 18px; }
 .senior .route-badge { font-size: 18px; height: auto; padding: 6px 12px; }
 .senior .status-pill svg { width: 16px; height: 16px; }
 .senior input { min-height: 48px; }
@@ -187,14 +149,6 @@ button:disabled { cursor: not-allowed; }
 :root { --stage: #c9c5dd; }
 .tablet-stage, .tablet-device, .tablet-screen { display: contents; }
 .tablet-status { display: none; }
-@media (min-width: 1100px) and (min-height: 680px) and (hover: hover) and (pointer: fine) {
-  body { background: var(--stage); }
-  .tablet-stage { display: grid; min-height: 100dvh; place-items: center; padding: 24px; background: radial-gradient(1200px 600px at 50% 0%, color-mix(in oklch, var(--primary) 10%, transparent), transparent 70%), var(--stage); }
-  .tablet-device { display: flex; flex-direction: column; width: min(1180px, 100%); height: min(calc(100dvh - 48px), 860px); padding: 14px; border-radius: 42px; background: #1d2220; box-shadow: 0 0 0 2px #3a403d inset, 0 30px 80px -20px rgba(0, 0, 0, .45); }
-  .tablet-status { display: flex; flex: none; height: 30px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 22px; border-radius: 28px 28px 0 0; background: var(--background); color: var(--muted-foreground); font-size: 12px; font-weight: 600; }
-  .tablet-screen { display: block; flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; border-radius: 0 0 28px 28px; background: var(--background); scrollbar-width: thin; }
-  .tablet-screen .site-shell { min-height: 100%; }
-}
 
 /* 해든: 아래는 3004 다정약국 모양입니다. 앞쪽 공통 규칙보다 뒤에 두어 덮어씁니다. */
 :root { --route-auto-bg: #e6f2ea; --route-ask-bg: #e8eef9; --route-handoff-bg: #fbefe2; --route-denied-bg: #eeeff1; --route-blocked-bg: #fbe9e7; --urgent: #d64545; }
@@ -362,7 +316,7 @@ h1, h2, h3, .brand strong, .senior-title { font-family: var(--font-gowun), var(-
 .pager::-webkit-scrollbar { display: none; }
 .pager-page { flex: 0 0 100%; min-width: 0; padding: 2px; scroll-snap-align: start; scroll-snap-stop: always; }
 /* 고객(어르신) 화면: rem을 쓰면 글씨 크기 단계가 화면 전체를 키웁니다 */
-.senior small, .senior .brand small, .senior .who-name b, .senior .who-name small, .senior .nav-link, .senior .site-footer, .senior .eyebrow, .senior .request-id, .senior .field-help, .senior .status-pill, .senior .ticket-tag, .senior .text-sm, .senior .search-box, .senior .kpi-card small, .senior .soft-note, .senior .ticket-number p, .senior .ticket-number span, .senior [data-slot="table"], .senior th, .senior td, .senior button, .senior .field-label { font-size: 18px; }
+.senior small, .senior .brand small, .senior .who-name b, .senior .who-name small, .senior .nav-link, .senior .site-footer, .senior .request-id, .senior .field-help, .senior .status-pill, .senior .ticket-tag, .senior .text-sm, .senior .search-box, .senior .kpi-card small, .senior .soft-note, .senior .ticket-number p, .senior .ticket-number span, .senior [data-slot="table"], .senior th, .senior td, .senior button, .senior .field-label { font-size: 18px; }
 .senior .brand strong { font-size: 1.1rem; }
 .senior .brand-mark { width: 48px; height: 48px; }
 .senior .route-badge { font-size: 18px; height: auto; padding: 4px 12px; }
