@@ -1396,17 +1396,17 @@
    "hit4": 12,
    "leaks": 0,
    "in_scope_top1": [
-    0.391,
     0.399,
-    0.439,
+    0.409,
+    0.438,
     0.444,
     0.444,
-    0.47,
+    0.468,
     0.549,
     0.556,
-    0.58,
-    0.588,
+    0.579,
     0.591,
+    0.592,
     0.641
    ]
   },
@@ -1496,7 +1496,7 @@
      [
       "senior-safety-signals",
       "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
-      0.314
+      0.316
      ],
      [
       "senior-pain-joint",
@@ -1529,7 +1529,7 @@
      [
       "senior-safety-signals",
       "4. AI 안내의 한계",
-      0.431
+      0.432
      ],
      [
       "senior-safety-signals",
@@ -1633,7 +1633,7 @@
      [
       "senior-safety-signals",
       "2. 같이 먹어도 되나 묻기 전에",
-      0.4
+      0.399
      ]
     ],
     "top1": "senior-pain-joint",
@@ -1666,7 +1666,7 @@
      [
       "senior-safety-signals",
       "4. AI 안내의 한계",
-      0.342
+      0.344
      ]
     ],
     "top1": "senior-pain-joint",
@@ -1684,12 +1684,12 @@
      [
       "senior-safety-signals",
       "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
-      0.472
+      0.495
      ],
      [
       "senior-safety-signals",
       "2. 같이 먹어도 되나 묻기 전에",
-      0.428
+      0.427
      ],
      [
       "senior-cold-sleep-stomach",
@@ -1703,7 +1703,7 @@
      ]
     ],
     "top1": "senior-safety-signals",
-    "top1_score": 0.472,
+    "top1_score": 0.495,
     "hit1": true,
     "hit4": true,
     "leak": false
@@ -1720,14 +1720,14 @@
       0.282
      ],
      [
-      "senior-safety-signals",
-      "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
-      0.272
-     ],
-     [
       "senior-pain-joint",
       "4. 같이 먹어도 되나 — 출처와 기준일",
       0.26
+     ],
+     [
+      "senior-safety-signals",
+      "1. 숨참 · 가슴 통증 같은 위험 증상은 ",
+      0.252
      ],
      [
       "senior-pain-joint",
