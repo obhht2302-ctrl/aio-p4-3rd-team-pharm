@@ -17,15 +17,9 @@ const links = [
   { href: "/my/", label: "내 문의" },
   { href: "/admin/", label: "약사 화면" },
 ];
-// 로고: 해든 시안 '하트를 비워 낸 알약'(11/5 팀 투표) — 라벤더 둥근 사각형(.brand-mark) 안에 흰 알약, 한쪽은 옅게, 진한 쪽에 하트 구멍
+// 로고: 해든 원본 '하트 알약'(11/5 팀 투표, web/public/logo.png 512px)
 function BrandMark({ size }: { size: number }) {
-  return <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-    <g transform="rotate(-45 12 12)">
-      <rect x="3" y="8" width="18" height="8" rx="4" fill="#fff" fillOpacity=".5" />
-      <path d="M7 8h5v8H7a4 4 0 0 1 0-8z" fill="#fff" />
-    </g>
-    <path d="M8.9 16.9c-1.4-1.1-2.3-1.9-2.3-2.9a1.15 1.15 0 0 1 2.3-.45 1.15 1.15 0 0 1 2.3.45c0 1-.9 1.8-2.3 2.9z" fill="var(--primary)" />
-  </svg>;
+  return <img src="/logo.png" width={size} height={size} alt="" className="brand-logo" />;
 }
 const roleNames: Record<string, string> = { staff: "직원", pharmacist: "책임 약사", owner: "약국장", patient: "고객" };
 // 하단 '연습 모드' 표시는 연습(mock) 빌드에서만 (실제 모드 VM에서는 빼기)
