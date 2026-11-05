@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Home, Mic, PhoneCall, Square, Volume2 } from "lucide-react";
 import { useAsk, useTypes } from "@/lib/use-ask";
 import type { Who } from "@/lib/session";
-import { CallButton } from "@/components/call";
+import { EmergencyCall } from "@/components/call";
 import { RouteBadge, routeTone, seniorLine } from "@/components/route-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -135,7 +135,6 @@ export function SeniorAsk({ who }: { who: Who }) {
     <div className="senior-bar">
       <div className="senior-sizes" role="group" aria-label="글씨 크기"><b>글씨 크기</b>{SIZES.map(item => <Button key={item.px} variant={size === item.px ? "default" : "outline"} className="senior-button" aria-pressed={size === item.px} onClick={() => setSize(item.px)}>{item.label}</Button>)}</div>
       <ol className="senior-steps">{["질문하기", "답 보기"].map((label, index) => <li key={label} className={ask.page === index ? "on" : ""}>{index + 1}. {label}{ask.page === index && <motion.span layoutId="senior-step" className="senior-step-bar" />}</li>)}</ol>
-      <CallButton who="pharmacist" variant="outline" className="senior-button senior-outline">약사에게 전화</CallButton>
     </div>
     <div className="senior-body">
       {ask.page === 0 ? <motion.div key="ask" className="senior-view" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
@@ -170,7 +169,7 @@ export function SeniorAsk({ who }: { who: Who }) {
         {loading && <div className="loading-card" aria-live="polite"><p>약국 안내 문서에서 찾고 있어요. 잠시만 기다려 주세요.</p><Skeleton className="h-7 w-2/5" /><Skeleton className="h-6 w-full" /><Skeleton className="h-6 w-4/5" /></div>}
         {answer && urgent && <motion.section className="senior-danger" role="alert" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           <div className="senior-danger-head"><span><PhoneCall /></span><div><b>지금 바로 연락해 주세요</b><p>걱정되는 내용이에요. 혼자 참지 마시고 도움을 받으세요.</p></div></div>
-          <div className="senior-danger-actions"><CallButton who="119" className="senior-button senior-danger-call">119 전화하기</CallButton><CallButton who="pharmacist" variant="outline" className="senior-button senior-outline">약사에게 전화</CallButton></div>
+          <EmergencyCall ticketId={answer.ticket?.ticket_id} />
         </motion.section>}
         {answer && <motion.section key={answer.request_id ?? answer.answer} className="senior-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           <div className={`senior-band band-${routeTone(answer.route)}`}><RouteBadge route={answer.route} /><b>{seniorLine[answer.route] ?? answer.route}</b></div>
