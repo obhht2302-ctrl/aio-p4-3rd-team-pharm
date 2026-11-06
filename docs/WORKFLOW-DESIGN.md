@@ -88,12 +88,12 @@ flowchart TD
 | `Support webhook` | 팀 Webhook → 웹 화면 · Slack Trigger | Header Auth (`team3WebhookKey`) → SSO · Slack 서명 | 계약 요청 | — | 키 없음 · 틀림 → 403 `Authorization data is wrong!` (n8n 2.42.6 실측), 워크플로우는 실행 안 됨 |
 | `Create ticket` | data-api `POST /tickets` → (약사 이관은 우리 화면, 장애만 Jira) | 연습용은 키 없음 → 운영은 API 키 (`X-Api-Key` Header Auth) | `{key, title, requester, category, priority}` | `{ticket_id, duplicate}` | 1차 실패 뒤 5xx·timeout·429만 2회 더 재시도 (2초 timeout · 500ms 간격, 최악 7초 < 본체 8초) → DLQ + 알림. 401·403은 재시도 없이 `auth_failed` |
 | `Send DLQ` | data-api `POST /dlq` | 위와 같음 | `{item:{id, type, priority, reason, severity}}` | `{ok}` | 실패 무시, `dlq: true` |
-| `Send alert` | data-api `POST /alerts` → Slack `#support-alerts` | 위와 같음 | `{workflow, severity, reason, message}` | `{stored}` | 실패 무시, `alert` 플래그만 (중복 티켓은 알림 없음) |
+| `Send alert` | data-api `POST /alerts` → Slack `#support-alerts` | 위와 같음 | `{workflow, node, severity, reason, message, ticket_id}` | `{stored}` | 실패 무시, `alert` 플래그만 (중복 티켓은 알림 없음) |
 | `Post to screen` | FastAPI `POST /tickets` (약사 화면, data-api 티켓이 있을 때만) | `team3ApiKey` (`X-Api-Key`) | data-api와 같은 본문 + `ticket_id` · `product` | 201 / 200 | 2초 timeout, 실패 무시 → `extras.screen: "failed"` |
-| `Call Slack` | `team3-alert` (`team3Alert000001`) → Slack | Slack Bot (`slackAio3Bot0001`) | `{mode, severity, reason, message}` | `{ok, mode, error}` | 실패 무시 → `extras.slack: "failed"` |
-| `Call Jira` | `team3-ticket` (`team3Ticket00001`) → Jira | Jira Cloud (`jiraAio3Cloud001`) | `{mode, summary, reason}` | `{ok, mode, error}` | 실패 무시 → `extras.jira: "failed"` |
-| `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | `X-Api-Key` → 사내 API | 번호 · 사용자 | 접수 건 / 403 | timeout 3초, 재시도 없음 → 이관 (`tickets_slow`) |
-| `Check user` | data-api `GET /employees/<user>` → 약국 계정 · SSO | `X-Api-Key` | 이름 | `role` · `access_levels` | 404 → 400 `unknown_user` |
+| `Call Slack` | `team3-alert` (`team3Alert000001`) → Slack | Slack Bot (`slackAio3Bot0001`) | `{mode, severity, reason, message}` | `{ok, mode, error}` | 실패 무시 → `extras.slack: "failed"` (`Post to Slack` 최대 3회 시도 · 1초 간격, 실제 모드에서만) |
+| `Call Jira` | `team3-ticket` (`team3Ticket00001`) → Jira | Jira Cloud (`jiraAio3Cloud001`) | `{mode, summary, reason}` | `{ok, mode, error}` | `Create Jira request` 4초 timeout · 재시도 없음, 실패 무시 → `extras.jira: "failed"` (실제 모드 · `tickets_down`일 때만) |
+| `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | 연습용은 키 없음 → 운영은 `X-Api-Key` (사내 API) | 번호 · 사용자 | 접수 건 / 403 | timeout 3초, 재시도 없음 → 이관 (`tickets_slow`) |
+| `Check user` | data-api `GET /employees/<user>` → 약국 계정 · SSO | 연습용은 키 없음 → 운영은 `X-Api-Key` | 이름 | `role` · `access_levels` | timeout 3초, 재시도 없음 · 404 · 응답 없음 → 400 `unknown_user` |
 
 > 약사 화면 알림은 n8n이 FastAPI로 따로 보내지 않습니다. FastAPI `GET /api/admin/alerts`가 data-api `GET /alerts`를 읽어(3초 캐시, 실패 시 마지막 성공값) 보여 줍니다 (`00-DESIGN.md` 3.4절).
 
