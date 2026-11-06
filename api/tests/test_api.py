@@ -55,9 +55,9 @@ def test_ask_needs_entry_code_and_saves_my_request(client, monkeypatch):
     assert client.post("/api/ask", json=req, headers={"X-Entry-Code": "wrong"}).status_code == 401
     resp = client.post("/api/ask", json=req, headers=H).json()
     assert CONTRACT_KEYS <= set(resp) and resp["route"] == "자동 답변"
-    mine = client.get("/api/my-requests", params={"user": req["user"]}, headers=H).json()["items"]
+    mine = client.get("/api/my-requests", params={"user": req["user"]}, headers=as_user(req["user"])).json()["items"]
     assert len(mine) == 1 and mine[0]["route"] == "자동 답변"
-    assert client.get("/api/my-requests", params={"user": "윤서아"}, headers=H).json()["items"] == []
+    assert client.get("/api/my-requests", params={"user": "윤서아"}, headers=as_user("윤서아")).json()["items"] == []
 
 
 def test_brain_down_keeps_contract_shape(client, monkeypatch):
@@ -108,6 +108,26 @@ def test_admin_alerts_keeps_last_good_when_data_api_down(client, monkeypatch):
     monkeypatch.setattr(main, "_alert_cache", {"at": 0.0, "items": main._alert_cache["items"]})  # 캐시 만료
     items = client.get("/api/admin/alerts", headers=as_user("이서준")).json()["items"]
     assert [item["message"] for item in items] == ["kept"]
+
+
+def test_my_requests_only_own_unless_pharmacist_or_owner(client):
+    main.STORE.add_request({"request_id": "web-own-1", "user": "윤서아", "question": "R-1003 처리 상태", "route": "자동 답변", "ticket": None})
+    url, params = "/api/my-requests", {"user": "윤서아"}
+
+    own = client.get(url, params=params, headers=as_user("윤서아"))
+    assert own.status_code == 200 and [r["request_id"] for r in own.json()["items"]] == ["web-own-1"]
+
+    for other in ("김하늘", "최영순"):  # 직원 · 어르신이 남의 이름으로 부르면 막힘
+        denied = client.get(url, params=params, headers=as_user(other))
+        assert denied.status_code == 403 and "items" not in denied.json()
+    assert client.get(url, params=params, headers=H).status_code == 403  # X-User 없음
+    assert client.get(url, params=params, headers={**H, "X-User": quote("없는사람")}).status_code == 403
+
+    for admin in ("이서준", "정민재"):  # 약사 · 약국장은 예외
+        seen = client.get(url, params=params, headers=as_user(admin))
+        assert seen.status_code == 200 and len(seen.json()["items"]) == 1
+
+    assert client.get(url, params=params, headers={"X-Entry-Code": "wrong", "X-User": quote("윤서아")}).status_code == 401
 
 
 def test_tickets_idempotent_by_key(client):

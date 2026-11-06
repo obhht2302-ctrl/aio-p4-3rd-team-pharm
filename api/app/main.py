@@ -124,8 +124,11 @@ async def ask(payload: dict, x_entry_code: str | None = Header(default=None)):
 
 
 @app.get("/api/my-requests")
-def my_requests(user: str, x_entry_code: str | None = Header(default=None)):
+def my_requests(user: str, x_entry_code: str | None = Header(default=None), x_user: str | None = Header(default=None)):
     need_entry(x_entry_code)
+    me = unquote(x_user or "")  # 주소의 이름이 아니라 로그인한 사람(X-User)을 기준으로 본인 것만
+    if me != user and (users().get(me) or {}).get("role") not in ADMIN_ROLES:
+        raise HTTPException(403, "본인 문의만 볼 수 있어요")
     items = []
     for row in STORE.my_requests(user):
         ticket = row.get("ticket")
