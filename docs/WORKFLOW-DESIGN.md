@@ -100,18 +100,22 @@ flowchart TD
 
 ## 6. 노드 간 페이로드 (연결선마다)
 
-예시 원본은 [`../contracts/examples/`](../contracts/examples/) (실행 뒤에는 실제 실행에서 복사하고 개인정보를 가림).
+예시는 **오늘 실제 실행본** `runs/trace-wf01-20261106-0959.json` (11/6 09:59 팀 VM 실제 모드 · WF-01 한 건 · n8n 실행 1650 `team3-support` / 1651 `team3-search` · 노드마다 첫 출력 1개 · 팀 키 · headers 뺌 · 사용자는 가상 인물)에서 `실행 번호 · 노드 이름`으로 가리킨다. 그 한 건이 자동 답변이라 이관 쪽 연결선은 계약 예시 [`../contracts/examples/`](../contracts/examples/)를 쓴다.
 
-| 연결선 | 필수 필드 | 선택 필드 | 변환 로직 | 예시 |
-| --- | --- | --- | --- | --- |
-| Webhook → `Validate input` | `request_id`, `user`, `question` | `channel`, `attempt`, `context` | 공백 · 마크다운 제거 | `support.json` `request` |
-| `Type policy` → `Search knowledge` | `query`, `access_levels` | `top_k`, `type` | 역할 → 메모리 키 | `search.json` `request` |
-| `Search knowledge` → `Merge evidence` | `evidence[]` | `search_ms` | `SCORE_MIN` 미만 · 중복 제거 | `search.json` `response` |
-| `Check answer` → `Handoff` | `request_id`, `user`, `type`, `title`, `assignee`, `priority`, `reason` | `summary`, `product` | 질문 요약 80자, 연락처 가림 | `handoff.json` `request` |
-| `Handoff` → `Build response` | `ticket`, `reason`, `dlq`, `alert` | `extras` | — | `handoff.json` `response_ok` |
-| `Handoff` → data-api `/dlq` | `item.id`(= `request_id`), `item.type`, `item.priority`, `item.reason`, `item.severity` | — | 연락처 · 약 이름 + 손님 조합은 넣지 않음 | `handoff.json` `response_tickets_down` |
-| `Handoff` → data-api `/alerts` | `workflow`, `node`, `severity`, `reason`, `message` | `ticket_id` | 메시지는 유형 · 담당자만 (연락처 없음) | `handoff.json` `response_ok` |
-| `Error Trigger` → `/alerts` · `/dlq` | `workflow`, `node`, `message`(앞 200자), `execution_id`, `severity:"critical"`, `reason:"unexpected"` | — | 메시지 연락처 가림 | — |
+타입 표기: `string` · `number` · `boolean` · `string[]` · `object` · `null`, `A|B` = 둘 중 하나, 값이 정해진 칸은 `'값1'|'값2'`.
+
+| 연결선 | 필수 필드 | 선택 필드 | 타입 | 변환 로직 | 예시 |
+| --- | --- | --- | --- | --- | --- |
+| Webhook → `Validate input` | `request_id`, `user`, `question` | `channel`, `attempt`, `context` | `request_id` string(64자 안) · `user` string · `question` string(500자 안) · `channel` string · `attempt` number(없으면 1) · `context` string | `Start timer`: 앞뒤 공백 · 마크다운 기호 제거 → `clean_question`, `attempt` 숫자로 · `Validate input`: `Check user` 직원표에서 `role` · `access_levels` 붙임 | 1650 `Support webhook` (`request_id` · `user` · `question`) |
+| `Type policy` → `Search knowledge` | `query`, `access_levels` | `top_k`, `type` | `query` string · `access_levels` string[] · `top_k` number(4 고정) · `type` string | `clean_question` → `query`, `plan.type` → `type`, `access_levels`는 그대로 (이름 · 연락처 · `request_id`는 안 보냄). 권한 → 메모리 키(`pharm_kb_v1_all` / `_owner`)는 `team3-search`의 `KB settings`가 고름 | 1650 `Type policy` 출력 `plan`(closing · auto) → 1651 `Search webhook` body (`access_levels` · `top_k` 4 · `type`. `query`는 기록 도구의 가림 규칙에 걸려 빠짐, 값은 `clean_question`과 같음) |
+| `Search knowledge` → `Merge evidence`(입력 1) | `evidence[]` | `kb_version`, `search_ms` | `evidence[]` object[] = {`doc` string, `title` string, `section` string, `text` string, `score` number 0~1, `access_level` `'all'`\|`'owner'`} · `kb_version` string · `search_ms` number | 없음 (그대로 합침). 거르기는 다음 `Build context`: `SCORE_MIN`(0.37) 미만 · 권한 밖 제거 → 유형 문서 먼저 정렬 → `doc`+`section` 중복 제거 → 최대 4개에 `[n]` 번호 | 1650 `Search knowledge` (4건, 1등 closing-checklist 2절 0.591) |
+| `Get record` → `Record mode?` → `Merge evidence`(입력 2) | `statusCode`, `body` | — | `statusCode` number · `body` object (접수 건 또는 `{error, ticket_id}`) | `ticket_id`가 없으면 `NONE`으로 조회(404) · `requester` = 본인 이름. `Build context`가 200일 때만 답 끝 상태 한 줄(`record_line`)로 만듦 | 1650 `Get record` (`NONE` → 404 `ticket not found`) |
+| `Prepare handoff` → `Handoff` | `request_id`, `user`, `type`, `title`, `assignee`, `priority`, `reason` | `summary`, `product`, `mode` | 모두 string · `assignee` `'pharmacist'`\|`'owner'` · `priority` `'high'`\|`'normal'` · `mode` `'practice'` | `clean_question` 앞 80자 → `title`, 답(검사 통과본 또는 정해진 문장) → `summary`, `plan.assignee` · `plan.priority` · `reason`(없으면 `needs_person`) 그대로, 연락처 칸은 보내지 않음 | `contracts/examples/handoff.json` `request` |
+| `Handoff` → `After handoff` | `ticket`, `reason`, `dlq`, `alert` | `extras`, `handoff_ms` | `ticket` object\|null = {`ticket_id` string, `priority` string, `duplicate` boolean} · `reason` string · `dlq` boolean · `alert` boolean · `extras` object · `handoff_ms` number | `After handoff`: `ticket`에 `plan.assignee`를 붙임 · `tickets_down`이면 `ticket` null + 보관 안내 문장 | `handoff.json` `response_ok` · `response_duplicate` · `response_tickets_down` |
+| `Handoff` → data-api `/dlq` | `item.id`(= `request_id`), `item.type`, `item.priority`, `item.reason`, `item.severity` | — | 모두 string | 연락처 · 약 이름 + 손님 조합은 넣지 않음 | `handoff.json` `response_tickets_down` |
+| `Handoff` → data-api `/alerts` | `workflow`, `node`, `severity`, `reason`, `message` | `ticket_id` | 모두 string | 메시지는 유형 · 담당자만 (연락처 없음) | `handoff.json` `response_ok` |
+| `Error Trigger` → `/alerts` · `/dlq` | `workflow`, `node`, `message`(앞 200자), `execution_id`, `severity:"critical"`, `reason:"unexpected"` | — | `execution_id` string\|number · 나머지 string | 메시지 연락처 가림 | — |
+| `Build result` → `Output filter` → … → `Send result` (응답) | `request_id`, `route`, `answer`, `sources`, `ticket`, `agents`, `security`, `reason` | `timings` | `route` string(5개 값) · `answer` string · `sources` object[] = {`doc`, `section` string, `score` number} · `ticket` object\|null · `agents` string[] · `security` object = {`blocked_by`, `reason` string, `masked` number} · `reason` string · `timings` object = {`total_ms` number} | `Build result`: `plan.notice`(AI 고지) · 접수 상태 줄 붙임 → `Output filter`: 연락처 가림(`masked` 수) | 1650 `Send result` (자동 답변 · sources 3 · ticket null) |
 
 ## 7. 오류 처리
 
