@@ -1,0 +1,1411 @@
+{
+ "meta": {
+  "what": "WF-01 정상 문의 한 건을 request_id로 n8n 실행 기록까지 따라간 노드별 입출력 (81일차 2교시)",
+  "request_id": "d81-2-wf01trace-005954",
+  "sent_at_kst": "2026-11-06 09:59:54",
+  "env": "팀 VM · 실제 모드(SEARCH real · HANDOFF real) · 판정 시험 아님(1건 추적)",
+  "vm_commit": "8d81022",
+  "client": {
+   "http": 200,
+   "seconds": 8.235
+  },
+  "n8n_executions": {
+   "team3-support": 1650,
+   "team3-search": 1651
+  },
+  "how": "VM에서 curl 1건 → n8n 컨테이너 database.sqlite 사본(docker cp)의 execution_data를 풀어 노드마다 첫 출력 item 1개만 저장 → 사본 삭제",
+  "masked": "요청 headers(팀 키 포함)·params·query는 뺌. 이름에 key/token/password가 들어간 칸은 [가림] (plan.route_key도 이 규칙에 걸려 가려짐 — 비밀값은 아님). 600자 넘는 글은 자름. 사용자 '김하늘'은 연습용 가상 인물",
+  "llm": "Triage · Writer · Verifier = OpenAI Credential openAiCourse0001 (gpt-4.1-mini), Embeddings = text-embedding-3-large. 모델 하위 노드의 실행 시간(ms)이 실제 호출 증거"
+ },
+ "request_id": "d81-2-wf01trace-005954",
+ "executions": [
+  {
+   "execution_id": 1650,
+   "workflow": "team3-support",
+   "status": "success",
+   "mode": "webhook",
+   "started_utc": "2026-11-06 00:59:54.929",
+   "stopped_utc": "2026-11-06 01:00:03.122",
+   "nodes": [
+    {
+     "node": "Support webhook",
+     "ms": 0,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "body": {
+       "request_id": "d81-2-wf01trace-005954",
+       "user": "김하늘",
+       "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?"
+      }
+     },
+     "at_s": 0.0
+    },
+    {
+     "node": "Support settings",
+     "ms": 1437,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "SEARCH": "real",
+      "HANDOFF": "real",
+      "SCORE_MIN": 0.37
+     },
+     "at_s": 0.0
+    },
+    {
+     "node": "Start timer",
+     "ms": 16,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452
+     },
+     "at_s": 1.437
+    },
+    {
+     "node": "Check user",
+     "ms": 9,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "body": {
+       "name": "김하늘",
+       "dept": "매장",
+       "role": "staff",
+       "access_levels": [
+        "all"
+       ],
+       "contact": {
+        "phone": "010-0000-1101",
+        "email": "haneul.kim@example.com"
+       }
+      },
+      "statusCode": 200,
+      "statusMessage": "OK"
+     },
+     "at_s": 1.453
+    },
+    {
+     "node": "Validate input",
+     "ms": 10,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ]
+     },
+     "at_s": 1.462
+    },
+    {
+     "node": "Valid?",
+     "ms": 2,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ]
+     },
+     "at_s": 1.472
+    },
+    {
+     "node": "Check cache",
+     "ms": 5,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "body": {
+       "error": "not cached",
+       "key": "[가림]"
+      },
+      "statusCode": 404,
+      "statusMessage": "Not Found"
+     },
+     "at_s": 1.474
+    },
+    {
+     "node": "Cached?",
+     "ms": 1,
+     "status": "success",
+     "out_branch": 1,
+     "items": 1,
+     "output": {
+      "body": {
+       "error": "not cached",
+       "key": "[가림]"
+      },
+      "statusCode": 404,
+      "statusMessage": "Not Found"
+     },
+     "at_s": 1.479
+    },
+    {
+     "node": "Injection rules",
+     "ms": 12,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "blocked": false,
+      "security": {
+       "blocked_by": "",
+       "reason": ""
+      }
+     },
+     "at_s": 1.481
+    },
+    {
+     "node": "Blocked?",
+     "ms": 2,
+     "status": "success",
+     "out_branch": 1,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "blocked": false,
+      "security": {
+       "blocked_by": "",
+       "reason": ""
+      }
+     },
+     "at_s": 1.493
+    },
+    {
+     "node": "Triage",
+     "ms": 2161,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "output": "{\"type\":\"closing\",\"urgency\":\"normal\",\"missing\":[\"어느 단계에서\"],\"ticket_id\":\"\",\"med_judgment\":false,\"unclear\":false}"
+     },
+     "at_s": 1.495
+    },
+    {
+     "node": "Triage model",
+     "ms": 2132,
+     "status": "success",
+     "out_branch": null,
+     "items": 0,
+     "output": null,
+     "at_s": 1.522
+    },
+    {
+     "node": "Triage failed?",
+     "ms": 1,
+     "status": "success",
+     "out_branch": 1,
+     "items": 1,
+     "output": {
+      "output": "{\"type\":\"closing\",\"urgency\":\"normal\",\"missing\":[\"어느 단계에서\"],\"ticket_id\":\"\",\"med_judgment\":false,\"unclear\":false}"
+     },
+     "at_s": 3.656
+    },
+    {
+     "node": "Type policy",
+     "ms": 19,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "plan": {
+       "type": "closing",
+       "mode": "auto",
+       "assignee": "owner",
+       "priority": "normal",
+       "reason": "",
+       "notice": "",
+       "ticket_id": "",
+       "product": "",
+       "missing": [],
+       "deny": false,
+       "clarify": false,
+       "handoff": false,
+       "med_judgment": false,
+       "route_key": "[가림]"
+      }
+     },
+     "at_s": 3.658
+    },
+    {
+     "node": "Route by mode",
+     "ms": 8,
+     "status": "success",
+     "out_branch": 2,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "plan": {
+       "type": "closing",
+       "mode": "auto",
+       "assignee": "owner",
+       "priority": "normal",
+       "reason": "",
+       "notice": "",
+       "ticket_id": "",
+       "product": "",
+       "missing": [],
+       "deny": false,
+       "clarify": false,
+       "handoff": false,
+       "med_judgment": false,
+       "route_key": "[가림]"
+      }
+     },
+     "at_s": 3.678
+    },
+    {
+     "node": "Search knowledge",
+     "ms": 2111,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       }
+      ],
+      "kb_version": "pharm_kb_v1",
+      "search_ms": 2027
+     },
+     "at_s": 3.686
+    },
+    {
+     "node": "Get record",
+     "ms": 8,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "body": {
+       "error": "ticket not found",
+       "ticket_id": "NONE"
+      },
+      "statusCode": 404,
+      "statusMessage": "Not Found"
+     },
+     "at_s": 5.797
+    },
+    {
+     "node": "Record mode?",
+     "ms": 1,
+     "status": "success",
+     "out_branch": 1,
+     "items": 1,
+     "output": {
+      "body": {
+       "error": "ticket not found",
+       "ticket_id": "NONE"
+      },
+      "statusCode": 404,
+      "statusMessage": "Not Found"
+     },
+     "at_s": 5.806
+    },
+    {
+     "node": "Merge evidence",
+     "ms": 1,
+     "status": "success",
+     "out_branch": 0,
+     "items": 2,
+     "output": {
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       }
+      ],
+      "kb_version": "pharm_kb_v1",
+      "search_ms": 2027
+     },
+     "at_s": 5.808
+    },
+    {
+     "node": "Build context",
+     "ms": 21,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "[1] 혼자 하는 첫 마감 순서 / 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.\n\n[2] 혼자 하는 첫 마감 순서 / 4. 나가기 전 — 끄고 잠그고 메모 남기기\n혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.\n\n[3…(+482자)",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "plan": {
+       "type": "closing",
+       "mode": "auto",
+       "assignee": "owner",
+       "priority": "normal",
+       "reason": "",
+       "notice": "",
+       "ticket_id": "",
+       "product": "",
+       "missing": [],
+       "deny": false,
+       "clarify": false,
+       "handoff": false,
+       "med_judgment": false,
+       "route_key": "[가림]"
+      },
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       }
+      ],
+      "record": {
+       "body": {
+        "error": "ticket not found",
+        "ticket_id": "NONE"
+       },
+       "statusCode": 404,
+       "statusMessage": "Not Found"
+      },
+      "record_line": "",
+      "record_status": 404,
+      "agents": [
+       "triage",
+       "retriever"
+      ]
+     },
+     "at_s": 5.809
+    },
+    {
+     "node": "Evidence?",
+     "ms": 2,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "[1] 혼자 하는 첫 마감 순서 / 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.\n\n[2] 혼자 하는 첫 마감 순서 / 4. 나가기 전 — 끄고 잠그고 메모 남기기\n혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.\n\n[3…(+482자)",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "plan": {
+       "type": "closing",
+       "mode": "auto",
+       "assignee": "owner",
+       "priority": "normal",
+       "reason": "",
+       "notice": "",
+       "ticket_id": "",
+       "product": "",
+       "missing": [],
+       "deny": false,
+       "clarify": false,
+       "handoff": false,
+       "med_judgment": false,
+       "route_key": "[가림]"
+      },
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       }
+      ],
+      "record": {
+       "body": {
+        "error": "ticket not found",
+        "ticket_id": "NONE"
+       },
+       "statusCode": 404,
+       "statusMessage": "Not Found"
+      },
+      "record_line": "",
+      "record_status": 404,
+      "agents": [
+       "triage",
+       "retriever"
+      ]
+     },
+     "at_s": 5.83
+    },
+    {
+     "node": "Writer",
+     "ms": 1642,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "output": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][3][4]."
+     },
+     "at_s": 5.832
+    },
+    {
+     "node": "Writer model",
+     "ms": 1613,
+     "status": "success",
+     "out_branch": null,
+     "items": 0,
+     "output": null,
+     "at_s": 5.86
+    },
+    {
+     "node": "Verifier",
+     "ms": 562,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "output": "{\"grounded\":true,\"policy_ok\":true,\"issues\":[]}"
+     },
+     "at_s": 7.474
+    },
+    {
+     "node": "Verifier model",
+     "ms": 548,
+     "status": "success",
+     "out_branch": null,
+     "items": 0,
+     "output": null,
+     "at_s": 7.487
+    },
+    {
+     "node": "Check answer",
+     "ms": 13,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "[1] 혼자 하는 첫 마감 순서 / 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.\n\n[2] 혼자 하는 첫 마감 순서 / 4. 나가기 전 — 끄고 잠그고 메모 남기기\n혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.\n\n[3…(+482자)",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "plan": {
+       "type": "closing",
+       "mode": "auto",
+       "assignee": "owner",
+       "priority": "normal",
+       "reason": "",
+       "notice": "",
+       "ticket_id": "",
+       "product": "",
+       "missing": [],
+       "deny": false,
+       "clarify": false,
+       "handoff": false,
+       "med_judgment": false,
+       "route_key": "[가림]"
+      },
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       }
+      ],
+      "record": {
+       "body": {
+        "error": "ticket not found",
+        "ticket_id": "NONE"
+       },
+       "statusCode": 404,
+       "statusMessage": "Not Found"
+      },
+      "record_line": "",
+      "record_status": 404,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "route": "자동 답변",
+      "reason": ""
+     },
+     "at_s": 8.036
+    },
+    {
+     "node": "Needs handoff?",
+     "ms": 2,
+     "status": "success",
+     "out_branch": 1,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "clean_question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1,
+      "context": "[1] 혼자 하는 첫 마감 순서 / 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.\n\n[2] 혼자 하는 첫 마감 순서 / 4. 나가기 전 — 끄고 잠그고 메모 남기기\n혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.\n\n[3…(+482자)",
+      "channel": "",
+      "t0": 1793926796452,
+      "valid": true,
+      "codes": [],
+      "role": "staff",
+      "access_levels": [
+       "all"
+      ],
+      "plan": {
+       "type": "closing",
+       "mode": "auto",
+       "assignee": "owner",
+       "priority": "normal",
+       "reason": "",
+       "notice": "",
+       "ticket_id": "",
+       "product": "",
+       "missing": [],
+       "deny": false,
+       "clarify": false,
+       "handoff": false,
+       "med_judgment": false,
+       "route_key": "[가림]"
+      },
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       }
+      ],
+      "record": {
+       "body": {
+        "error": "ticket not found",
+        "ticket_id": "NONE"
+       },
+       "statusCode": 404,
+       "statusMessage": "Not Found"
+      },
+      "record_line": "",
+      "record_status": 404,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "route": "자동 답변",
+      "reason": ""
+     },
+     "at_s": 8.049
+    },
+    {
+     "node": "Build result",
+     "ms": 11,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "route": "자동 답변",
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "security": {
+       "blocked_by": "",
+       "reason": "",
+       "masked": 0
+      },
+      "reason": "",
+      "timings": {
+       "total_ms": 6608
+      }
+     },
+     "at_s": 8.051
+    },
+    {
+     "node": "Output filter",
+     "ms": 15,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "route": "자동 답변",
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "security": {
+       "blocked_by": "",
+       "reason": "",
+       "masked": 0
+      },
+      "reason": "",
+      "timings": {
+       "total_ms": 6608
+      }
+     },
+     "at_s": 8.063
+    },
+    {
+     "node": "Save cache",
+     "ms": 8,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "key": "[가림]",
+      "stored": true,
+      "ttl": 600
+     },
+     "at_s": 8.078
+    },
+    {
+     "node": "Restore result",
+     "ms": 9,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "route": "자동 답변",
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "security": {
+       "blocked_by": "",
+       "reason": "",
+       "masked": 0
+      },
+      "reason": "",
+      "timings": {
+       "total_ms": 6608
+      }
+     },
+     "at_s": 8.086
+    },
+    {
+     "node": "Log request",
+     "ms": 8,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "stored": 1,
+      "live": 4
+     },
+     "at_s": 8.095
+    },
+    {
+     "node": "Result again",
+     "ms": 6,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "route": "자동 답변",
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "security": {
+       "blocked_by": "",
+       "reason": "",
+       "masked": 0
+      },
+      "reason": "",
+      "timings": {
+       "total_ms": 6608
+      }
+     },
+     "at_s": 8.103
+    },
+    {
+     "node": "Send result",
+     "ms": 10,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "request_id": "d81-2-wf01trace-005954",
+      "route": "자동 답변",
+      "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.591
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.586
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.501
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "security": {
+       "blocked_by": "",
+       "reason": "",
+       "masked": 0
+      },
+      "reason": "",
+      "timings": {
+       "total_ms": 6608
+      }
+     },
+     "at_s": 8.11
+    }
+   ]
+  },
+  {
+   "execution_id": 1651,
+   "workflow": "team3-search",
+   "status": "success",
+   "mode": "webhook",
+   "started_utc": "2026-11-06 00:59:58.713",
+   "stopped_utc": "2026-11-06 01:00:00.785",
+   "nodes": [
+    {
+     "node": "Search webhook",
+     "ms": 0,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "body": {
+       "access_levels": [
+        "all"
+       ],
+       "top_k": 4,
+       "type": "closing"
+      }
+     },
+     "at_s": 0.0
+    },
+    {
+     "node": "KB settings",
+     "ms": 19,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "top_k": 4,
+      "fetch_k": 8,
+      "kb_version": "pharm_kb_v1",
+      "want_owner": false,
+      "t0": 1793926798752
+     },
+     "at_s": 0.001
+    },
+    {
+     "node": "Has query?",
+     "ms": 8,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "top_k": 4,
+      "fetch_k": 8,
+      "kb_version": "pharm_kb_v1",
+      "want_owner": false,
+      "t0": 1793926798752
+     },
+     "at_s": 0.02
+    },
+    {
+     "node": "Search all",
+     "ms": 1999,
+     "status": "success",
+     "out_branch": 0,
+     "items": 8,
+     "output": {
+      "document": {
+       "pageContent": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+       "metadata": {
+        "source": "blob",
+        "blobType": "text/plain",
+        "loc": {
+         "lines": {
+          "from": 1,
+          "to": 4
+         }
+        },
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "chunk": "2.1",
+        "access_level": "all",
+        "kb_version": "pharm_kb_v1",
+        "type": "closing"
+       }
+      },
+      "score": 0.5913505042782894
+     },
+     "at_s": 0.028
+    },
+    {
+     "node": "Embeddings",
+     "ms": 1991,
+     "status": "success",
+     "out_branch": null,
+     "items": 0,
+     "output": null,
+     "at_s": 0.036
+    },
+    {
+     "node": "Need owner?",
+     "ms": 2,
+     "status": "success",
+     "out_branch": 1,
+     "items": 1,
+     "output": {
+      "top_k": 4,
+      "fetch_k": 8,
+      "kb_version": "pharm_kb_v1",
+      "want_owner": false,
+      "t0": 1793926798752
+     },
+     "at_s": 2.027
+    },
+    {
+     "node": "Skip owner",
+     "ms": 6,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {},
+     "at_s": 2.029
+    },
+    {
+     "node": "Merge hits",
+     "ms": 2,
+     "status": "success",
+     "out_branch": 0,
+     "items": 9,
+     "output": {
+      "document": {
+       "pageContent": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+       "metadata": {
+        "source": "blob",
+        "blobType": "text/plain",
+        "loc": {
+         "lines": {
+          "from": 1,
+          "to": 4
+         }
+        },
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "chunk": "2.1",
+        "access_level": "all",
+        "kb_version": "pharm_kb_v1",
+        "type": "closing"
+       }
+      },
+      "score": 0.5913505042782894
+     },
+     "at_s": 2.035
+    },
+    {
+     "node": "Shape evidence",
+     "ms": 10,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       }
+      ],
+      "kb_version": "pharm_kb_v1",
+      "search_ms": 2027
+     },
+     "at_s": 2.037
+    },
+    {
+     "node": "Send evidence",
+     "ms": 4,
+     "status": "success",
+     "out_branch": 0,
+     "items": 1,
+     "output": {
+      "evidence": [
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "text": "혼자 하는 첫 마감 순서 › 2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)\n- 청구 프로그램에서 오늘 처방 입력을 검수해요. 최종 확인은 약사가 해요.\n- 카드 단말기 마감 전표를 뽑아 포스 카드 합계와 맞춰요. 앱 결제 같은 비대면 결제는 단말기 합계에 안 잡혀서 따로 빼요.\n- 계산대 현금은 준비금 10만 원(가짜)을 먼저 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 계산대마다 따로 하고, 안 맞으면 \"마감 때 돈이 안 맞을 때\" 문서대로 해요.",
+        "score": 0.591,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "1. 먼저 다시 세기",
+        "text": "마감 때 돈이 안 맞을 때 › 1. 먼저 다시 세기\n- 준비금 10만 원(가짜)을 뺐는지 먼저 확인해요. 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세요.\n- 계산대가 여러 대면 계산대마다 따로 맞춰요.\n- 카드가 안 맞으면 금액보다 건수부터 맞춰요. 단말기가 몇 대인지, 비대면 결제나 취소 건이 있었는지 확인해요.",
+        "score": 0.586,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "title": "마감 때 돈이 안 맞을 때",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "text": "마감 때 돈이 안 맞을 때 › 3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기\n- 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 적어요.\n- 도우미에게 차액을 말하면 약국장에게 넘기고 티켓 번호를 드려요. 처리 기준은 약국장만 보는 규정에 있어요.\n- 다음 날 약국장이 정산표와 함께 확인해요. 결과는 \"내 문의\" 화면에서 볼 수 있어요.",
+        "score": 0.501,
+        "access_level": "all"
+       },
+       {
+        "doc": "closing-checklist",
+        "title": "혼자 하는 첫 마감 순서",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "text": "혼자 하는 첫 마감 순서 › 4. 나가기 전 — 끄고 잠그고 메모 남기기\n- 청구 프로그램 백업, 기계 끄기, 금고 · 문단속 · 셔터를 확인해요.\n- 못 끝낸 일(차액, 남은 환불, 안 온 주문, 냉장고 이상)은 인수인계 메모로 남겨요. 돈은 약국장, 약 · 처방은 다음 근무 약사에게 알려요.\n- 건강보험 청구 전송은 하루 마감 일이 아니에요. 월말 · 월초에 약사 · 약국장이 하는 월간 업무예요.",
+        "score": 0.456,
+        "access_level": "all"
+       }
+      ],
+      "kb_version": "pharm_kb_v1",
+      "search_ms": 2027
+     },
+     "at_s": 2.048
+    }
+   ]
+  }
+ ]
+}

@@ -64,7 +64,8 @@
    "expect": {
     "equals": {
      "route": "담당자 이관",
-     "ticket.assignee": "pharmacist"
+     "ticket.assignee": "pharmacist",
+     "ticket.priority": "normal"
     },
     "contains": {
      "answer": [
@@ -140,7 +141,8 @@
    "expect": {
     "equals": {
      "route": "담당자 이관",
-     "ticket.assignee": "pharmacist"
+     "ticket.assignee": "pharmacist",
+     "ticket.priority": "normal"
     },
     "not_contains": {
      "answer": [
