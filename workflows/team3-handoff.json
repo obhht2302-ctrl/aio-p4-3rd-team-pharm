@@ -312,7 +312,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({key:$('Ticket outcome').first().json.request_id,ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||''),title:$('Ticket outcome').first().json.title,requester:$('Ticket outcome').first().json.user,category:$('Ticket outcome').first().json.type,priority:$('Ticket outcome').first().json.priority,product:$('Ticket outcome').first().json.product}) }}",
+        "jsonBody": "={{ JSON.stringify({key:$('Ticket outcome').first().json.request_id,ticket_id:(($('Ticket outcome').first().json.ticket||{}).ticket_id||''),title:$('Ticket outcome').first().json.title,requester:$('Ticket outcome').first().json.user,category:$('Ticket outcome').first().json.type,priority:$('Ticket outcome').first().json.priority,product:$('Ticket outcome').first().json.product,assignee:$('Ticket outcome').first().json.assignee}) }}",
         "options": {
           "timeout": 2000,
           "response": {

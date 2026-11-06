@@ -51,7 +51,7 @@ class MemoryStore:
             del self.tickets[old_key]
         self.notices = [n for n in self.notices if n["ticket_id"] != ticket_id]
         ticket = {"ticket_id": ticket_id, "key": key, "status": "접수됨", "note": "",
-                  "created_at": now(), **{k: body.get(k, "") for k in ("title", "requester", "category", "priority", "product")}}
+                  "created_at": now(), **{k: body.get(k, "") for k in ("title", "requester", "category", "priority", "product", "assignee")}}
         self.tickets[key] = ticket
         return ticket, False
 
@@ -171,12 +171,12 @@ class PgStore:
                             (ticket_id, key))
                 cur.execute("DELETE FROM tickets WHERE ticket_id = %s AND key <> %s", (ticket_id, key))
             cur.execute(
-                """INSERT INTO tickets (ticket_id, key, title, requester, category, priority, product)
-                   VALUES (COALESCE(%s, 'T-' || nextval('team3_ticket_seq')), %s, %s, %s, %s, %s, %s)
+                """INSERT INTO tickets (ticket_id, key, title, requester, category, priority, product, assignee)
+                   VALUES (COALESCE(%s, 'T-' || nextval('team3_ticket_seq')), %s, %s, %s, %s, %s, %s, %s)
                    ON CONFLICT (key) DO NOTHING
                    RETURNING *""",
                 (ticket_id, key, body.get("title", ""), body.get("requester", ""), body.get("category", ""),
-                 body.get("priority", "normal"), body.get("product", "")),
+                 body.get("priority", "normal"), body.get("product", ""), body.get("assignee") or ""),
             )
             inserted = cur.fetchone()
             if inserted:

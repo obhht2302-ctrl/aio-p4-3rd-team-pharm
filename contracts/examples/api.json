@@ -142,6 +142,7 @@
      "priority": "high",
      "status": "접수됨",
      "product": "OTC-03",
+     "assignee": "pharmacist",
      "created_at": "2026-11-04T18:05:41+09:00"
     },
     {
@@ -153,6 +154,7 @@
      "priority": "normal",
      "status": "접수됨",
      "product": "",
+     "assignee": "owner",
      "created_at": "2026-11-04T18:07:02+09:00"
     }
    ]
@@ -271,7 +273,8 @@
    "category": "recall",
    "priority": "high",
    "product": "OTC-03",
-   "ticket_id": "T-2003"
+   "ticket_id": "T-2003",
+   "assignee": "pharmacist"
   },
   "response": {
    "ticket_id": "T-2003",
@@ -281,7 +284,7 @@
    "ticket_id": "T-2003",
    "duplicate": true
   },
-  "_note": "ticket_id 는 선택: handoff 가 data-api 에서 받은 번호를 넘기면 그 번호를 그대로 쓴다 (화면과 응답의 번호를 같게)."
+  "_note": "ticket_id 는 선택: handoff 가 data-api 에서 받은 번호를 넘기면 그 번호를 그대로 쓴다 (화면과 응답의 번호를 같게). assignee(pharmacist · owner)도 선택: 비어 있어도 되고, 저장된 값은 GET /api/admin/tickets 에 나온다."
  },
  "POST /alerts": {
   "request": {
