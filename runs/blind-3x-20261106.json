@@ -1,0 +1,6525 @@
+{
+ "about": "81일차 3교시 · 블라인드 25문항(+판단 6문항 2턴째) × 3회. 회차마다 flow.py ops --reset + cache-clear 뒤 1번씩. 팀 VM 연습 모드, request_id d81r<회차>-qNN(-t2). 같은 회차에 cases/team.json · cases/team-3way.json · 공통 WF-03도 돌림(보고서 따로). 저장 대조 = 응답 ticket → 약사 화면 DB(FastAPI · PG, key=request_id) 3회 + data-api /tickets-created 3회차(1 · 2회차는 단건 경로 /tickets/<id>로 봐서 미확인 — 그 경로는 시드 접수만 보여 줌).",
+ "date": "2026-11-06",
+ "vm_commit": "099475f Merge pull request #57 from twlaude/lead/d81-2-dayoung2",
+ "mode": "practice",
+ "warmup": "d81-3-warm (판정에 안 셈) 6.5초 자동 답변",
+ "questions": "docs/rag-eval/blind_route_20261105.json (같은 25문항 · 같은 2턴째 약 이름)",
+ "rounds": [
+  {
+   "round": 1,
+   "started": "2026-11-06T02:06:46+0000",
+   "finished": "2026-11-06T02:10:08+0000",
+   "reports": {
+    "team": "runs/team-20261106-020752.json",
+    "team3way": "runs/team-3way-20261106-020818.json",
+    "wf03": [
+     "runs/d81_3_wf03-20261106-021008.json"
+    ]
+   },
+   "blind": [
+    {
+     "id": "Q01",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.533
+      ],
+      [
+       "recall-first-response",
+       0.485
+      ],
+      [
+       "recall-customer-guide",
+       0.466
+      ],
+      [
+       "recall-first-response",
+       0.466
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q01",
+      "seconds": 3.92,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공지가 떴으면 먼저 공표된 제품의 제조번호를 확인해서 진열대나 창고에 있으면 바로 빼고 판매를 멈추는 것이 첫 조치예요. 그다음에 뺀 약은 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관하고 개수를 세서 기록해야 해요[1][2][3]. 지금 조치를 담당자에게 넘겼어요.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "1. 회수 공표란",
+        "score": 0.533
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.485
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.466
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2015",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3716
+      }
+     }
+    },
+    {
+     "id": "Q02",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.494
+      ],
+      [
+       "recall-first-response",
+       0.457
+      ],
+      [
+       "closing-checklist",
+       0.38
+      ],
+      [
+       "recall-customer-guide",
+       0.376
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q02",
+      "seconds": 3.74,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "판매중지된 제품은 진열대에서 바로 빼서 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관해야 해요. 창고에 둘 때도 다른 반품과 섞지 말고 개수와 제조번호, 뺀 시각, 뺀 사람을 기록해야 해요. 이 첫 조치는 약사가 확인할 때까지 꼭 지켜야 합니다[1][2]. 담당자에게 넘겼어요.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.493
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.458
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2016",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3530
+      }
+     }
+    },
+    {
+     "id": "Q03",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.493
+      ],
+      [
+       "recall-customer-guide",
+       0.479
+      ],
+      [
+       "recall-customer-guide",
+       0.451
+      ],
+      [
+       "recall-customer-guide",
+       0.443
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q03",
+      "seconds": 3.25,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수된 시럽을 산 손님에게 연락하는 것은 약국이 선택적으로 하는 서비스입니다. 약사가 회수 대상 확인과 안내 승인을 한 뒤에 연락하며, 직원이 먼저 연락하지는 않습니다. 지금 약사에게 확인해서 안내해 드리도록 넘기겠습니다[1][2].",
+      "sources": [
+       {
+        "doc": "recall-customer-guide",
+        "section": "1. 손님 안내는 약국이 하는 선택 서비스",
+        "score": 0.479
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "4. 약사에게 알리기",
+        "score": 0.493
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2017",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3100
+      }
+     }
+    },
+    {
+     "id": "Q04",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.53
+      ],
+      [
+       "recall-customer-guide",
+       0.487
+      ],
+      [
+       "recall-first-response",
+       0.482
+      ],
+      [
+       "recall-first-response",
+       0.404
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q04",
+      "seconds": 3.71,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공표가 떴을 때는 제조번호가 다른 같은 제품도 약사가 확인할 때까지 따로 보관해야 해요. 뺀 약은 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관하고, 다른 반품과 섞지 않아야 합니다[1][2]. 지금 상황을 약사에게 알려서 확인하도록 하겠습니다.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.53
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.482
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2018",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3586
+      }
+     }
+    },
+    {
+     "id": "Q05",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.579
+      ],
+      [
+       "recall-customer-guide",
+       0.536
+      ],
+      [
+       "recall-customer-guide",
+       0.531
+      ],
+      [
+       "scope-and-escalation",
+       0.506
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q05",
+      "seconds": 3.5,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공표가 떴을 때는 도우미가 바로 당일 책임 약사에게 긴급으로 넘겨서 약사가 회수 대상인지 확인해요. 손님에게 알릴지는 약사가 정하고 직원이 먼저 연락하지 않으니, 상담 끝나고 약사에게 바로 말씀드리는 게 맞아요[1][2].",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "4. 약사에게 알리기",
+        "score": 0.579
+       },
+       {
+        "doc": "scope-and-escalation",
+        "section": "4. 긴급으로 바로 알리는 경우",
+        "score": 0.506
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2019",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3342
+      }
+     }
+    },
+    {
+     "id": "Q06",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.594
+      ],
+      [
+       "closing-checklist",
+       0.579
+      ],
+      [
+       "closing-checklist",
+       0.574
+      ],
+      [
+       "closing-checklist",
+       0.477
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q06",
+      "seconds": 4.5,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "문 닫기 30분 전에는 오늘 나간 약을 보고 도매 주문을 넣고 손님을 정리해요. 문 닫은 뒤에는 처방 검수, 카드 단말기 마감 전표 확인, 현금 맞추기 순서로 돈을 맞춰야 해요. 마지막으로 청구 프로그램 백업, 기계 끄기, 금고와 문단속 확인 후 못 끝낸 일은 메모로 남기고 나가시면 됩니다[1][2][3][4].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.594
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "1. 문 닫기 30분 전 — 주문 넣고 손님 정리하기",
+        "score": 0.58
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "score": 0.574
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "3. 서류와 약 정리 — 처방전, 향정, 냉장고, 반품",
+        "score": 0.476
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 4341
+      }
+     }
+    },
+    {
+     "id": "Q07",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.453
+      ],
+      [
+       "closing-cash-mismatch",
+       0.44
+      ],
+      [
+       "closing-cash-mismatch",
+       0.404
+      ],
+      [
+       "closing-checklist",
+       0.381
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q07",
+      "seconds": 5.07,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "먼저 준비금 10만 원을 뺐는지 확인하고, 권종별로 현금을 다시 세어 보세요. 그래도 3천원이 모자라면 날짜, 계산대 번호, 금액, 모자람 여부와 원인을 기록한 뒤 약국장에게 넘기시면 됩니다. 약국장이 정산표와 함께 확인할 거예요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.381
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.453
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.404
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2020",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 4949
+      }
+     }
+    },
+    {
+     "id": "Q08",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.356
+      ],
+      [
+       "closing-checklist",
+       0.297
+      ],
+      [
+       "closing-cash-mismatch",
+       0.293
+      ],
+      [
+       "closing-cash-mismatch",
+       0.285
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q08",
+      "seconds": 1.34,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1209
+      }
+     }
+    },
+    {
+     "id": "Q09",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.33
+      ],
+      [
+       "closing-checklist",
+       0.326
+      ],
+      [
+       "request-records-guide",
+       0.271
+      ],
+      [
+       "closing-cash-mismatch",
+       0.269
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q09",
+      "seconds": 1.24,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서, 화면에 뜬 문구",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1119
+      }
+     }
+    },
+    {
+     "id": "Q10",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.384
+      ],
+      [
+       "closing-cash-mismatch",
+       0.357
+      ],
+      [
+       "closing-cash-mismatch",
+       0.353
+      ],
+      [
+       "closing-cash-mismatch",
+       0.351
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q10",
+      "seconds": 3.61,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "돈이 만 원 더 남았을 때는 먼저 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세는 것이 좋아요. 준비금 10만 원이 빠졌는지도 확인해 주세요[1]. 담당자에게 이 내용을 넘기겠습니다.",
+      "sources": [
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.384
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2021",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3445
+      }
+     }
+    },
+    {
+     "id": "Q11",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.367
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.362
+      ],
+      [
+       "senior-pain-joint",
+       0.361
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q11",
+      "seconds": 5.72,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "콧물약에 들어 있는 클로르페니라민 성분은 졸음을 유발할 수 있어서 운전이나 기계 조작 시 주의가 필요해요. 세티리진이나 로라타딘도 졸음 부작용이 있을 수 있습니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 5600
+      }
+     }
+    },
+    {
+     "id": "Q12",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.51
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.382
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.338
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.329
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q12",
+      "seconds": 3.49,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "타이레놀 하얀 알약의 성분은 아세트아미노펜이에요. 이 성분은 감기로 인한 열과 두통, 근육통, 관절통에 쓰이며, 간손상 위험이 있으니 술을 많이 마시거나 간장애가 있는 분은 복용 전에 꼭 상의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "1. 열 · 통증 약 — 아세트아미노펜",
+        "score": 0.51
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3311
+      }
+     }
+    },
+    {
+     "id": "Q13",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-safety-signals",
+       0.464
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.455
+      ],
+      [
+       "senior-pain-joint",
+       0.404
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.394
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q13",
+      "seconds": 3.41,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "나이 드신 분은 감기약 성분 중 클로르페니라민이 졸음을 유발할 수 있어 운전이나 기계 조작에 주의해야 해요. 또한 파모티딘 같은 위장약은 복용 전에 의사나 약사와 상의하는 것이 좋습니다[1][2]. 복용 중인 약과 함께 먹어도 되는지 궁금하면 약사에게 확인을 받으셔야 해요[3].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.455
+       },
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.394
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.464
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3292
+      }
+     }
+    },
+    {
+     "id": "Q14",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-safety-signals",
+       0.431
+      ],
+      [
+       "senior-pain-joint",
+       0.375
+      ],
+      [
+       "senior-pain-joint",
+       0.356
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q14",
+      "seconds": 12.62,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "변비약은 종류가 여러 가지인데, 예를 들어 비사코딜은 급성 또는 만성 변비에 쓰이고 장기간 사용하지 말라는 주의가 있어요. 각각 성분과 주의사항이 다르니 복용 전 약사와 상담하는 게 좋아요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 12491
+      }
+     }
+    },
+    {
+     "id": "Q15",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.48
+      ],
+      [
+       "senior-pain-joint",
+       0.477
+      ],
+      [
+       "senior-pain-joint",
+       0.417
+      ],
+      [
+       "senior-pain-joint",
+       0.412
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q15",
+      "seconds": 3.63,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "무릎 아플 때 쓰는 소염진통제는 이부프로펜, 덱시부프로펜, 나프록센, 아세클로페낙, 세레콕시브 등이 있어요. 이 약들은 위장관 출혈이나 천공 같은 위장 이상반응 위험이 있어서 어르신 주의 약으로 분류돼요. 만약 위장 출혈 증상(혈변, 혈액구토 등)이 나타나면 즉시 복용을 중지하고 의사나 약사와 상의해야 해요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "2. 관절 · 통증 소염진통제",
+        "score": 0.48
+       },
+       {
+        "doc": "senior-pain-joint",
+        "section": "3. 어르신 주의 (노인주의)",
+        "score": 0.412
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3496
+      }
+     }
+    },
+    {
+     "id": "Q16",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.531
+      ],
+      [
+       "senior-safety-signals",
+       0.477
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-pain-joint",
+       0.369
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q16",
+      "seconds": 1.12,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 988
+      }
+     },
+     "t2": {
+      "request_id": "d81r1-q16-t2",
+      "context": "암로디핀, 종합감기약(클로르페니라민 들어 있음)",
+      "seconds": 3.43,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "혈압약 암로디핀과 클로르페니라민 성분이 들어간 종합감기약을 같이 드셔도 되는지는 사람마다 다르기 때문에 약사에게 확인이 필요해요. 지금 드시는 약 이름과 감기약 성분을 알려 주셨으니, 약사에게 확인을 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.458
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.477
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2022",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3285
+      }
+     }
+    },
+    {
+     "id": "Q17",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.381
+      ],
+      [
+       "senior-pain-joint",
+       0.367
+      ],
+      [
+       "senior-safety-signals",
+       0.365
+      ],
+      [
+       "senior-pain-joint",
+       0.355
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q17",
+      "seconds": 1.18,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1060
+      }
+     },
+     "t2": {
+      "request_id": "d81r1-q17-t2",
+      "context": "나프록센",
+      "seconds": 7.54,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "나프록센을 드시고 계시군요. 복용 중인 다른 약과의 상호작용 여부를 약사가 확인해 드릴 테니, 약사에게 문의해 주세요[1]. 지금 바로 약사에게 확인을 요청하겠습니다.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+        "score": 0.381
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2023",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 7363
+      }
+     }
+    },
+    {
+     "id": "Q18",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-safety-signals",
+       0.372
+      ],
+      [
+       "senior-pain-joint",
+       0.328
+      ],
+      [
+       "senior-pain-joint",
+       0.303
+      ],
+      [
+       "senior-safety-signals",
+       0.288
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q18",
+      "seconds": 1.13,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 990
+      }
+     },
+     "t2": {
+      "request_id": "d81r1-q18-t2",
+      "context": "아세트아미노펜(타이레놀)",
+      "seconds": 3.49,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "열이 안 떨어져서 해열제를 한 알 더 드셔도 되는지 궁금하시면, 먼저 약 이름과 지금 드시는 약을 알려 주세요. 약사가 확인 후에 안내해 드릴 수 있도록 바로 넘기겠습니다[1]. 아세트아미노펜(타이레놀) 복용 관련해서도 확인해 드릴게요.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.372
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2024",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3333
+      }
+     }
+    },
+    {
+     "id": "Q19",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.393
+      ],
+      [
+       "senior-safety-signals",
+       0.339
+      ],
+      [
+       "closing-checklist",
+       0.327
+      ],
+      [
+       "senior-pain-joint",
+       0.314
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q19",
+      "seconds": 1.42,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1241
+      }
+     },
+     "t2": {
+      "request_id": "d81r1-q19-t2",
+      "context": "이부프로펜",
+      "seconds": 3.26,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "지금 드신 진통제가 이부프로펜 맞으시죠? 소주와 같이 드셔도 되는지 약사에게 확인해 드리겠습니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+        "score": 0.393
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2025",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3120
+      }
+     }
+    },
+    {
+     "id": "Q20",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.397
+      ],
+      [
+       "senior-safety-signals",
+       0.385
+      ],
+      [
+       "closing-checklist",
+       0.297
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.295
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q20",
+      "seconds": 1.02,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 886
+      }
+     },
+     "t2": {
+      "request_id": "d81r1-q20-t2",
+      "context": "파모티딘",
+      "seconds": 3.42,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "아침에 깜빡한 위장약 파모티딘을 점심 때 두 번 한꺼번에 드셔도 되는지는 약사에게 확인이 필요해요. 약사에게 파모티딘 복용 상황을 알려드리고 상담받으시도록 바로 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.397
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.385
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2026",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3286
+      }
+     }
+    },
+    {
+     "id": "Q21",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.473
+      ],
+      [
+       "senior-safety-signals",
+       0.451
+      ],
+      [
+       "senior-pain-joint",
+       0.394
+      ],
+      [
+       "senior-safety-signals",
+       0.371
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q21",
+      "seconds": 1.01,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 856
+      }
+     },
+     "t2": {
+      "request_id": "d81r1-q21-t2",
+      "context": "비사코딜, 영감 약은 이름 모름",
+      "seconds": 4.01,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "비사코딜 변비약과 영감님이 드시던 약 이름을 알려 주시면 약사가 확인해 드릴게요. 두 가지 이상 약을 같이 먹어도 되는지는 사람마다 다르니 약사에게 여쭤보는 게 안전해요[1][2][3]. 지금 비사코딜과 영감님 약 이름 모른다고 하셨으니 약사에게 확인 요청해 넘겼어요.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.473
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.451
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "3. 이 도우미가 하지 않는 것",
+        "score": 0.371
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2027",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3812
+      }
+     }
+    },
+    {
+     "id": "Q22",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "request-records-guide",
+       0.206
+      ],
+      [
+       "request-records-guide",
+       0.187
+      ],
+      [
+       "scope-and-escalation",
+       0.186
+      ],
+      [
+       "recall-first-response",
+       0.179
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q22",
+      "seconds": 1.28,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2028",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1039
+      }
+     }
+    },
+    {
+     "id": "Q23",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "request-records-guide",
+       0.381
+      ],
+      [
+       "request-records-guide",
+       0.378
+      ],
+      [
+       "request-records-guide",
+       0.377
+      ],
+      [
+       "request-records-guide",
+       0.36
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q23",
+      "seconds": 1.4,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2029",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1241
+      }
+     }
+    },
+    {
+     "id": "Q24",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.416
+      ],
+      [
+       "closing-cash-mismatch",
+       0.387
+      ],
+      [
+       "closing-cash-mismatch",
+       0.366
+      ],
+      [
+       "closing-cash-mismatch",
+       0.324
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q24",
+      "seconds": 1.2,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서, 화면에 뜬 문구",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1067
+      }
+     }
+    },
+    {
+     "id": "Q25",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.355
+      ],
+      [
+       "closing-cash-mismatch",
+       0.322
+      ],
+      [
+       "closing-cash-mismatch",
+       0.305
+      ],
+      [
+       "closing-checklist",
+       0.283
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r1-q25",
+      "seconds": 1.17,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2030",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1034
+      }
+     }
+    }
+   ],
+   "store": [
+    {
+     "src": "team:T-04 회수 · 산 손님 연락은 약사가",
+     "request_id": "t04",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2001",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2001",
+       "key": "t04",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-03 마감 · 현금 모자람은 약국장 (근거 + 이관)",
+     "request_id": "t03",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2002",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2002",
+       "key": "t03",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-06 마감 · 냉장고 온도 이탈은 긴급",
+     "request_id": "t06",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2003",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2003",
+       "key": "t06",
+       "category": "closing",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-33 어르신 · 병용금기에 없어도 약사 확인",
+     "request_id": "t33",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2004",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2004",
+       "key": "t33",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-34 어르신 · 위험 신호는 긴급",
+     "request_id": "t34",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2005",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2005",
+       "key": "t34",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-36 어르신 · 타이레놀과 감기약 병용 약사 이관",
+     "request_id": "t-36",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2006",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2006",
+       "key": "t-36",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-37 어르신 · 숨참과 가슴 통증 긴급 이관",
+     "request_id": "t-37",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2007",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2007",
+       "key": "t-37",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-38 어르신 · 입술 부음과 두드러기 긴급 이관",
+     "request_id": "t-38",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2008",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2008",
+       "key": "t-38",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-39 어르신 · 와파린 복용 중 진통제 질문 긴급 이관",
+     "request_id": "t-39",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2009",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2009",
+       "key": "t-39",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-40 어르신 · 약사 직접 요청",
+     "request_id": "t-40",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2010",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2010",
+       "key": "t-40",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-41 어르신 · 어지러움과 구토 긴급 이관",
+     "request_id": "t-41",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2011",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2011",
+       "key": "t-41",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-42 어르신 · 식은땀과 호흡 곤란 긴급 이관",
+     "request_id": "t-42",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2012",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2012",
+       "key": "t-42",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-43 어르신 · 정신 혼란 긴급 이관",
+     "request_id": "t-43",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2013",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2013",
+       "key": "t-43",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team3way:3W-J2 판단 · 같은 질문 2턴째 약사 이관 (보통)",
+     "request_id": "3w-j2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2014",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2014",
+       "key": "3w-j2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q01:t1",
+     "request_id": "d81r1-q01",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2015",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2015",
+       "key": "d81r1-q01",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q02:t1",
+     "request_id": "d81r1-q02",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2016",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2016",
+       "key": "d81r1-q02",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q03:t1",
+     "request_id": "d81r1-q03",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2017",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2017",
+       "key": "d81r1-q03",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q04:t1",
+     "request_id": "d81r1-q04",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2018",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2018",
+       "key": "d81r1-q04",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q05:t1",
+     "request_id": "d81r1-q05",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2019",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2019",
+       "key": "d81r1-q05",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q07:t1",
+     "request_id": "d81r1-q07",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2020",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2020",
+       "key": "d81r1-q07",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q10:t1",
+     "request_id": "d81r1-q10",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2021",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2021",
+       "key": "d81r1-q10",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q16:t2",
+     "request_id": "d81r1-q16-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2022",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2022",
+       "key": "d81r1-q16-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q17:t2",
+     "request_id": "d81r1-q17-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2023",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2023",
+       "key": "d81r1-q17-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q18:t2",
+     "request_id": "d81r1-q18-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2024",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2024",
+       "key": "d81r1-q18-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q19:t2",
+     "request_id": "d81r1-q19-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2025",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2025",
+       "key": "d81r1-q19-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q20:t2",
+     "request_id": "d81r1-q20-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2026",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2026",
+       "key": "d81r1-q20-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q21:t2",
+     "request_id": "d81r1-q21-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2027",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2027",
+       "key": "d81r1-q21-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q22:t1",
+     "request_id": "d81r1-q22",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2028",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2028",
+       "key": "d81r1-q22",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q23:t1",
+     "request_id": "d81r1-q23",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2029",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2029",
+       "key": "d81r1-q23",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q25:t1",
+     "request_id": "d81r1-q25",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2030",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2030",
+       "key": "d81r1-q25",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    }
+   ],
+   "pg_count_after": 84
+  },
+  {
+   "round": 2,
+   "started": "2026-11-06T02:10:08+0000",
+   "finished": "2026-11-06T02:13:02+0000",
+   "reports": {
+    "team": "runs/team-20261106-021108.json",
+    "team3way": "runs/team-3way-20261106-021127.json",
+    "wf03": [
+     "runs/d81_3_wf03-20261106-021302.json"
+    ]
+   },
+   "blind": [
+    {
+     "id": "Q01",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.533
+      ],
+      [
+       "recall-first-response",
+       0.485
+      ],
+      [
+       "recall-customer-guide",
+       0.466
+      ],
+      [
+       "recall-first-response",
+       0.466
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q01",
+      "seconds": 3.62,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공지가 떴으면 먼저 공표된 제품의 제조번호를 확인하고, 진열대나 창고에 있으면 바로 빼서 판매를 멈추는 것이 첫 조치예요. 그다음에 뺀 약은 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관하고 개수를 세서 기록해야 해요. 이 내용을 회수의무자에게 알려야 하며, 회수확인서 작성과 반품은 약사가 처리해요[1][2][3]. 지금 할 첫 조치부터 담당자에게 넘겼어요.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "1. 회수 공표란",
+        "score": 0.533
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.485
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.466
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2015",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3481
+      }
+     }
+    },
+    {
+     "id": "Q02",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.493
+      ],
+      [
+       "recall-first-response",
+       0.458
+      ],
+      [
+       "closing-checklist",
+       0.379
+      ],
+      [
+       "recall-customer-guide",
+       0.377
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q02",
+      "seconds": 3.94,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "판매중지된 제품은 진열대에서 바로 빼서 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관해야 해요. 창고에 둘 때도 다른 반품과 섞지 말고 개수와 제조번호, 뺀 시각, 뺀 사람을 기록해야 해요. 이 부분은 약사에게 넘겼어요[1][2].",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.493
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.458
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2016",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3780
+      }
+     }
+    },
+    {
+     "id": "Q03",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.493
+      ],
+      [
+       "recall-customer-guide",
+       0.479
+      ],
+      [
+       "recall-customer-guide",
+       0.451
+      ],
+      [
+       "recall-customer-guide",
+       0.443
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q03",
+      "seconds": 3.68,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수된 시럽을 산 손님에게 연락하는 것은 약국이 선택적으로 하는 서비스이며, 직원이 먼저 연락하지 않고 약사가 회수 대상 확인 후 안내 여부를 결정해요. 손님에게는 약사가 확인 후 안내한다고 말씀드리고 약사에게 넘기시면 됩니다[1][2].",
+      "sources": [
+       {
+        "doc": "recall-customer-guide",
+        "section": "1. 손님 안내는 약국이 하는 선택 서비스",
+        "score": 0.479
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "4. 약사에게 알리기",
+        "score": 0.493
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2017",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3533
+      }
+     }
+    },
+    {
+     "id": "Q04",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.53
+      ],
+      [
+       "recall-customer-guide",
+       0.487
+      ],
+      [
+       "recall-first-response",
+       0.482
+      ],
+      [
+       "recall-first-response",
+       0.404
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q04",
+      "seconds": 3.22,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "로트번호가 다른 제품도 약사가 확인할 때까지 따로 보관해야 해요. 회수된 약은 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관하고, 다른 반품과 섞지 않아야 합니다[1][2]. 담당 약사에게 확인을 넘겼어요.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.53
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.482
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2018",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3101
+      }
+     }
+    },
+    {
+     "id": "Q05",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.579
+      ],
+      [
+       "recall-customer-guide",
+       0.536
+      ],
+      [
+       "recall-customer-guide",
+       0.531
+      ],
+      [
+       "scope-and-escalation",
+       0.506
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q05",
+      "seconds": 3.7,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공표가 떴을 때는 도우미가 바로 당일 책임 약사에게 긴급으로 넘겨서 약사가 회수 대상인지 확인해요. 상담 중이라도 바로 말씀드리는 게 맞습니다[1][2]. 지금 바로 약사에게 넘겼다고 전해 드릴게요.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "4. 약사에게 알리기",
+        "score": 0.579
+       },
+       {
+        "doc": "scope-and-escalation",
+        "section": "4. 긴급으로 바로 알리는 경우",
+        "score": 0.506
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2019",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3552
+      }
+     }
+    },
+    {
+     "id": "Q06",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.594
+      ],
+      [
+       "closing-checklist",
+       0.579
+      ],
+      [
+       "closing-checklist",
+       0.574
+      ],
+      [
+       "closing-checklist",
+       0.477
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q06",
+      "seconds": 4.72,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "문 닫기 30분 전에는 오늘 나간 약을 보고 도매 주문을 넣고 손님을 정리해요. 문 닫은 뒤에는 처방 검수, 카드 단말기 마감 전표 확인, 현금 맞추기 순서로 돈을 맞춰야 해요. 마지막으로 청구 프로그램 백업, 기계 끄기, 금고와 문단속 확인, 못 끝낸 일은 메모로 남기고 나가시면 됩니다[1][2][3][4].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.594
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "1. 문 닫기 30분 전 — 주문 넣고 손님 정리하기",
+        "score": 0.579
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "score": 0.574
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "3. 서류와 약 정리 — 처방전, 향정, 냉장고, 반품",
+        "score": 0.477
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 4555
+      }
+     }
+    },
+    {
+     "id": "Q07",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.453
+      ],
+      [
+       "closing-cash-mismatch",
+       0.44
+      ],
+      [
+       "closing-cash-mismatch",
+       0.404
+      ],
+      [
+       "closing-checklist",
+       0.381
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q07",
+      "seconds": 3.72,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "먼저 준비금 10만 원을 뺐는지 확인하고, 큰 돈부터 권종별로 다시 세어 보세요. 그래도 현금이 맞지 않으면 날짜, 계산대 번호, 금액, 남음 또는 모자람, 찾아본 원인, 마감자 이름을 기록한 뒤 약국장에게 넘기시면 됩니다[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.381
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.453
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.404
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2020",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3594
+      }
+     }
+    },
+    {
+     "id": "Q08",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.356
+      ],
+      [
+       "closing-checklist",
+       0.297
+      ],
+      [
+       "closing-cash-mismatch",
+       0.293
+      ],
+      [
+       "closing-cash-mismatch",
+       0.285
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q08",
+      "seconds": 1.14,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1019
+      }
+     }
+    },
+    {
+     "id": "Q09",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.33
+      ],
+      [
+       "closing-checklist",
+       0.326
+      ],
+      [
+       "request-records-guide",
+       0.271
+      ],
+      [
+       "closing-cash-mismatch",
+       0.269
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q09",
+      "seconds": 1.24,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서, 화면에 뜬 문구",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1128
+      }
+     }
+    },
+    {
+     "id": "Q10",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.384
+      ],
+      [
+       "closing-cash-mismatch",
+       0.357
+      ],
+      [
+       "closing-cash-mismatch",
+       0.353
+      ],
+      [
+       "closing-cash-mismatch",
+       0.351
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q10",
+      "seconds": 3.36,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "돈이 만원 더 남았을 때는 먼저 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람이 한 번 더 세는 것이 좋습니다. 준비금 10만 원이 빠졌는지도 확인해 주세요[1]. 이 내용을 담당자에게 넘기겠습니다.",
+      "sources": [
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.384
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2021",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3217
+      }
+     }
+    },
+    {
+     "id": "Q11",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.367
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.362
+      ],
+      [
+       "senior-pain-joint",
+       0.361
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q11",
+      "seconds": 3.72,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "콧물약에 들어 있는 클로르페니라민 성분은 졸음을 유발할 수 있어서 운전이나 기계 조작 시 주의가 필요해요. 세티리진이나 로라타딘 같은 성분도 졸음 부작용이 있을 수 있어요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3579
+      }
+     }
+    },
+    {
+     "id": "Q12",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.51
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.382
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.338
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.329
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q12",
+      "seconds": 4.11,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "타이레놀 하얀 알약의 성분은 아세트아미노펜이에요. 이 성분은 감기로 인한 열과 두통, 근육통, 관절통에 쓰입니다. 간손상 위험이 있으니 매일 술을 많이 마시거나 간장애가 있는 분은 복용 전에 약사와 상의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "1. 열 · 통증 약 — 아세트아미노펜",
+        "score": 0.51
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3961
+      }
+     }
+    },
+    {
+     "id": "Q13",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-safety-signals",
+       0.464
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.455
+      ],
+      [
+       "senior-pain-joint",
+       0.404
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.394
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q13",
+      "seconds": 3.74,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "나이 드신 분은 감기약 성분 중 클로르페니라민이 졸음을 유발할 수 있어 운전이나 기계 조작에 주의해야 해요. 또한 파모티딘 같은 위장약은 복용 전에 의사나 약사와 상의하는 것이 좋습니다[1][2]. 복용 중인 약과 함께 먹어도 되는지 궁금하면 약사에게 확인을 받으셔야 해요[3].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.455
+       },
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.394
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.464
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3615
+      }
+     }
+    },
+    {
+     "id": "Q14",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-safety-signals",
+       0.431
+      ],
+      [
+       "senior-pain-joint",
+       0.375
+      ],
+      [
+       "senior-pain-joint",
+       0.356
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q14",
+      "seconds": 2.99,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "변비약은 종류가 여러 가지인데, 예를 들어 비사코딜은 급성 또는 만성 변비에 쓰이고 장기간 사용하지 말라는 주의가 있어요. 각각 성분과 용도가 다르니 복용 전 약사와 상의하는 게 좋아요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 2874
+      }
+     }
+    },
+    {
+     "id": "Q15",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.48
+      ],
+      [
+       "senior-pain-joint",
+       0.477
+      ],
+      [
+       "senior-pain-joint",
+       0.417
+      ],
+      [
+       "senior-pain-joint",
+       0.412
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q15",
+      "seconds": 3.37,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "무릎 아플 때 쓰는 소염진통제는 이부프로펜, 덱시부프로펜, 나프록센, 아세클로페낙, 세레콕시브 등이 있어요. 이 약들은 위장관 출혈이나 천공 같은 위장 이상반응 위험이 있어서 어르신 주의 약으로 분류돼요. 만약 위장 출혈 증상(혈변, 혈액구토 등)이 나타나면 즉시 복용을 중지하고 의사나 약사와 상의해야 해요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "2. 관절 · 통증 소염진통제",
+        "score": 0.48
+       },
+       {
+        "doc": "senior-pain-joint",
+        "section": "3. 어르신 주의 (노인주의)",
+        "score": 0.412
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3251
+      }
+     }
+    },
+    {
+     "id": "Q16",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.531
+      ],
+      [
+       "senior-safety-signals",
+       0.477
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-pain-joint",
+       0.369
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q16",
+      "seconds": 1.18,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1072
+      }
+     },
+     "t2": {
+      "request_id": "d81r2-q16-t2",
+      "context": "암로디핀, 종합감기약(클로르페니라민 들어 있음)",
+      "seconds": 3.21,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "혈압약 암로디핀과 클로르페니라민 성분이 들어간 종합감기약을 같이 드셔도 되는지는 사람마다 다르기 때문에 약사에게 확인이 필요해요. 지금 드시는 약 이름과 감기약 성분을 알려 주셨으니 약사에게 확인하도록 바로 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.477
+       },
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2022",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3080
+      }
+     }
+    },
+    {
+     "id": "Q17",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.381
+      ],
+      [
+       "senior-pain-joint",
+       0.367
+      ],
+      [
+       "senior-safety-signals",
+       0.365
+      ],
+      [
+       "senior-pain-joint",
+       0.355
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q17",
+      "seconds": 1.24,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1116
+      }
+     },
+     "t2": {
+      "request_id": "d81r2-q17-t2",
+      "context": "나프록센",
+      "seconds": 3.34,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "나프록센을 드시고 계시군요. 복용 중인 다른 약과의 상호작용 여부를 약사가 확인해 드릴 테니, 약사에게 상담을 부탁드릴게요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+        "score": 0.381
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2023",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3203
+      }
+     }
+    },
+    {
+     "id": "Q18",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-safety-signals",
+       0.372
+      ],
+      [
+       "senior-pain-joint",
+       0.328
+      ],
+      [
+       "senior-pain-joint",
+       0.303
+      ],
+      [
+       "senior-safety-signals",
+       0.288
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q18",
+      "seconds": 1.17,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1050
+      }
+     },
+     "t2": {
+      "request_id": "d81r2-q18-t2",
+      "context": "아세트아미노펜(타이레놀)",
+      "seconds": 4.18,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "열이 안 떨어져서 해열제를 한 알 더 드시려면 먼저 약 이름과 지금 드시는 약을 알려 주세요. 약사가 확인 후 안내해 드릴게요. 아세트아미노펜(타이레놀) 복용 관련해서 약사에게 확인해 넘겼습니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.372
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2024",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 4048
+      }
+     }
+    },
+    {
+     "id": "Q19",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.393
+      ],
+      [
+       "senior-safety-signals",
+       0.339
+      ],
+      [
+       "closing-checklist",
+       0.327
+      ],
+      [
+       "senior-pain-joint",
+       0.314
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q19",
+      "seconds": 0.98,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 857
+      }
+     },
+     "t2": {
+      "request_id": "d81r2-q19-t2",
+      "context": "이부프로펜",
+      "seconds": 3.37,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "지금 드신 진통제가 이부프로펜 맞으시죠? 소주와 같이 드셔도 되는지 약사에게 확인해 드리겠습니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+        "score": 0.393
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2025",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3220
+      }
+     }
+    },
+    {
+     "id": "Q20",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.397
+      ],
+      [
+       "senior-safety-signals",
+       0.385
+      ],
+      [
+       "closing-checklist",
+       0.297
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.295
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q20",
+      "seconds": 1.1,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 960
+      }
+     },
+     "t2": {
+      "request_id": "d81r2-q20-t2",
+      "context": "파모티딘",
+      "seconds": 3.42,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "아침에 깜빡하고 못 드신 위장약 파모티딘을 점심 때 두 번 한꺼번에 드셔도 되는지는 사람마다 다르기 때문에 약사에게 확인이 필요해요. 약사에게 파모티딘 복용 상황을 알려드리도록 바로 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.397
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.385
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2026",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3289
+      }
+     }
+    },
+    {
+     "id": "Q21",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.473
+      ],
+      [
+       "senior-safety-signals",
+       0.451
+      ],
+      [
+       "senior-pain-joint",
+       0.394
+      ],
+      [
+       "senior-safety-signals",
+       0.371
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q21",
+      "seconds": 0.94,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 818
+      }
+     },
+     "t2": {
+      "request_id": "d81r2-q21-t2",
+      "context": "비사코딜, 영감 약은 이름 모름",
+      "seconds": 3.46,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "비사코딜 변비약과 영감분이 드시던 약 이름을 알려 주시면 약사가 확인해 드릴게요. 두 약을 같이 먹어도 되는지는 사람마다 다르니 약사에게 문의하는 것이 안전해요[1][2]. 지금 비사코딜과 영감분 약 이름을 알려 주시면 바로 약사에게 넘겼습니다.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.473
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.451
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2027",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3336
+      }
+     }
+    },
+    {
+     "id": "Q22",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "request-records-guide",
+       0.206
+      ],
+      [
+       "request-records-guide",
+       0.187
+      ],
+      [
+       "scope-and-escalation",
+       0.186
+      ],
+      [
+       "recall-first-response",
+       0.179
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q22",
+      "seconds": 1.56,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2028",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1427
+      }
+     }
+    },
+    {
+     "id": "Q23",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "request-records-guide",
+       0.381
+      ],
+      [
+       "request-records-guide",
+       0.378
+      ],
+      [
+       "request-records-guide",
+       0.377
+      ],
+      [
+       "request-records-guide",
+       0.36
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q23",
+      "seconds": 1.31,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2029",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1170
+      }
+     }
+    },
+    {
+     "id": "Q24",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.416
+      ],
+      [
+       "closing-cash-mismatch",
+       0.387
+      ],
+      [
+       "closing-cash-mismatch",
+       0.366
+      ],
+      [
+       "closing-cash-mismatch",
+       0.324
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q24",
+      "seconds": 1.19,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서, 화면에 뜬 문구",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1073
+      }
+     }
+    },
+    {
+     "id": "Q25",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.355
+      ],
+      [
+       "closing-cash-mismatch",
+       0.322
+      ],
+      [
+       "closing-cash-mismatch",
+       0.305
+      ],
+      [
+       "closing-checklist",
+       0.283
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r2-q25",
+      "seconds": 1.73,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2030",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1504
+      }
+     }
+    }
+   ],
+   "store": [
+    {
+     "src": "team:T-04 회수 · 산 손님 연락은 약사가",
+     "request_id": "t04",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2001",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2001",
+       "key": "t04",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-03 마감 · 현금 모자람은 약국장 (근거 + 이관)",
+     "request_id": "t03",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2002",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2002",
+       "key": "t03",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-06 마감 · 냉장고 온도 이탈은 긴급",
+     "request_id": "t06",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2003",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2003",
+       "key": "t06",
+       "category": "closing",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-33 어르신 · 병용금기에 없어도 약사 확인",
+     "request_id": "t33",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2004",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2004",
+       "key": "t33",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-34 어르신 · 위험 신호는 긴급",
+     "request_id": "t34",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2005",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2005",
+       "key": "t34",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-36 어르신 · 타이레놀과 감기약 병용 약사 이관",
+     "request_id": "t-36",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2006",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2006",
+       "key": "t-36",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-37 어르신 · 숨참과 가슴 통증 긴급 이관",
+     "request_id": "t-37",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2007",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2007",
+       "key": "t-37",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-38 어르신 · 입술 부음과 두드러기 긴급 이관",
+     "request_id": "t-38",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2008",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2008",
+       "key": "t-38",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-39 어르신 · 와파린 복용 중 진통제 질문 긴급 이관",
+     "request_id": "t-39",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2009",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2009",
+       "key": "t-39",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-40 어르신 · 약사 직접 요청",
+     "request_id": "t-40",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2010",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2010",
+       "key": "t-40",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-41 어르신 · 어지러움과 구토 긴급 이관",
+     "request_id": "t-41",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2011",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2011",
+       "key": "t-41",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-42 어르신 · 식은땀과 호흡 곤란 긴급 이관",
+     "request_id": "t-42",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2012",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2012",
+       "key": "t-42",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-43 어르신 · 정신 혼란 긴급 이관",
+     "request_id": "t-43",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2013",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2013",
+       "key": "t-43",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team3way:3W-J2 판단 · 같은 질문 2턴째 약사 이관 (보통)",
+     "request_id": "3w-j2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2014",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2014",
+       "key": "3w-j2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q01:t1",
+     "request_id": "d81r2-q01",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2015",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2015",
+       "key": "d81r2-q01",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q02:t1",
+     "request_id": "d81r2-q02",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2016",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2016",
+       "key": "d81r2-q02",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q03:t1",
+     "request_id": "d81r2-q03",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2017",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2017",
+       "key": "d81r2-q03",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q04:t1",
+     "request_id": "d81r2-q04",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2018",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2018",
+       "key": "d81r2-q04",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q05:t1",
+     "request_id": "d81r2-q05",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2019",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2019",
+       "key": "d81r2-q05",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q07:t1",
+     "request_id": "d81r2-q07",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2020",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2020",
+       "key": "d81r2-q07",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q10:t1",
+     "request_id": "d81r2-q10",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2021",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2021",
+       "key": "d81r2-q10",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q16:t2",
+     "request_id": "d81r2-q16-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2022",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2022",
+       "key": "d81r2-q16-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q17:t2",
+     "request_id": "d81r2-q17-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2023",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2023",
+       "key": "d81r2-q17-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q18:t2",
+     "request_id": "d81r2-q18-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2024",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2024",
+       "key": "d81r2-q18-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q19:t2",
+     "request_id": "d81r2-q19-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2025",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2025",
+       "key": "d81r2-q19-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q20:t2",
+     "request_id": "d81r2-q20-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2026",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2026",
+       "key": "d81r2-q20-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q21:t2",
+     "request_id": "d81r2-q21-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2027",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2027",
+       "key": "d81r2-q21-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q22:t1",
+     "request_id": "d81r2-q22",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2028",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2028",
+       "key": "d81r2-q22",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q23:t1",
+     "request_id": "d81r2-q23",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2029",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2029",
+       "key": "d81r2-q23",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q25:t1",
+     "request_id": "d81r2-q25",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2030",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 404
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2030",
+       "key": "d81r2-q25",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    }
+   ],
+   "pg_count_after": 84
+  },
+  {
+   "round": 3,
+   "started": "2026-11-06T02:13:02+0000",
+   "finished": "2026-11-06T02:15:46+0000",
+   "reports": {
+    "team": "runs/team-20261106-021359.json",
+    "team3way": "runs/team-3way-20261106-021419.json",
+    "wf03": [
+     "runs/d81_3_wf03-20261106-021546.json"
+    ]
+   },
+   "blind": [
+    {
+     "id": "Q01",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.533
+      ],
+      [
+       "recall-first-response",
+       0.485
+      ],
+      [
+       "recall-customer-guide",
+       0.466
+      ],
+      [
+       "recall-first-response",
+       0.466
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q01",
+      "seconds": 3.52,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공지가 떴으면 먼저 공표된 제품의 제조번호를 확인하고, 진열대나 창고에 있으면 바로 빼서 판매를 멈추는 것이 첫 조치예요. 그다음에 뺀 약은 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관하고 개수를 세서 기록해야 해요. 이 내용은 담당 약사에게 넘겼어요[1][2][3].",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "1. 회수 공표란",
+        "score": 0.533
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.485
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.466
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2015",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3380
+      }
+     }
+    },
+    {
+     "id": "Q02",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.493
+      ],
+      [
+       "recall-first-response",
+       0.458
+      ],
+      [
+       "closing-checklist",
+       0.379
+      ],
+      [
+       "recall-customer-guide",
+       0.377
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q02",
+      "seconds": 3.2,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "판매중지된 제품은 진열대에서 바로 빼서 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관해야 해요. 창고에 둘 때도 다른 반품과 섞지 말고 개수와 제조번호, 뺀 시각, 뺀 사람을 기록해야 해요. 이 첫 조치는 약사가 하도록 넘겼어요[1][2].",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.493
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.458
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2016",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3061
+      }
+     }
+    },
+    {
+     "id": "Q03",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.493
+      ],
+      [
+       "recall-customer-guide",
+       0.479
+      ],
+      [
+       "recall-customer-guide",
+       0.451
+      ],
+      [
+       "recall-customer-guide",
+       0.443
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q03",
+      "seconds": 3.31,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수된 시럽을 산 손님에게 연락하는 것은 약국이 선택적으로 하는 서비스예요. 약사가 회수 대상 확인과 안내 승인을 한 뒤에 연락을 하며, 직원이 먼저 연락하지는 않아요[1][2]. 지금 약사에게 확인을 넘겼습니다.",
+      "sources": [
+       {
+        "doc": "recall-customer-guide",
+        "section": "1. 손님 안내는 약국이 하는 선택 서비스",
+        "score": 0.479
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "4. 약사에게 알리기",
+        "score": 0.493
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2017",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3132
+      }
+     }
+    },
+    {
+     "id": "Q04",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.53
+      ],
+      [
+       "recall-customer-guide",
+       0.487
+      ],
+      [
+       "recall-first-response",
+       0.482
+      ],
+      [
+       "recall-first-response",
+       0.404
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q04",
+      "seconds": 3.44,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공표가 떴을 때는 제조번호가 다른 같은 제품도 약사가 확인할 때까지 따로 보관해야 해요. 뺀 약은 \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관하고, 다른 반품과 섞지 않아야 합니다[1][2].",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "3. 따로 보관하고 개수 세기",
+        "score": 0.53
+       },
+       {
+        "doc": "recall-first-response",
+        "section": "2. 진열대에서 바로 빼기",
+        "score": 0.482
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2018",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3282
+      }
+     }
+    },
+    {
+     "id": "Q05",
+     "category": "recall_staff",
+     "search_top4": [
+      [
+       "recall-first-response",
+       0.579
+      ],
+      [
+       "recall-customer-guide",
+       0.536
+      ],
+      [
+       "recall-customer-guide",
+       0.531
+      ],
+      [
+       "scope-and-escalation",
+       0.506
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q05",
+      "seconds": 3.23,
+      "route": "담당자 이관",
+      "reason": "urgent",
+      "answer": "회수 공표가 떴을 때는 도우미가 바로 당일 책임 약사에게 긴급으로 넘겨서 약사가 회수 대상인지 확인해요. 상담 중이라도 바로 말씀드리는 게 맞습니다[1][2]. 제가 약사에게 긴급히 넘겼어요.",
+      "sources": [
+       {
+        "doc": "recall-first-response",
+        "section": "4. 약사에게 알리기",
+        "score": 0.579
+       },
+       {
+        "doc": "scope-and-escalation",
+        "section": "4. 긴급으로 바로 알리는 경우",
+        "score": 0.506
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2019",
+       "priority": "high",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3054
+      }
+     }
+    },
+    {
+     "id": "Q06",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.594
+      ],
+      [
+       "closing-checklist",
+       0.579
+      ],
+      [
+       "closing-checklist",
+       0.574
+      ],
+      [
+       "closing-checklist",
+       0.477
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q06",
+      "seconds": 3.2,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "문 닫기 30분 전에는 오늘 나간 약을 보고 도매 주문을 넣고 손님을 정리해요. 문 닫은 뒤에는 처방 검수, 카드 단말기 마감 전표 확인, 현금 맞추기 순서로 돈을 맞춰야 해요. 마지막으로 청구 프로그램 백업, 기계 끄기, 금고와 문단속을 확인하고 못 끝낸 일은 메모로 남겨요[1][2][3][4].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.594
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "1. 문 닫기 30분 전 — 주문 넣고 손님 정리하기",
+        "score": 0.579
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+        "score": 0.574
+       },
+       {
+        "doc": "closing-checklist",
+        "section": "3. 서류와 약 정리 — 처방전, 향정, 냉장고, 반품",
+        "score": 0.477
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3063
+      }
+     }
+    },
+    {
+     "id": "Q07",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.453
+      ],
+      [
+       "closing-cash-mismatch",
+       0.44
+      ],
+      [
+       "closing-cash-mismatch",
+       0.404
+      ],
+      [
+       "closing-checklist",
+       0.381
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q07",
+      "seconds": 3.97,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "먼저 준비금 10만 원을 뺐는지 확인하고, 권종별로 현금을 다시 세어 보세요. 그래도 3천원이 모자라면 날짜, 계산대 번호, 금액, 모자람 여부와 원인을 기록한 뒤 약국장에게 넘기시면 됩니다. 약국장이 정산표와 함께 확인할 거예요[1][2][3].",
+      "sources": [
+       {
+        "doc": "closing-checklist",
+        "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+        "score": 0.381
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.453
+       },
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+        "score": 0.404
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2020",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3784
+      }
+     }
+    },
+    {
+     "id": "Q08",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.356
+      ],
+      [
+       "closing-checklist",
+       0.297
+      ],
+      [
+       "closing-cash-mismatch",
+       0.293
+      ],
+      [
+       "closing-cash-mismatch",
+       0.285
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q08",
+      "seconds": 1.06,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 937
+      }
+     }
+    },
+    {
+     "id": "Q09",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.33
+      ],
+      [
+       "closing-checklist",
+       0.326
+      ],
+      [
+       "request-records-guide",
+       0.271
+      ],
+      [
+       "closing-cash-mismatch",
+       0.269
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q09",
+      "seconds": 1.23,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서, 화면에 뜬 문구",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1000
+      }
+     }
+    },
+    {
+     "id": "Q10",
+     "category": "closing_staff",
+     "search_top4": [
+      [
+       "closing-cash-mismatch",
+       0.384
+      ],
+      [
+       "closing-cash-mismatch",
+       0.357
+      ],
+      [
+       "closing-cash-mismatch",
+       0.353
+      ],
+      [
+       "closing-cash-mismatch",
+       0.351
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q10",
+      "seconds": 3.49,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "돈이 만 원 더 남으면 먼저 큰 돈부터 권종별로 다시 세고, 가능하면 다른 사람에게도 한 번 더 세어보는 것이 좋아요. 준비금 10만 원이 빠졌는지도 확인해 주세요[1]. 이 조치를 한 뒤 담당자에게 넘기겠습니다.",
+      "sources": [
+       {
+        "doc": "closing-cash-mismatch",
+        "section": "1. 먼저 다시 세기",
+        "score": 0.384
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2021",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3361
+      }
+     }
+    },
+    {
+     "id": "Q11",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.367
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.362
+      ],
+      [
+       "senior-pain-joint",
+       0.361
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q11",
+      "seconds": 3.15,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "콧물약에 들어 있는 클로르페니라민 성분은 졸음을 유발할 수 있어서 운전이나 기계 조작 시 주의가 필요해요. 세티리진이나 로라타딘도 졸음 부작용이 있을 수 있답니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3032
+      }
+     }
+    },
+    {
+     "id": "Q12",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.51
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.382
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.338
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.329
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q12",
+      "seconds": 2.98,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "타이레놀 하얀 알약의 성분은 아세트아미노펜이에요. 이 성분은 감기로 인한 열과 두통, 근육통, 관절통에 쓰이며, 간손상 위험이 있으니 술을 많이 마시거나 간장애가 있는 분은 복용 전에 꼭 약사나 의사와 상의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "1. 열 · 통증 약 — 아세트아미노펜",
+        "score": 0.51
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 2867
+      }
+     }
+    },
+    {
+     "id": "Q13",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-safety-signals",
+       0.464
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.455
+      ],
+      [
+       "senior-pain-joint",
+       0.404
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.394
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q13",
+      "seconds": 3.58,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "나이 드신 분은 감기약 성분 중 클로르페니라민이 졸음을 유발할 수 있어 운전이나 기계 조작에 주의해야 해요. 또한 파모티딘 같은 위장약은 복용 전에 의사나 약사와 상의하는 게 좋습니다[1][2]. 복용 중인 약과 함께 먹어도 되는지 궁금하면 약사에게 확인을 받으셔야 해요[3].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.455
+       },
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.394
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.464
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3388
+      }
+     }
+    },
+    {
+     "id": "Q14",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-safety-signals",
+       0.431
+      ],
+      [
+       "senior-pain-joint",
+       0.375
+      ],
+      [
+       "senior-pain-joint",
+       0.356
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q14",
+      "seconds": 2.82,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "변비약은 종류가 여러 가지인데, 예를 들어 비사코딜은 급성 또는 만성 변비에 쓰이고 장기간 사용하지 말라는 주의가 있어요. 각각 성분과 주의사항이 다르니 복용 전 약사와 상담하는 게 좋아요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 2693
+      }
+     }
+    },
+    {
+     "id": "Q15",
+     "category": "senior_fact",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.48
+      ],
+      [
+       "senior-pain-joint",
+       0.477
+      ],
+      [
+       "senior-pain-joint",
+       0.417
+      ],
+      [
+       "senior-pain-joint",
+       0.412
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q15",
+      "seconds": 3.23,
+      "route": "자동 답변",
+      "reason": "",
+      "answer": "무릎 아플 때 쓰는 소염진통제는 이부프로펜, 덱시부프로펜, 나프록센, 아세클로페낙, 세레콕시브 등이 있어요. 이 약들은 위장관 출혈이나 천공 같은 위장 이상반응 위험이 있어서 어르신은 특히 주의해야 해요. 만약 위장 출혈 증상(혈변, 혈액구토 등)이 나타나면 즉시 복용을 중지하고 의사나 약사와 상의해야 합니다[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "2. 관절 · 통증 소염진통제",
+        "score": 0.48
+       },
+       {
+        "doc": "senior-pain-joint",
+        "section": "3. 어르신 주의 (노인주의)",
+        "score": 0.412
+       }
+      ],
+      "ticket": null,
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier"
+      ],
+      "timings": {
+       "total_ms": 3111
+      }
+     }
+    },
+    {
+     "id": "Q16",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.531
+      ],
+      [
+       "senior-safety-signals",
+       0.477
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.458
+      ],
+      [
+       "senior-pain-joint",
+       0.369
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q16",
+      "seconds": 1.2,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1088
+      }
+     },
+     "t2": {
+      "request_id": "d81r3-q16-t2",
+      "context": "암로디핀, 종합감기약(클로르페니라민 들어 있음)",
+      "seconds": 3.47,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "혈압약 암로디핀과 클로르페니라민 성분이 들어간 종합감기약을 같이 드시는 것은 사람마다 다를 수 있어서 약사에게 확인이 필요해요. 지금 드시는 약 이름과 감기약 성분을 알려 주셨으니, 약사에게 확인하도록 바로 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.477
+       },
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "1. 감기 · 콧물 약 성분",
+        "score": 0.458
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2022",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3313
+      }
+     }
+    },
+    {
+     "id": "Q17",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.381
+      ],
+      [
+       "senior-pain-joint",
+       0.367
+      ],
+      [
+       "senior-safety-signals",
+       0.365
+      ],
+      [
+       "senior-pain-joint",
+       0.355
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q17",
+      "seconds": 1.13,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1014
+      }
+     },
+     "t2": {
+      "request_id": "d81r3-q17-t2",
+      "context": "나프록센",
+      "seconds": 3.28,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "나프록센을 드시고 계시군요. 복용 중인 다른 약과의 상호작용 여부를 약사가 확인해 드릴 테니, 약사에게 상담을 받아 보시는 게 좋겠어요[1]. 지금 바로 약사에게 문의해 드릴게요.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+        "score": 0.381
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2023",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3121
+      }
+     }
+    },
+    {
+     "id": "Q18",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-safety-signals",
+       0.372
+      ],
+      [
+       "senior-pain-joint",
+       0.328
+      ],
+      [
+       "senior-pain-joint",
+       0.303
+      ],
+      [
+       "senior-safety-signals",
+       0.288
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q18",
+      "seconds": 1.13,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 964
+      }
+     },
+     "t2": {
+      "request_id": "d81r3-q18-t2",
+      "context": "아세트아미노펜(타이레놀)",
+      "seconds": 3.44,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "열이 안 떨어져서 해열제를 한 알 더 드시려는 경우, 약사에게 먼저 약 이름과 지금 드시는 약을 알려 주셔야 해요. 두 가지 이상 약을 같이 먹어도 되는지는 사람마다 다르기 때문에 약사가 확인 후 안내해 드립니다[1]. 아세트아미노펜(타이레놀) 복용 관련해서 약사에게 확인해 드렸어요.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.372
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2024",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3300
+      }
+     }
+    },
+    {
+     "id": "Q19",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-pain-joint",
+       0.393
+      ],
+      [
+       "senior-safety-signals",
+       0.339
+      ],
+      [
+       "closing-checklist",
+       0.327
+      ],
+      [
+       "senior-pain-joint",
+       0.314
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q19",
+      "seconds": 1.15,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1038
+      }
+     },
+     "t2": {
+      "request_id": "d81r3-q19-t2",
+      "context": "이부프로펜",
+      "seconds": 3.0,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "지금 드신 진통제가 이부프로펜 맞으시죠? 소주와 같이 드셔도 되는지 약사에게 확인해 드리겠습니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-pain-joint",
+        "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+        "score": 0.393
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2025",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 2887
+      }
+     }
+    },
+    {
+     "id": "Q20",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.397
+      ],
+      [
+       "senior-safety-signals",
+       0.385
+      ],
+      [
+       "closing-checklist",
+       0.297
+      ],
+      [
+       "senior-cold-sleep-stomach",
+       0.295
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q20",
+      "seconds": 1.03,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 864
+      }
+     },
+     "t2": {
+      "request_id": "d81r3-q20-t2",
+      "context": "파모티딘",
+      "seconds": 3.75,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "아침에 깜빡한 위장약 파모티딘을 점심 때 두 번 같이 드셔도 되는지 약사에게 확인해 드리도록 하겠습니다. 약 이름과 복용 상황을 알려 주셔서 약사에게 바로 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.385
+       },
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.397
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2026",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3619
+      }
+     }
+    },
+    {
+     "id": "Q21",
+     "category": "senior_judgment",
+     "search_top4": [
+      [
+       "senior-cold-sleep-stomach",
+       0.473
+      ],
+      [
+       "senior-safety-signals",
+       0.451
+      ],
+      [
+       "senior-pain-joint",
+       0.394
+      ],
+      [
+       "senior-safety-signals",
+       0.371
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q21",
+      "seconds": 0.99,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 851
+      }
+     },
+     "t2": {
+      "request_id": "d81r3-q21-t2",
+      "context": "비사코딜, 영감 약은 이름 모름",
+      "seconds": 3.76,
+      "route": "담당자 이관",
+      "reason": "needs_person",
+      "answer": "비사코딜 변비약과 영감분이 드시던 약 이름을 알려 주시면 약사가 확인해 드릴 수 있어요. 두 약을 같이 먹어도 되는지는 사람마다 다르니 약사에게 문의하시는 게 좋습니다[1][2]. 제가 약사에게 확인 요청해 드릴게요.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+      "sources": [
+       {
+        "doc": "senior-cold-sleep-stomach",
+        "section": "3. 위장 약 · 변비약 성분",
+        "score": 0.473
+       },
+       {
+        "doc": "senior-safety-signals",
+        "section": "2. 같이 먹어도 되나 묻기 전에",
+        "score": 0.451
+       }
+      ],
+      "ticket": {
+       "ticket_id": "T-2027",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "pharmacist"
+      },
+      "agents": [
+       "triage",
+       "retriever",
+       "writer",
+       "verifier",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 3617
+      }
+     }
+    },
+    {
+     "id": "Q22",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "request-records-guide",
+       0.206
+      ],
+      [
+       "request-records-guide",
+       0.187
+      ],
+      [
+       "scope-and-escalation",
+       0.186
+      ],
+      [
+       "recall-first-response",
+       0.179
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q22",
+      "seconds": 1.2,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2028",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1034
+      }
+     }
+    },
+    {
+     "id": "Q23",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "request-records-guide",
+       0.381
+      ],
+      [
+       "request-records-guide",
+       0.378
+      ],
+      [
+       "request-records-guide",
+       0.377
+      ],
+      [
+       "request-records-guide",
+       0.36
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q23",
+      "seconds": 1.11,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2029",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 979
+      }
+     }
+    },
+    {
+     "id": "Q24",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.416
+      ],
+      [
+       "closing-cash-mismatch",
+       0.387
+      ],
+      [
+       "closing-cash-mismatch",
+       0.366
+      ],
+      [
+       "closing-cash-mismatch",
+       0.324
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q24",
+      "seconds": 1.3,
+      "route": "보완 질문",
+      "reason": "",
+      "answer": "더 알려 주세요: 어느 단계에서, 화면에 뜬 문구",
+      "sources": [],
+      "ticket": null,
+      "agents": [
+       "triage"
+      ],
+      "timings": {
+       "total_ms": 1148
+      }
+     }
+    },
+    {
+     "id": "Q25",
+     "category": "out_of_scope",
+     "search_top4": [
+      [
+       "closing-checklist",
+       0.355
+      ],
+      [
+       "closing-cash-mismatch",
+       0.322
+      ],
+      [
+       "closing-cash-mismatch",
+       0.305
+      ],
+      [
+       "closing-checklist",
+       0.283
+      ]
+     ],
+     "t1": {
+      "request_id": "d81r3-q25",
+      "seconds": 1.35,
+      "route": "담당자 이관",
+      "reason": "no_evidence",
+      "answer": "담당자에게 확인을 요청했어요.",
+      "sources": [],
+      "ticket": {
+       "ticket_id": "T-2030",
+       "priority": "normal",
+       "duplicate": false,
+       "assignee": "owner"
+      },
+      "agents": [
+       "triage",
+       "handoff"
+      ],
+      "timings": {
+       "total_ms": 1238
+      }
+     }
+    }
+   ],
+   "store": [
+    {
+     "src": "team:T-04 회수 · 산 손님 연락은 약사가",
+     "request_id": "t04",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2001",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2001",
+      "key": "t04",
+      "category": "recall",
+      "priority": "high",
+      "requester": "박도윤"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2001",
+       "key": "t04",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-03 마감 · 현금 모자람은 약국장 (근거 + 이관)",
+     "request_id": "t03",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2002",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2002",
+      "key": "t03",
+      "category": "closing",
+      "priority": "normal",
+      "requester": "윤서아"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2002",
+       "key": "t03",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-06 마감 · 냉장고 온도 이탈은 긴급",
+     "request_id": "t06",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2003",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2003",
+      "key": "t06",
+      "category": "closing",
+      "priority": "high",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2003",
+       "key": "t06",
+       "category": "closing",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-33 어르신 · 병용금기에 없어도 약사 확인",
+     "request_id": "t33",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2004",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2004",
+      "key": "t33",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2004",
+       "key": "t33",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-34 어르신 · 위험 신호는 긴급",
+     "request_id": "t34",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2005",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2005",
+      "key": "t34",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2005",
+       "key": "t34",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-36 어르신 · 타이레놀과 감기약 병용 약사 이관",
+     "request_id": "t-36",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2006",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2006",
+      "key": "t-36",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2006",
+       "key": "t-36",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-37 어르신 · 숨참과 가슴 통증 긴급 이관",
+     "request_id": "t-37",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2007",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2007",
+      "key": "t-37",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2007",
+       "key": "t-37",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-38 어르신 · 입술 부음과 두드러기 긴급 이관",
+     "request_id": "t-38",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2008",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2008",
+      "key": "t-38",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2008",
+       "key": "t-38",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-39 어르신 · 와파린 복용 중 진통제 질문 긴급 이관",
+     "request_id": "t-39",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2009",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2009",
+      "key": "t-39",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2009",
+       "key": "t-39",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-40 어르신 · 약사 직접 요청",
+     "request_id": "t-40",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2010",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2010",
+      "key": "t-40",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2010",
+       "key": "t-40",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-41 어르신 · 어지러움과 구토 긴급 이관",
+     "request_id": "t-41",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2011",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2011",
+      "key": "t-41",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2011",
+       "key": "t-41",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-42 어르신 · 식은땀과 호흡 곤란 긴급 이관",
+     "request_id": "t-42",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2012",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2012",
+      "key": "t-42",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2012",
+       "key": "t-42",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team:T-43 어르신 · 정신 혼란 긴급 이관",
+     "request_id": "t-43",
+     "route": "담당자 이관",
+     "reason": "risk_signal",
+     "resp": {
+      "ticket_id": "T-2013",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2013",
+      "key": "t-43",
+      "category": "senior",
+      "priority": "high",
+      "requester": "최영순"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2013",
+       "key": "t-43",
+       "category": "senior",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "team3way:3W-J2 판단 · 같은 질문 2턴째 약사 이관 (보통)",
+     "request_id": "3w-j2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2014",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2014",
+      "key": "3w-j2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2014",
+       "key": "3w-j2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q01:t1",
+     "request_id": "d81r3-q01",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2015",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2015",
+      "key": "d81r3-q01",
+      "category": "recall",
+      "priority": "high",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2015",
+       "key": "d81r3-q01",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q02:t1",
+     "request_id": "d81r3-q02",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2016",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2016",
+      "key": "d81r3-q02",
+      "category": "recall",
+      "priority": "high",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2016",
+       "key": "d81r3-q02",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q03:t1",
+     "request_id": "d81r3-q03",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2017",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2017",
+      "key": "d81r3-q03",
+      "category": "recall",
+      "priority": "high",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2017",
+       "key": "d81r3-q03",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q04:t1",
+     "request_id": "d81r3-q04",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2018",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2018",
+      "key": "d81r3-q04",
+      "category": "recall",
+      "priority": "high",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2018",
+       "key": "d81r3-q04",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q05:t1",
+     "request_id": "d81r3-q05",
+     "route": "담당자 이관",
+     "reason": "urgent",
+     "resp": {
+      "ticket_id": "T-2019",
+      "assignee": "pharmacist",
+      "priority": "high",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2019",
+      "key": "d81r3-q05",
+      "category": "recall",
+      "priority": "high",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2019",
+       "key": "d81r3-q05",
+       "category": "recall",
+       "priority": "high",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q07:t1",
+     "request_id": "d81r3-q07",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2020",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2020",
+      "key": "d81r3-q07",
+      "category": "closing",
+      "priority": "normal",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2020",
+       "key": "d81r3-q07",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q10:t1",
+     "request_id": "d81r3-q10",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2021",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2021",
+      "key": "d81r3-q10",
+      "category": "closing",
+      "priority": "normal",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2021",
+       "key": "d81r3-q10",
+       "category": "closing",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q16:t2",
+     "request_id": "d81r3-q16-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2022",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2022",
+      "key": "d81r3-q16-t2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2022",
+       "key": "d81r3-q16-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q17:t2",
+     "request_id": "d81r3-q17-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2023",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2023",
+      "key": "d81r3-q17-t2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2023",
+       "key": "d81r3-q17-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q18:t2",
+     "request_id": "d81r3-q18-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2024",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2024",
+      "key": "d81r3-q18-t2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2024",
+       "key": "d81r3-q18-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q19:t2",
+     "request_id": "d81r3-q19-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2025",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2025",
+      "key": "d81r3-q19-t2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2025",
+       "key": "d81r3-q19-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q20:t2",
+     "request_id": "d81r3-q20-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2026",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2026",
+      "key": "d81r3-q20-t2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2026",
+       "key": "d81r3-q20-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q21:t2",
+     "request_id": "d81r3-q21-t2",
+     "route": "담당자 이관",
+     "reason": "needs_person",
+     "resp": {
+      "ticket_id": "T-2027",
+      "assignee": "pharmacist",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2027",
+      "key": "d81r3-q21-t2",
+      "category": "senior",
+      "priority": "normal",
+      "requester": "한기철"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2027",
+       "key": "d81r3-q21-t2",
+       "category": "senior",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q22:t1",
+     "request_id": "d81r3-q22",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2028",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2028",
+      "key": "d81r3-q22",
+      "category": "other",
+      "priority": "normal",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2028",
+       "key": "d81r3-q22",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q23:t1",
+     "request_id": "d81r3-q23",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2029",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2029",
+      "key": "d81r3-q23",
+      "category": "other",
+      "priority": "normal",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2029",
+       "key": "d81r3-q23",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    },
+    {
+     "src": "blind:Q25:t1",
+     "request_id": "d81r3-q25",
+     "route": "담당자 이관",
+     "reason": "no_evidence",
+     "resp": {
+      "ticket_id": "T-2030",
+      "assignee": "owner",
+      "priority": "normal",
+      "duplicate": false
+     },
+     "data_api": {
+      "status": 200,
+      "n": 1,
+      "ticket_id": "T-2030",
+      "key": "d81r3-q25",
+      "category": "other",
+      "priority": "normal",
+      "requester": "김하늘"
+     },
+     "pg": [
+      {
+       "ticket_id": "T-2030",
+       "key": "d81r3-q25",
+       "category": "other",
+       "priority": "normal",
+       "status": "접수됨"
+      }
+     ]
+    }
+   ],
+   "pg_count_after": 84
+  }
+ ]
+}
