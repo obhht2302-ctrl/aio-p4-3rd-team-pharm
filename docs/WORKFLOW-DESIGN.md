@@ -122,7 +122,8 @@ flowchart TD
 | 상황 | 알아채는 노드 | 처리 | 사용자 응답 | 기록 | 확인한 시나리오 |
 | --- | --- | --- | --- | --- | --- |
 | 인증 실패 | `Create ticket` · HTTP 401/403 | 재시도 없이 DLQ + 알림 (`reason: auth_failed`) | 이관 안내 | DLQ · 알림 | 팀 |
-| 호출 한도 (429) | `Create ticket` HTTP 상태 | 5xx·timeout·429만 1+2회 재시도 (2초 timeout · 500ms 간격) 뒤 DLQ + 알림 | 이관 안내 | 재시도 수 · DLQ | 팀 |
+| 호출 한도 (429) | `Create ticket` HTTP 상태 → `Retry needed?` | 5xx·timeout·429만 1+2회 재시도 (2초 timeout · 500ms 간격) 뒤 DLQ + 알림. 상태 코드가 문자 `'429'`로 와도 같음 (#75) | 이관 안내 | 재시도 수 · DLQ | 팀 (node 시뮬) |
+| 그 밖 4xx (400 · 404 · 422) | `Create ticket` HTTP 상태 → `Retry needed?` | **재시도 없이** DLQ + 알림 (`reason: tickets_down`) — 요청이 틀린 건 다시 보내도 같아서 (#53) | 이관 안내 | DLQ · 알림 | 팀 (node 시뮬 — 고장 스위치에 4xx · 429 모드가 없어 VM 재현 안 함, `runs/fault-idempotency-20261106.md`) |
 | 검색 결과 없음 | `Evidence?` | 이관 `no_evidence` | 담당자 연결 안내 | `reason` | WF-03 |
 | 외부 API 장애 (5xx · timeout) | `Create ticket` | 1+2회 재시도 → DLQ + 알림 | 200, `ticket: null`, `dlq: true` | DLQ · 알림 | WF-04 |
 | 중복 요청 | `Cached?` · `Create ticket`의 `key` | 저장된 결과 / 기존 티켓, `duplicate: true` | 같은 답 | — | WF-09 |
