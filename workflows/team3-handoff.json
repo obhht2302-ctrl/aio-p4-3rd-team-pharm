@@ -60,7 +60,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 5xx·timeout만 한 번 더 재시도한다. 401·403은 바로 auth_failed로 보낸다.\nconst raw = $json;\nconst status = raw.statusCode ?? raw.httpCode ?? raw.error?.statusCode ?? raw.error?.httpCode ?? (raw.error ? 500 : 200);\nconst errText = JSON.stringify(raw.error || raw);\nconst auth = status === 401 || status === 403 || /\\b(401|403)\\b/.test(errText);\nconst retry = !auth && (!!raw.error || status >= 500 || status === 429);\nreturn [{ json: { ...raw, retry } }];"
+        "jsCode": "// 5xx·timeout·429만 한 번 더 재시도한다. 4xx는 재시도하지 않고, 401·403은 바로 auth_failed로 보낸다.\nconst raw = $json;\nconst status = raw.statusCode ?? raw.httpCode ?? raw.error?.statusCode ?? raw.error?.httpCode ?? (raw.error ? 500 : 200);\nconst errText = JSON.stringify(raw.error || raw);\nconst auth = status === 401 || status === 403 || /\\b(401|403)\\b/.test(errText);\nconst retry = !auth && (status >= 500 || status === 429);\nreturn [{ json: { ...raw, retry } }];"
       },
       "id": "h4b-retry-if",
       "name": "Retry needed?",
