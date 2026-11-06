@@ -1,0 +1,231 @@
+{
+  "webhook": "team3-support",
+  "request": {
+    "request_id": "d81-6m-060829-bsame",
+    "user": "김하늘",
+    "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+    "attempt": 1
+  },
+  "n": 5,
+  "p50": 0.145,
+  "p95": 3.778,
+  "max": 3.778,
+  "failures": 0,
+  "runs": [
+    {
+      "run": 1,
+      "status": 200,
+      "seconds": 3.778,
+      "response": {
+        "request_id": "d81-6m-060829-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.585
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3576
+        }
+      }
+    },
+    {
+      "run": 2,
+      "status": 200,
+      "seconds": 0.145,
+      "response": {
+        "request_id": "d81-6m-060829-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.585
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3576
+        }
+      }
+    },
+    {
+      "run": 3,
+      "status": 200,
+      "seconds": 0.15,
+      "response": {
+        "request_id": "d81-6m-060829-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.585
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3576
+        }
+      }
+    },
+    {
+      "run": 4,
+      "status": 200,
+      "seconds": 0.126,
+      "response": {
+        "request_id": "d81-6m-060829-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.585
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3576
+        }
+      }
+    },
+    {
+      "run": 5,
+      "status": 200,
+      "seconds": 0.131,
+      "response": {
+        "request_id": "d81-6m-060829-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.585
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3576
+        }
+      }
+    }
+  ]
+}
