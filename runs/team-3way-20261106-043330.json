@@ -1,0 +1,299 @@
+{
+  "cases": "team-3way.json",
+  "webhook": "team3-support",
+  "passed": 7,
+  "total": 7,
+  "results": [
+    {
+      "case": "3W-F1 성분 사실 · 클로르페니라민 용도",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 3.1,
+      "status": 200,
+      "request": {
+        "request_id": "3w-f1",
+        "user": "최영순",
+        "question": "클로르페니라민은 어디에 쓰는 성분이에요?"
+      },
+      "response": {
+        "request_id": "3w-f1",
+        "route": "자동 답변",
+        "answer": "클로르페니라민은 재채기, 콧물, 알레르기 비염에 쓰는 성분이에요. 복용 후 졸음이 올 수 있어서 운전이나 기계 조작 시 주의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [
+          {
+            "doc": "senior-cold-sleep-stomach",
+            "section": "1. 감기 · 콧물 약 성분",
+            "score": 0.405
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 2947
+        }
+      }
+    },
+    {
+      "case": "3W-F2 일반 주의 · 잠 오는 약 (조심)",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 3.1,
+      "status": 200,
+      "request": {
+        "request_id": "3w-f2",
+        "user": "최영순",
+        "question": "잠 오는 약은 어르신이 왜 조심해야 해요?"
+      },
+      "response": {
+        "request_id": "3w-f2",
+        "route": "자동 답변",
+        "answer": "어르신이 잠 오는 약을 조심해야 하는 이유는 디펜히드라민과 독실라민 같은 성분이 항콜린 부작용으로 인지기능 저하, 섬망 악화, 구갈, 배뇨곤란, 변비 등을 일으키기 쉬워서입니다. 그래서 복용 전에 꼭 약사와 상의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [
+          {
+            "doc": "senior-cold-sleep-stomach",
+            "section": "2. 잠 오는 약 성분",
+            "score": 0.579
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 2930
+        }
+      }
+    },
+    {
+      "case": "3W-F3 일반 주의 · 관절 소염진통제 (주의)",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 3.4,
+      "status": 200,
+      "request": {
+        "request_id": "3w-f3",
+        "user": "한기철",
+        "question": "관절 소염진통제는 어르신한테 어떤 주의가 있어요?"
+      },
+      "response": {
+        "request_id": "3w-f3",
+        "route": "자동 답변",
+        "answer": "어르신이 관절 소염진통제를 복용할 때는 위장관 출혈이나 천공 같은 위장 이상반응 위험이 크고, 세레콕시브는 신기능·간기능·심기능 저하와 와파린 병용 시 출혈 위험이 있으니 주의해야 해요. 만약 위장출혈, 혈변, 혈액구토 같은 증상이 나타나면 즉시 복용을 중지하고 약사나 의사와 상의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [
+          {
+            "doc": "senior-pain-joint",
+            "section": "3. 어르신 주의 (노인주의)",
+            "score": 0.517
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3247
+        }
+      }
+    },
+    {
+      "case": "3W-F4 일반 주의 · '조심/주의' 없이 묻기",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 3.0,
+      "status": 200,
+      "request": {
+        "request_id": "3w-f4",
+        "user": "최영순",
+        "question": "잠 오는 감기약은 어르신한테 왜 위험해요?"
+      },
+      "response": {
+        "request_id": "3w-f4",
+        "route": "자동 답변",
+        "answer": "잠 오는 감기약에 들어 있는 디펜히드라민과 독실라민은 어르신에게 항콜린 부작용을 일으켜 인지기능 저하, 섬망 악화, 구갈, 배뇨곤란, 변비 등이 나타나기 쉬워서 위험해요. 그래서 어르신은 이런 약을 먹기 전에 꼭 약사와 상의해야 해요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [
+          {
+            "doc": "senior-cold-sleep-stomach",
+            "section": "2. 잠 오는 약 성분",
+            "score": 0.562
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 2829
+        }
+      }
+    },
+    {
+      "case": "3W-B1 경계 · '주의'가 있어도 '같이 먹'이면 판단",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 1.3,
+      "status": 200,
+      "request": {
+        "request_id": "3w-b1",
+        "user": "한기철",
+        "question": "혈압약 먹는데 감기약 같이 먹을 때 주의할 게 있어요?",
+        "attempt": 1
+      },
+      "response": {
+        "request_id": "3w-b1",
+        "route": "보완 질문",
+        "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [],
+        "ticket": null,
+        "agents": [
+          "triage"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 1083
+        }
+      }
+    },
+    {
+      "case": "3W-J1 판단 · 관절 소염진통제 한 알 더 (1턴 되묻기)",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 1.2,
+      "status": 200,
+      "request": {
+        "request_id": "3w-j1",
+        "user": "한기철",
+        "question": "관절 소염진통제 오늘 한 알 더 먹어도 돼요?",
+        "attempt": 1
+      },
+      "response": {
+        "request_id": "3w-j1",
+        "route": "보완 질문",
+        "answer": "더 알려 주세요: 약 이름, 지금 드시는 약\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [],
+        "ticket": null,
+        "agents": [
+          "triage"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 1087
+        }
+      }
+    },
+    {
+      "case": "3W-J2 판단 · 같은 질문 2턴째 약사 이관 (보통)",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 3.0,
+      "status": 200,
+      "request": {
+        "request_id": "3w-j2",
+        "user": "한기철",
+        "question": "관절 소염진통제 오늘 한 알 더 먹어도 돼요?",
+        "attempt": 2,
+        "context": "나프록센"
+      },
+      "response": {
+        "request_id": "3w-j2",
+        "route": "담당자 이관",
+        "answer": "나프록센을 한 알 더 드셔도 되는지 약사에게 확인해 드리도록 하겠습니다. 지금 드시는 다른 약도 함께 알려 주시면 더 정확히 확인할 수 있어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+        "sources": [
+          {
+            "doc": "senior-pain-joint",
+            "section": "4. 같이 먹어도 되나 — 혈압약과 소염진통제",
+            "score": 0.526
+          },
+          {
+            "doc": "senior-safety-signals",
+            "section": "2. 같이 먹어도 되나 묻기 전에",
+            "score": 0.399
+          }
+        ],
+        "ticket": {
+          "ticket_id": "T-2014",
+          "priority": "normal",
+          "duplicate": false,
+          "assignee": "pharmacist"
+        },
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier",
+          "handoff"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "needs_person",
+        "timings": {
+          "total_ms": 2872
+        }
+      }
+    }
+  ]
+}
