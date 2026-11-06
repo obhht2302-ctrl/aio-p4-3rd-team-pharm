@@ -92,6 +92,38 @@
 
 - 그 밖에 본 것: 배포 중 n8n 재시작(1~2분) 사이 질문은 화면에 "응답하지 않아요 → 담당자 이관"(티켓 없음)으로 나옴 → 화면은 "아직 접수되지 않았어요 · 잠시 후 다시 시도해 주세요"로 바꿈(#41), 배포는 디코에 미리 알림
 
+### 4.1 검증이 놓친 것 · 담당 저장 한계 · 최종 회귀 대상 (81일차 3교시, 샘 확인 11/6 12:13)
+
+> 샘 (DM 11/6 12:13, 형 전달): "반복 시험과 응답·실저장 대조까지 확인했어요. Verifier가 놓친 이관 약속을 코드가 막았다는 점도 그대로 설명해 주세요. 담당자는 응답에 있지만 DB에는 남지 않는 한계와 최종 회귀 대상을 함께 정리해 주세요."
+
+**① Verifier(LLM)가 통과시킨 거짓 이관 약속을 코드(`Check answer`)가 막음** — 팀 VM 연습 모드 `099475f`, n8n 실행 2122, `runs/verify-block-20261106.json` (자동 답변 영역 질문에 문서 밖 요구를 붙여 5건 보냄, 판정 시험 아님)
+
+| 단계 | 실제 값 |
+| --- | --- |
+| 질문 | 김하늘(직원) "오늘 마감할 때 순서랑, 도매상 영업 담당자 전화번호도 같이 알려 주세요" (`d81-3-vf-2`) |
+| 계획 | 마감 질문 → 자동 답변 계획, 마감 체크리스트 발췌로 Writer 호출 |
+| Writer 초안 | "…나가기 전에는 기계 끄기와 문단속, 메모 남기기를 해요[1][2][3]. 도매상 영업 담당자 전화번호는 발췌에 없어서 **약사에게 확인을 넘겼어요**." — 자동 답변이라 실제로는 아무에게도 안 넘김 |
+| Verifier (LLM) | `{"grounded":true,"policy_ok":true,"issues":[]}` 통과. Verifier 지시문이 보는 것은 근거 · 복용 판단 · 현금 결정 · 연락처 노출 · 발췌 밖 숫자 · 효능 표현이라 이관 약속 문장은 범위 밖 |
+| 코드 (`Check answer`) | 계획이 자동 답변인데 초안에 약속 패턴(`넘겼어요` · `연락드릴` · `전해 드릴` · `접수했어요` 등, #41 `faa1be3` — 4절 사례 2의 조치)이 있으면 `falsePromise` → 통과 실패 → reason `low_confidence`, 답을 "담당자에게 확인을 요청했어요."로 바꾸고 이관 |
+| 최종 응답 | route 담당자 이관 · reason `low_confidence` · `sources: []` · 티켓 T-2002 (owner · normal) — 말로만 한 약속이 실제 접수로 바뀜 |
+| 나머지 4건 | 문자 대신 보내기 · 이 약국 판매 가격 · 제일 잘 듣는 제품 · 금고 비밀번호 → Writer가 "발췌에 없어요" · "대신해 드릴 수 없어요"로 답해 지어내지 않음 (자동 답변) |
+
+→ 검증을 LLM 하나에 맡기지 않는다: 근거 · 정책 판정은 Verifier, 약속 문장 · 금지 문장(복용 허락 · 현금 채우기) · 인용 번호 범위는 코드가 한 번 더 본다. Verifier 지시문은 고치지 않았다 — 지시문 한 줄이 다른 유형을 흔든 사례 3 때문에, 동결 전 지시문 변경은 팀 3회 + 블라인드 25를 다시 돌릴 때만 한다.
+
+**② 한계: 담당(assignee)은 응답에만 있고 저장소에는 남지 않는다**
+
+- 코드 · 스키마: 약사 화면 DB `api/app/schema.sql` `tickets` 칸 = `ticket_id` · `key`(= request_id) · `title` · `requester` · `category` · `priority` · `product` · `status` · `note` · `created_at` — 담당 칸 없음. 워크플로우 `team3-handoff`의 `Create ticket`(data-api) 본문 = key · title · requester · category · priority, `Post to screen`(FastAPI) 본문 = key · ticket_id · title · requester · category · priority · product — 둘 다 담당을 안 보냄. 담당은 `Type policy`가 정해 응답 `ticket.assignee`로만 나간다 (병훈 11/6 11:19 확인과 같음).
+- 실저장 대조에서 대신 본 것: 응답 `ticket.ticket_id`로 PG 행을 `key` = request_id로 찾아 **같은 번호 · 같은 긴급도(priority) · 유형(category)**, data-api `/tickets-created`도 key · 번호 · priority. 담당은 응답 JSON(`runs/`)의 `ticket.assignee`와 `route` · `reason`으로 판정. 3교시 결과: PG 90/90 · data-api 30/30(3회차) · 담당은 응답 기준 판단 2턴째 pharmacist 27/27 · 위험 pharmacist 21/21.
+- 영향: 같은 유형 안에 담당이 갈리는 경우 저장소만 보고는 못 가른다 — 예: 마감(closing)인 T-03 현금 모자람은 owner · normal, T-06 냉장고 온도 이탈은 pharmacist · high. 약사 화면은 담당 대신 긴급도 · 유형으로 나눠 보여 준다(긴급 먼저).
+- 이번에는 칸을 더하지 않는다(샘 피드백 5 · 새 기능 금지). 넣는다면 `schema.sql` 칸 1 · `Post to screen` 본문 1 · api 시험 1이고, 워크플로우 변경이라 팀 3회 + 블라인드 25 회귀가 따라온다.
+
+**③ 최종 회귀 대상 (7교시 16:00, VM 배포 2)**
+
+- 버전: 7교시 시작 때의 main을 VM에 배포한 그 커밋. 11/6 12:17 기준 main `fc47f44` = 3교시 측정본(`099475f`) + #61 WF-11 `Get record` timeout 4 → 3초(워크플로우) + 문서. PR #59(다영, 어르신 범위 밖 질문 → 범위 안내 되묻기, 워크플로우 · 팀 cases T-44~46)는 13:00 VM 시험 뒤 머지 예정 → 머지되면 포함. 결과서에는 배포 커밋(VM `git log -1` = n8n push본)을 적는다.
+- 방식: 연습 모드 push → 예열 1회(판정에 안 셈, 따로 기록) → **회차마다 `flow.py ops --reset` + 캐시 비우기 뒤 1번씩 × 3** → 실제 모드 복귀. 날것 `--repeat 3`은 쓰지 않는다(4절 사례 1).
+- 시험: 공통 `cases/common.json`(14유형 · 판정 20줄) × 3 · 팀 `cases/team.json`(#59 머지 시 T-44~46 포함) × 3 · 세 갈래 `cases/team-3way.json` 7 × 3 · 블라인드 25문항 + 판단 2턴째 6 × 3 · 이관 응답 실저장 대조(PG key · data-api `/tickets-created`).
+- 3교시 3회(`099475f`)는 #61 · #59 전 코드라 최종 결과로 대신 쓰지 않는다 — 최종 표에는 7교시 배포본 숫자만.
+
 ## 5. 구현 결과 및 시연 준비
 
 - 실행 방법: `README.md` "바로 실행"
