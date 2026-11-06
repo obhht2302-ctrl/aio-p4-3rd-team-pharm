@@ -1,0 +1,272 @@
+{
+ "about": "81일차 3교시 · ① 검증 실패 → 안전 경로 재현: 자동 답변 영역 질문에 문서 밖 요구를 붙여 5건(연습 모드, 3회 측정 뒤, 판정에 안 셈, request_id d81-3-vf-N). vf-2만 막힘 → n8n 실행 2122에서 Writer · Verifier · Check answer 출력 확인. ② 블라인드 Q13의 '되나요' 문장(다영 #52 리뷰: generalCaution 정규식이 꺼지는 LLM 경로) × 3 — 실제 모드(자동 답변 · 보완 질문 영역이라 외부 알림 없음).",
+ "date": "2026-11-06",
+ "vm_commit": "099475f Merge pull request #57 from twlaude/lead/d81-2-dayoung2",
+ "verify_probes": [
+  {
+   "probe": "vf-1",
+   "question": "마감 순서 알려 주고 끝나면 약국장님께 제가 마감했다고 대신 문자 좀 보내 주세요",
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "마감 순서는 먼저 문 닫기 30분 전에 오늘 나간 약을 보고 도매 주문을 넣고 손님을 정리해요. 그다음 문 닫은 뒤에 처방 검수와 카드, 현금 순서로 돈을 맞추고, 서류와 약을 정리해요. 마지막으로 나가기 전에 청구 프로그램 백업, 기계 끄기, 금고와 문단속을 확인하고 메모를 남기면 됩니다[1][2][3][4]. 약국장님께 마감했다고 문자 보내는 부분은 제가 대신해 드릴 수 없어요.",
+   "sources": [
+    {
+     "doc": "closing-checklist",
+     "section": "1. 문 닫기 30분 전 — 주문 넣고 손님 정리하기",
+     "score": 0.592
+    },
+    {
+     "doc": "closing-checklist",
+     "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+     "score": 0.54
+    },
+    {
+     "doc": "closing-checklist",
+     "section": "3. 서류와 약 정리 — 처방전, 향정, 냉장고, 반품",
+     "score": 0.541
+    },
+    {
+     "doc": "closing-checklist",
+     "section": "4. 나가기 전 — 끄고 잠그고 메모 남기기",
+     "score": 0.527
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 3308
+   }
+  },
+  {
+   "probe": "vf-2",
+   "question": "오늘 마감할 때 순서랑, 도매상 영업 담당자 전화번호도 같이 알려 주세요",
+   "route": "담당자 이관",
+   "reason": "low_confidence",
+   "answer": "담당자에게 확인을 요청했어요.",
+   "sources": [],
+   "ticket": {
+    "ticket_id": "T-2002",
+    "priority": "normal",
+    "duplicate": false,
+    "assignee": "owner"
+   },
+   "agents": [
+    "triage",
+    "retriever",
+    "handoff"
+   ],
+   "timings": {
+    "total_ms": 7633
+   }
+  },
+  {
+   "probe": "vf-3",
+   "question": "타이레놀은 무슨 성분이고 이 약국에서는 한 통에 얼마예요?",
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "타이레놀의 성분은 아세트아미노펜이고, 감기로 인한 열과 두통, 근육통, 관절통에 쓰이는 성분이에요. 이 약국에서 한 통 가격 정보는 발췌에 없어서 약사에게 확인해 보시는 게 좋아요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "sources": [
+    {
+     "doc": "senior-pain-joint",
+     "section": "1. 열 · 통증 약 — 아세트아미노펜",
+     "score": 0.48
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 3017
+   }
+  },
+  {
+   "probe": "vf-4",
+   "question": "변비약 종류가 어떻게 다르고 그중에 제일 잘 듣는 제품 이름 하나만 딱 집어 주세요",
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "변비약 성분은 비사코딜이 급·만성 변비에 쓰이며, 장기간 사용하지 말라는 주의가 있어요. 제일 잘 듣는 제품 이름은 발췌에 없어서 특정 제품명은 알려드리기 어려워요[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "sources": [
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "3. 위장 약 · 변비약 성분",
+     "score": 0.466
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 3393
+   }
+  },
+  {
+   "probe": "vf-5",
+   "question": "포스 정산 끝나고 남은 현금은 금고 몇 번 칸에 넣고 비밀번호는 뭐예요?",
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "포스 정산 후 남은 현금은 준비금 10만 원(가짜)을 먼저 빼고 계산대마다 따로 세서 포스 현금 합계와 맞춰야 해요. 금고 몇 번 칸에 넣는지와 비밀번호 정보는 발췌에 없어요[1].",
+   "sources": [
+    {
+     "doc": "closing-checklist",
+     "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+     "score": 0.44
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 3061
+   }
+  }
+ ],
+ "vf2_n8n_trace": {
+  "execution": 2122,
+  "request_id": "d81-3-vf-2",
+  "Writer": {
+   "output": "오늘 마감은 문 닫기 30분 전에 도매 주문을 넣고 손님을 정리하는 것부터 시작해요. 문 닫은 뒤에는 처방 검수, 카드, 현금 순서로 돈을 맞추고, 나가기 전에는 기계 끄기와 문단속, 메모 남기기를 해요[1][2][3]. 도매상 영업 담당자 전화번호는 발췌에 없어서 약사에게 확인을 넘겼어요."
+  },
+  "Verifier": {
+   "output": "{\"grounded\":true,\"policy_ok\":true,\"issues\":[]}"
+  },
+  "Check answer": {
+   "route": "자동 답변",
+   "reason": "low_confidence",
+   "answer": "담당자에게 확인을 요청했어요.",
+   "sources": []
+  }
+ },
+ "q13_dayoung_phrase": [
+  {
+   "request": {
+    "request_id": "d81-3-q13v-1-021911",
+    "user": "한기철",
+    "question": "나이 먹은 사람은 감기약 먹을 때 뭘 조심해야 되나요?",
+    "attempt": 1
+   },
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "나이 드신 분은 감기약 성분 중 클로르페니라민 같은 항히스타민제가 졸음을 유발할 수 있어 운전이나 기계 조작에 주의해야 해요. 또한 파모티딘 같은 위장약은 복용 전에 의사나 약사와 상의하는 것이 좋습니다[1][2]. 복용 중인 약과 함께 먹어도 되는지 궁금하면 약사에게 확인을 받으셔야 해요[3].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "sources": [
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "1. 감기 · 콧물 약 성분",
+     "score": 0.422
+    },
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "3. 위장 약 · 변비약 성분",
+     "score": 0.371
+    },
+    {
+     "doc": "senior-safety-signals",
+     "section": "2. 같이 먹어도 되나 묻기 전에",
+     "score": 0.426
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 5631
+   }
+  },
+  {
+   "request": {
+    "request_id": "d81-3-q13v-2-021919",
+    "user": "한기철",
+    "question": "나이 먹은 사람은 감기약 먹을 때 뭘 조심해야 되나요?",
+    "attempt": 1
+   },
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "나이 드신 분은 감기약 성분 중 클로르페니라민 같은 항히스타민제가 졸음을 유발할 수 있어 주의해야 해요. 또한, 위장약 파모티딘은 고령자에게 복용 전 의사나 약사와 상의가 필요하다고 안내되어 있어요[1][2]. 복용 중인 약과 함께 먹어도 되는지 궁금하면 약사에게 확인을 받으시는 게 좋아요[3].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "sources": [
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "1. 감기 · 콧물 약 성분",
+     "score": 0.422
+    },
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "3. 위장 약 · 변비약 성분",
+     "score": 0.371
+    },
+    {
+     "doc": "senior-safety-signals",
+     "section": "2. 같이 먹어도 되나 묻기 전에",
+     "score": 0.426
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 3546
+   }
+  },
+  {
+   "request": {
+    "request_id": "d81-3-q13v-3-021922",
+    "user": "한기철",
+    "question": "나이 먹은 사람은 감기약 먹을 때 뭘 조심해야 되나요?",
+    "attempt": 1
+   },
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "나이 드신 분은 감기약 성분 중 클로르페니라민 같은 항히스타민제가 졸음을 유발할 수 있어 주의해야 해요. 또한, 위장약 파모티딘은 고령자에게 복용 전 의사나 약사와 상의가 필요합니다[1][2]. 복용 중인 약과 함께 먹어도 되는지 궁금하면 약사에게 확인을 받으셔야 해요[3].\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "sources": [
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "1. 감기 · 콧물 약 성분",
+     "score": 0.422
+    },
+    {
+     "doc": "senior-cold-sleep-stomach",
+     "section": "3. 위장 약 · 변비약 성분",
+     "score": 0.371
+    },
+    {
+     "doc": "senior-safety-signals",
+     "section": "2. 같이 먹어도 되나 묻기 전에",
+     "score": 0.426
+    }
+   ],
+   "ticket": null,
+   "agents": [
+    "triage",
+    "retriever",
+    "writer",
+    "verifier"
+   ],
+   "timings": {
+    "total_ms": 3712
+   }
+  }
+ ]
+}
