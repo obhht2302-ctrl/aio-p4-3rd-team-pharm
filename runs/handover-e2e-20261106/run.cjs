@@ -34,10 +34,12 @@ async function login(p, path, role, name) {
     const askResp = p1.waitForResponse(r => r.url().includes("/api/ask") && r.request().method() === "POST", { timeout: 40000 });
     await p1.getByRole("button", { name: "보내기", exact: true }).click();
     const ask = await (await askResp).json();
+    await p1.waitForTimeout(300);
     result.ask = { route: ask.route, reason: ask.reason, ticket: ask.ticket, request_id: ask.request_id, agents: ask.agents };
     await p1.locator(".ticket-number strong").first().waitFor();
     const shownTicket = (await p1.locator(".ticket-number strong").first().innerText()).trim();
     result.screen_ticket = shownTicket;
+    await p1.waitForTimeout(1500); // 답 카드 나타나는 애니메이션 끝난 뒤 캡처
     await step(p1, `2 화면 답 = ${ask.route} · 접수 번호 ${shownTicket} (응답 ticket ${ask.ticket?.ticket_id} · 담당 ${ask.ticket?.assignee})`, "2-staff-answer");
     await c1.close();
     // 2) 책임 약사 이서준 — 접수 목록 · 인계 남기기
@@ -45,7 +47,10 @@ async function login(p, path, role, name) {
     const p2 = await c2.newPage(); p2.setDefaultTimeout(30000); hook(p2);
     await login(p2, "/admin/", "책임 약사", "이서준");
     await p2.getByRole("button", { name: "접수 목록 보기" }).waitFor();
-    await step(p2, "3 약사 이서준 로그인 (오늘 화면)", "3-pharm-home");
+    await p2.waitForTimeout(1200);
+    const h0 = api.filter(a => a.path === "/api/admin/handover" && a.method === "GET").pop();
+    result.handover_before = h0?.body?.item ? h0.body.item.id : null;
+    await step(p2, `3 약사 이서준 로그인 (오늘 화면) — 시작 전 확인 안 한 인계 ${result.handover_before ?? "없음"}`, "3-pharm-home");
     await p2.getByRole("button", { name: "접수 목록 보기" }).click();
     await p2.waitForTimeout(1200);
     const tl = api.filter(a => a.path === "/api/admin/tickets").pop();
@@ -85,7 +90,7 @@ async function login(p, path, role, name) {
     result.after_reload = await p3.locator(".handover-note").count();
     await step(p3, `9 다시 접속 → 카드 ${result.after_reload}개`, "9-reload");
     await c3.close();
-    result.ok = ask.ticket?.ticket_id === shownTicket && !!row && result.handover.has_ticket && result.next_login.sees_note && after === 0 && result.after_reload === 0;
+    result.ok = result.handover_before === null && ask.ticket?.ticket_id === shownTicket && !!row && result.handover.has_ticket && result.next_login.sees_note && after === 0 && result.after_reload === 0;
   } catch (e) { result.error = String(e.message || e).slice(0, 400); console.log("FAIL", result.error); }
   result.steps = log;
   fs.writeFileSync(`${OUT}/result.json`, JSON.stringify(result, null, 1));
