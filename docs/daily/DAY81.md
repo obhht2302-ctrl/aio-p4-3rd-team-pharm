@@ -101,6 +101,7 @@
   - 공통 **20/20** `runs/common-20261106-022415.json` — WF-02 보완 질문 · WF-02b `attempt_limit` 담당자 이관(T-2001 owner) · WF-11 `tickets_slow` **5.1초**(6초 기준) · WF-12 **pharmacist · high · urgent**(T-2006) · 근거 `recall-first-response` · 답 끝 줄 R-1001 실제 상태(`Build context`가 `Get record` 결과로 만듦) · 알림 1건
   - 병렬 갈래: WF-12 n8n 실행 2163에서 `Search knowledge` 0.359초가 끝난 뒤 `Get record` 0.008초 시작 → 그림은 두 갈래, 실제 실행은 순서대로(`executionOrder` v1). 전체 3.5초 중 LLM 3개 2.7초
   - 재색인: `team3-index` 1회 = 문서 10 · 청크 38(owner 3 · all 35) · **2.1초** · 길이 176 / 234 / 398
+  - **WF-11 7.3초 → 4.1초 (12:01~12:07, 태웅)**: 11:43 · 11:47 쉬고 온 호출에서 7.3 · 7.4초(6초 기준 넘음). n8n 실행 기록상 코드 실행기 다시 켜짐 1.4초 + `Triage` 1.7초 + `Get record` 대기 4.0초. ① VM n8n 실행기 안 꺼지게(`N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT` 15 → 0) ② #61 `Get record` timeout 4초 → 3초 `c45ff6f` VM 배포 → 35초 쉬고 **4.1초** ✔ · `runs/wf11-20261106-1207.md`. 팀 × 3 · 블라인드 회귀는 13:00 시험에 같이
   - 문서 대조: top_k 4 · `SCORE_MIN` 0.37 · 저장소 키 `pharm_kb_v1_all` / `_owner` · 메타데이터 7칸 · 권한 = `Check user`(직원표)에서 옴 → RAG 3 · 4절과 같음. 다른 곳은 담당 칸 PR로(아래)
 - **남은 것 · 다음 확인**: 설계서 5절 연동 표 `Check user` · `Get record` 인증 칸(연습용은 키 없음) · 본체 `Search knowledge`(6초) · `Handoff`(8초) 줄 — 병훈 PR. 6절 페이로드 예시에 실제 실행 샘플(`runs/trace-wf01-20261106-0959.json`) — 다영 7교시. RAG 설계서 2절 본문 "39개"(11/3 값) 표시 · 5절 재색인 실측 2.1초 — 영민 7교시(없으면 태웅). WF-12 답 본문 한 문장이 회수 이관과 R-1001을 섞음("R-1001은 담당 약사에게 넘겨서 …", 실제 R-1001은 약국장 확인 중) → 동결 전 지시문 안 바꾸고 결과서 잔여 위험 — 태웅 7교시. 샘 중간점검 수정 요청 · 담당 · 8교시 완료 기준 — 12:50 뒤 이 칸에 추가
 
