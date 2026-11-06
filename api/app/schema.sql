@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   note        text NOT NULL DEFAULT '',
   created_at  timestamptz NOT NULL DEFAULT now()
 );
+ALTER TABLE tickets ADD COLUMN IF NOT EXISTS assignee text NOT NULL DEFAULT '';  -- 담당자 (pharmacist · owner). 기존 VM DB에도 api가 켜질 때 생김
 CREATE TABLE IF NOT EXISTS alerts (
   id          bigserial PRIMARY KEY,
   workflow    text, node text, severity text, reason text, message text, ticket_id text,
