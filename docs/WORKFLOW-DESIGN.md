@@ -126,7 +126,7 @@ flowchart TD
 | 검색 결과 없음 | `Evidence?` | 이관 `no_evidence` | 담당자 연결 안내 | `reason` | WF-03 |
 | 외부 API 장애 (5xx · timeout) | `Create ticket` | 1+2회 재시도 → DLQ + 알림 | 200, `ticket: null`, `dlq: true` | DLQ · 알림 | WF-04 |
 | 중복 요청 | `Cached?` · `Create ticket`의 `key` | 저장된 결과 / 기존 티켓, `duplicate: true` | 같은 답 | — | WF-09 |
-| LLM 멈춤 | Agent 오류 출력 → `LLM down` | 이관 (자동 답변 없음) | 이관 안내 | `llm_down` | WF-10 |
+| LLM 멈춤 | `Triage` 오류 출력 → `Triage failed?` → `LLM down` → `Type policy` | `handoff_only` 이관 (자동 답변 · 되묻기 없음). 담당 · 긴급도는 코드가 정함: 위험 신호 말 → 약사 · high, 회수 → 약사 · high, 약 말 → 약사, 유형을 못 정하면 약국장 (#74) | 이관 안내 | `llm_down` | WF-10 |
 | 접수 조회 느림 | `Get record` timeout 3초 | 티켓 없이 바로 답 | 6초 안 | `tickets_slow` | WF-11 |
 | 화면 · Slack · Jira 실패 | `Post to screen` · `Call Slack` · `Call Jira` | 실패 무시, `extras`에 `failed`만 (알림 화면은 data-api 기록 유지) | 정상 응답 | `extras` · data-api | WF-04 · 12 |
 | 예상 못 한 오류 | Error Trigger (`team3Errors00001`) | `/alerts` critical + `/dlq` (+ real이면 Jira) | — | 알림 · DLQ | 팀 |
