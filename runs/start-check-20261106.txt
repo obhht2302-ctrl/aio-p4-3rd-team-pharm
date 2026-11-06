@@ -1,0 +1,21 @@
+# 81일차 1교시 팀 VM 출발점 확인 (2026-11-06 09:20~09:37 KST, 확인자: 태웅 · 리드 CC)
+# 환경: 팀 VM, n8n 2.42.6 (day65-n8n-n8n-1), 연습 모드로 바꿔 시험 → 실제 모드 복귀. 로컬/Mock 결과 아님.
+
+## 1. 버전 (읽기만, 09:20)
+- 배포 커밋: VM ~/aio-p4-3rd-team-pharm = be9c2c1 = origin/main, 작업 폴더 변경 없음
+- n8n 워크플로우 7개 (team3-alert · errors · handoff · index · search · support · ticket):
+  n8n 내보내기 ↔ 저장소 workflows/ (mode 'practice'→'real' 치환) 노드 · 연결 모두 같음. n8n updatedAt 11/5 07:42~07:43Z
+- 색인: n8n 재시작 11/5 07:43:55Z → team3-index 07:44:14Z success, indexed_chunks 38 (all 35 · owner 3, knowledge/ 절 수로 계산 일치)
+- 화면 web/out/index.html 11/5 08:53Z (#50)
+
+## 2. 공통 시험 출발점 (00:28~00:32Z = 09:28~09:32 KST)
+- 순서: deploy_vm.sh practice (push → n8n 재시작 → 색인) → flow.py ops --reset → run_tests.sh common (1회) → ops --reset → deploy_vm.sh real
+- 결과: 판정 19/20, 공통 14유형 13/14 · runs/common-20261106-003058.json
+- 실패 1줄: WF-01 정상 문의 8.5s (기준 8s). 답 · 근거는 맞음 (자동 답변, closing-checklist 1등 0.591)
+- WF-01 n8n 실행 1616 노드 시간: Triage 2783ms (그중 모델 2018ms, 모델 시작 전 0.76s) · Search knowledge 388ms · Writer 2485ms · Verifier 1893ms → n8n 안 7.7s
+  = 연습 모드 push로 n8n 재시작 → 색인(실행 1614 · 1615) 끝나고 0.7초 뒤 첫 요청 (cache-clear 뒤라 캐시 없음)
+- 11/5 같은 코드(#48) WF-01: 3.6s (common-20261105-074119), 11/5 전체 9개 보고서 3.1~5.4s
+
+## 3. 원인 확인 호출 (실제 모드, 자동 답변이라 Slack · Jira 안 감, 판정 아님)
+- 같은 질문 · 새 request_id d81-1-wf01chk-1~3: 6.8s (n8n 4.8s) → 3.6s (3.4s) → 3.1s (3.0s)
+- 해석: 재시작 · 대기 뒤 첫 호출만 느림 (LLM 3번 순서 호출 + 첫 노드 준비), 워크플로우 회귀 아님
