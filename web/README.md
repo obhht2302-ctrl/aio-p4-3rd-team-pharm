@@ -2,7 +2,9 @@
 
 화면 명세: [`specs/06-screen.md`](../specs/06-screen.md). 질문하기(`/`), 내 문의(`/my`), 약사 화면(`/admin`)을 Next.js 정적 내보내기로 제공합니다. 화면은 FastAPI만 호출하며 키와 웹훅 주소를 포함하지 않습니다.
 
+- 첫 화면: 왼쪽 위 알약 로고(`public/logo.png`) + 다정약국, 작은 글씨 "매장 업무 태블릿", 가운데 큰 제목 "오늘도 건강한 하루 보내세요" (`components/login.tsx` · `components/app-shell.tsx`).
 - 들어가기: 역할 카드 → 사용자 선택 → 입장 코드. 코드는 들어갈 때 API로 바로 확인합니다.
+- 내 문의(`/my`): 로그인한 사람 본인 것만 보입니다. 화면은 고른 이름으로 `X-User`를 보내고, API가 남의 이름으로 부르면 403으로 막습니다 (약사 · 약국장은 예외).
 - 고객(환자) 화면: `components/senior-ask.tsx`. 글씨 크기 3단계이고, 예시는 `/api/types`의 senior 값을 씁니다.
 - 태블릿 틀: 마우스를 쓰는 폭 760px 이상 화면에서만 보이고, 내용은 틀 안에서 스크롤합니다. 실제 태블릿 · 휴대폰은 화면을 꽉 채웁니다.
 
@@ -21,7 +23,7 @@ npm run dev -- --port 3100
 
 기본 캐시 권한 오류를 피하려고 프로젝트 내부 `.npm-cache/`를 사용합니다. 설치된 버전은 `package-lock.json`에 고정돼 있습니다. Motion, lucide-react, sonner, Pretendard, Tailwind CSS 4와 shadcn UI 부품을 사용합니다. 본문 글꼴 Pretendard는 `next/font/local`로 패키지의 WOFF2 파일을 불러옵니다. 제목 글꼴 고운돋움은 `next/font/google`이 빌드할 때 받아 앱 안에 넣으므로, 빌드하는 PC는 인터넷이 돼야 합니다 (실행 중 외부 요청은 없습니다).
 
-기본값은 계약 예시를 사용하는 연습 모드입니다. 실제 API를 연결할 때는 `.env.local`에 다음을 설정하고 개발 서버를 다시 시작하세요.
+기본값은 계약 예시를 사용하는 연습 모드입니다 (하단에 "연습 모드" 표시는 이 빌드에서만 보입니다). 실제 API를 연결할 때는 `.env.local`에 다음을 설정하고 개발 서버를 다시 시작하세요.
 
 ```text
 NEXT_PUBLIC_API_MODE=real
@@ -47,12 +49,13 @@ $env:npm_config_cache = (Join-Path (Get-Location) '.npm-cache')
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke open http://localhost:3100
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke run-code --filename tests/mock-screen-smoke.js
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke run-code --filename tests/voice-ask-smoke.js
+npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke run-code --filename tests/handover-smoke.js
 npx --yes --package @playwright/cli playwright-cli -s=haedeun_smoke close
 ```
 
 ## 퇴근 인수인계 (약사 화면 4단계)
 
-약사 화면 4단계 "인수인계"에서 남길 말을 적고 [인계 남기기]를 누르면, 아직 안 끝난 접수 건이 저절로 붙어 그 태블릿에 저장됩니다. 다음에 그 태블릿으로 약사 화면에 들어오면 1단계 "오늘 알림"에 "지난 근무 인계"가 보이고, [확인했어요]를 누르면 지워집니다. 매장 태블릿 한 대를 같이 쓰는 연습용이라 서버에는 저장하지 않습니다 (`tests/handover-smoke.js`).
+약사 화면 4단계 "인수인계"에서 남길 말을 적고 [인계 남기기]를 누르면 **약국 서버에 저장**됩니다 (`GET` · `POST /api/admin/handover`, `POST /api/admin/handover/{id}/done`). 아직 안 끝난 접수 건은 서버가 저절로 붙입니다. 다음에 들어온 약사 · 약국장은 **다른 태블릿 · 브라우저에서도** 1단계 "오늘 알림"에 "지난 근무 인계"가 보이고, 카드 머리 줄 오른쪽 [확인했어요]를 누르면 사라집니다. 열린 건은 3줄까지 보이고 나머지는 "외 N건"으로 줄입니다. 저장에 실패하면 "저장하지 못했어요. 다시 눌러 주세요."가 나오고, 인수인계를 못 불러와도 나머지 화면은 그대로 씁니다. 태블릿 `localStorage`에는 저장하지 않습니다. 연습 모드에서는 가짜 서버(`sessionStorage`)가 같은 모양으로 답합니다 (`tests/handover-smoke.js`: 남기기 → 새 브라우저로 로그인 → 보임 → 확인했어요 → 다시 들어와도 안 보임).
 
 ## 말로 묻기 (고객 화면 마이크)
 
