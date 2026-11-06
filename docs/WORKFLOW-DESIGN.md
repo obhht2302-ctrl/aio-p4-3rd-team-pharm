@@ -77,6 +77,7 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | 분기 | `Route by mode` | 처리 방식 4개 + 권한 없음 · 보완 질문 | `Type policy` 표 | WF-01 · 02 · 05 · 06 · 12 |
 | 분기 | `Build context` → `Evidence?` → `Check answer` | 검색 점수 · 근거 유무 · 금지 문장 | `SCORE_MIN` = 0.37 (영민 실측), `top_k` = 4 | WF-03, T-33 |
+| 분기 | `Type policy` → `Route by mode`(clarify) → `Clarify` | 어르신 + 범위 밖 질문 → 범위 안내 되묻기(티켓 없음). 역할 `patient` · 유형 `other` · 위험 신호 말 · 약 말 없음 · LLM 결과 읽음일 때만. 직원 · 약사 · 약국장의 `other`는 그대로 약국장 이관 | 2번째부터 '약사님께 직접 여쭤보고 싶어요' 안내를 덧붙임, `attempt_limit` 이관 안 함 | T-44 · 45 · 46 |
 | 병렬 | `Route by mode` → `Search knowledge` + `Get record` → `Merge evidence` | 근거 검색과 접수 조회는 서로의 결과가 필요 없어 한 노드에서 두 갈래로 나눔 · 수업 n8n(`executionOrder` v1)은 갈래를 하나씩 실행 | — | WF-12 |
 | 루프 | `attempt` (요청 사이) | 보완 질문 | 최대 3회 (3회째 이관) | WF-02 · 02b, T-32 · 33 |
 | 외부 호출 | HTTP 재시도 없음 | 본체의 HTTP Request 7개 (`Check user` · `Check cache` · `Search knowledge` · `Get record` · `Handoff` · `Save cache` · `Log request`) | 각 호출은 설정된 timeout 뒤 오류 갈래로 진행. `Get record`의 4초 제한은 전체 6초 응답 목표를 위한 값. 티켓 생성 재시도는 별도 `team3-handoff` 계약 (`00-DESIGN.md` 3.4절) | WF-04 · 11 |
