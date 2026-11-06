@@ -79,7 +79,7 @@ flowchart TD
 | 분기 | `Build context` → `Evidence?` → `Check answer` | 검색 점수 · 근거 유무 · 금지 문장 | `SCORE_MIN` = 0.37 (영민 실측), `top_k` = 4 | WF-03, T-33 |
 | 병렬 | `Route by mode` → `Search knowledge` + `Get record` → `Merge evidence` | 근거 검색과 접수 조회는 서로의 결과가 필요 없어 한 노드에서 두 갈래로 나눔 · 수업 n8n(`executionOrder` v1)은 갈래를 하나씩 실행 | — | WF-12 |
 | 루프 | `attempt` (요청 사이) | 보완 질문 | 최대 3회 (3회째 이관) | WF-02 · 02b, T-32 · 33 |
-| 외부 호출 | HTTP 재시도 없음 | 본체의 HTTP Request 7개 (`Check user` · `Check cache` · `Search knowledge` · `Get record` · `Handoff` · `Save cache` · `Log request`) | 각 호출은 설정된 timeout 뒤 오류 갈래로 진행. `Get record`의 4초 제한은 전체 6초 응답 목표를 위한 값. 티켓 생성 재시도는 별도 `team3-handoff` 계약 (`00-DESIGN.md` 3.4절) | WF-04 · 11 |
+| 외부 호출 | HTTP 재시도 없음 | 본체의 HTTP Request 7개 (`Check user` · `Check cache` · `Search knowledge` · `Get record` · `Handoff` · `Save cache` · `Log request`) | 각 호출은 설정된 timeout 뒤 오류 갈래로 진행. `Get record`의 3초 제한은 전체 6초 응답 목표를 위한 값 (앞단 Triage 분류 1~2초를 빼고 1초 여유, 11/6 4초 → 3초). 티켓 생성 재시도는 별도 `team3-handoff` 계약 (`00-DESIGN.md` 3.4절) | WF-04 · 11 |
 
 ## 5. 외부 연동 노드
 
@@ -92,7 +92,7 @@ flowchart TD
 | `Post to screen` | FastAPI `POST /tickets` (약사 화면, data-api 티켓이 있을 때만) | `team3ApiKey` (`X-Api-Key`) | data-api와 같은 본문 + `ticket_id` · `product` | 201 / 200 | 2초 timeout, 실패 무시 → `extras.screen: "failed"` |
 | `Call Slack` | `team3-alert` (`team3Alert000001`) → Slack | Slack Bot (`slackAio3Bot0001`) | `{mode, severity, reason, message}` | `{ok, mode, error}` | 실패 무시 → `extras.slack: "failed"` |
 | `Call Jira` | `team3-ticket` (`team3Ticket00001`) → Jira | Jira Cloud (`jiraAio3Cloud001`) | `{mode, summary, reason}` | `{ok, mode, error}` | 실패 무시 → `extras.jira: "failed"` |
-| `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | `X-Api-Key` → 사내 API | 번호 · 사용자 | 접수 건 / 403 | timeout 4초, 재시도 없음 → 이관 (`tickets_slow`) |
+| `Get record` | data-api `GET /tickets/<id>?requester=` → 약국 접수 시스템 | `X-Api-Key` → 사내 API | 번호 · 사용자 | 접수 건 / 403 | timeout 3초, 재시도 없음 → 이관 (`tickets_slow`) |
 | `Check user` | data-api `GET /employees/<user>` → 약국 계정 · SSO | `X-Api-Key` | 이름 | `role` · `access_levels` | 404 → 400 `unknown_user` |
 
 > 약사 화면 알림은 n8n이 FastAPI로 따로 보내지 않습니다. FastAPI `GET /api/admin/alerts`가 data-api `GET /alerts`를 읽어(3초 캐시, 실패 시 마지막 성공값) 보여 줍니다 (`00-DESIGN.md` 3.4절).
@@ -122,7 +122,7 @@ flowchart TD
 | 외부 API 장애 (5xx · timeout) | `Create ticket` | 1+2회 재시도 → DLQ + 알림 | 200, `ticket: null`, `dlq: true` | DLQ · 알림 | WF-04 |
 | 중복 요청 | `Cached?` · `Create ticket`의 `key` | 저장된 결과 / 기존 티켓, `duplicate: true` | 같은 답 | — | WF-09 |
 | LLM 멈춤 | Agent 오류 출력 → `LLM down` | 이관 (자동 답변 없음) | 이관 안내 | `llm_down` | WF-10 |
-| 접수 조회 느림 | `Get record` timeout 4초 | 티켓 없이 바로 답 | 6초 안 | `tickets_slow` | WF-11 |
+| 접수 조회 느림 | `Get record` timeout 3초 | 티켓 없이 바로 답 | 6초 안 | `tickets_slow` | WF-11 |
 | 화면 · Slack · Jira 실패 | `Post to screen` · `Call Slack` · `Call Jira` | 실패 무시, `extras`에 `failed`만 (알림 화면은 data-api 기록 유지) | 정상 응답 | `extras` · data-api | WF-04 · 12 |
 | 예상 못 한 오류 | Error Trigger (`team3Errors00001`) | `/alerts` critical + `/dlq` (+ real이면 Jira) | — | 알림 · DLQ | 팀 |
 

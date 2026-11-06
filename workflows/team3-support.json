@@ -550,7 +550,7 @@
         "method": "GET",
         "url": "=http://data-api:8800/tickets/{{ encodeURIComponent($('Type policy').first().json.plan.ticket_id || 'NONE') }}?requester={{ encodeURIComponent($('Type policy').first().json.user) }}",
         "options": {
-          "timeout": 4000,
+          "timeout": 3000,
           "response": {
             "response": {
               "neverError": true,
