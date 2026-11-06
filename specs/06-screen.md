@@ -86,13 +86,16 @@ cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE
 | 주소 | 누가 | 보이는 것 | 부르는 API |
 | --- | --- | --- | --- |
 | `/` 질문하기 | 직원 · 약사 · 약국장 · 환자 | 위: 사용자 고르기 (이름 목록) + 입장 코드 → 아래: 질문 칸 · 보내기 · 답 (근거 문서 이름, 티켓 번호, `route` 배지). 환자면 **어르신 약 질문 예시 버튼**과 큰 글씨 | `GET /api/users` · `GET /api/types` · `POST /api/ask` |
-| `/my` 내 문의 | 고른 사용자 | 내 질문 목록 (시각 · `route` · 티켓 번호 · 이관 건 상태) | `GET /api/my-requests?user=` |
-| `/admin` 약사 · 약국장 | `role`이 `pharmacist` · `owner` | 위: 회수 공표 · 긴급 알림 → 아래: 이관 티켓 목록 (긴급 먼저) · 상태 바꾸기 · 회수 티켓이면 **"손님 안내 보내기"** (약사만) → 결과: 동의한 손님 수, 가린 번호, "연습 기록 · 실제 발송 없음" | `GET /api/admin/alerts` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /api/admin/tickets/{id}/recall-notice` |
+| `/my` 내 문의 | 고른 사용자 (본인 것만) | 내 질문 목록 (시각 · `route` · 티켓 번호 · 이관 건 상태) | `GET /api/my-requests?user=` (+ `X-User`, 아래 참고) |
+| `/admin` 약사 · 약국장 | `role`이 `pharmacist` · `owner` | 위: 회수 공표 · 긴급 알림 → 아래: 이관 티켓 목록 (긴급 먼저) · 상태 바꾸기 · 회수 티켓이면 **"손님 안내 보내기"** (약사만) → 결과: 동의한 손님 수, 가린 번호, "연습 기록 · 실제 발송 없음" · 퇴근 인수인계 (서버 저장, 아래 참고) | `GET /api/admin/alerts` · `GET /api/admin/tickets` · `PATCH /api/admin/tickets/{id}` · `POST /api/admin/tickets/{id}/recall-notice` · `GET` · `POST /api/admin/handover` · `POST /api/admin/handover/{id}/done` |
 
 - 로그인 대신 **사용자 선택 + 입장 코드**. 고른 사용자와 코드는 `sessionStorage`에 (새로고침해도 유지, try/catch). 모든 요청에 `X-Entry-Code` · `X-User` 머리글 (`X-User`는 `encodeURIComponent(이름)` — 머리글은 ASCII만 됨).
 - `/admin` 막기: 화면에서 `role`이 약사 · 약국장이 아니면 안내 문장만 보이고 목록을 부르지 않음. **API도 403으로 한 번 더 막음** (주소를 직접 쳐도).
 - 보완 질문(`route: 보완 질문`)이면 답 아래에 "이어서 답하기" 칸 → 같은 질문 + `context` + `attempt + 1`로 다시 보냄 (API가 새 `request_id`를 만듦).
 - 어르신 답: `answer`에 AI 고지가 들어 있음 (본체가 붙임). 화면은 그대로 보여 주고 지우지 않습니다.
+- 첫 화면 (로그인 전, #50): 왼쪽 위에 알약 로고 + "다정약국", 그 아래 작은 글씨 "매장 업무 태블릿", 가운데 큰 제목 "오늘도 건강한 하루 보내세요". 로고 파일은 `web/public/logo.png`.
+- `/my` 본인 것만 (#73): API가 `X-User`(고른 이름)와 주소의 `user`가 다르면 403 "본인 문의만 볼 수 있어요" (약사 · 약국장은 예외, `X-User`가 없거나 모르는 이름도 403). 화면은 늘 고른 사람 이름으로 부르므로 바뀐 것은 없습니다.
+- 퇴근 인수인계 (#27 · #29): 약사 화면 4단계 "인수인계"에서 남길 말을 적고 [인계 남기기] → **서버에 저장** (`POST /api/admin/handover`, 아직 안 끝난 접수 건은 서버가 붙임). 다음에 들어온 약사 · 약국장은 **어느 태블릿 · 브라우저에서든** 1단계 "오늘 알림"에 "지난 근무 인계"가 보이고, 카드 머리 줄 오른쪽 [확인했어요]를 누르면 사라짐 (`POST /api/admin/handover/{id}/done`). 열린 건은 3줄까지 보이고 나머지는 "외 N건". 저장 실패 문구 "저장하지 못했어요. 다시 눌러 주세요.", 인수인계를 못 불러와도 나머지 화면은 그대로. 태블릿 `localStorage`에는 저장하지 않습니다.
 
 ## 2. 파일 (`web/`)
 
@@ -105,6 +108,7 @@ cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE
 | `lib/api.ts` | `fetch` 래퍼 (머리글, 오류 → 짧은 한국어 문장), `NEXT_PUBLIC_API_MODE=mock`이면 `lib/mock.ts` |
 | `lib/mock.ts` | `lib/contract-examples.json` (= `contracts/examples/api.json`, `packs.py build`가 복사)을 그대로 돌려줌 |
 | `lib/session.ts` | 고른 사용자 · 입장 코드 저장 |
+| `components/login.tsx` · `components/app-shell.tsx` | 첫 화면 (큰 제목 · 역할 고르기) · 머리 줄 (로고 · 약국 이름) · 하단 문구 |
 
 ## 3. 디자인 기준
 
@@ -113,6 +117,7 @@ cd ~/aio-p4-3rd-team-pharm/web && NEXT_PUBLIC_API_MODE=real NEXT_PUBLIC_API_BASE
 - 어르신(환자) 모드: 글씨 18px 이상, 버튼 높이 48px 이상, 예시 버튼 3개 (`/api/types`의 senior `examples`).
 - 휴대폰 폭 375px에서 가로 스크롤 없음, 표는 카드로 바뀜.
 - 개인정보: 화면은 API가 가린 값만 보여 줌. 화면에서 번호를 다시 조합하지 않음.
+- 하단 "연습 모드" 표시는 연습(mock) 빌드에서만 보임. 실제 모드(팀 VM)에서는 "사람과 제품, 연락처는 가상 데이터이며 실제 문자는 발송되지 않습니다"만 (#29).
 
 ## 4. 완료 기준
 
