@@ -1,0 +1,92 @@
+{
+ "ok": false,
+ "ask": {
+  "route": "담당자 이관",
+  "reason": "needs_person",
+  "ticket": {
+   "ticket_id": "T-2007",
+   "priority": "normal",
+   "duplicate": false,
+   "assignee": "owner"
+  },
+  "request_id": "web-57627855",
+  "agents": [
+   "triage",
+   "retriever",
+   "writer",
+   "verifier",
+   "handoff"
+  ]
+ },
+ "screen_ticket": "T-2007",
+ "handover": {
+  "id": 8,
+  "by": "이서준",
+  "open_count": 84,
+  "has_ticket": true
+ },
+ "next_login": {
+  "sees_note": true,
+  "by_seojun": true,
+  "local_empty": true
+ },
+ "after_reload": 2,
+ "steps": [
+  {
+   "at": "2026-11-06T05:03:28.885Z",
+   "step": "1 직원 김하늘 로그인 · 질문 입력"
+  },
+  {
+   "at": "2026-11-06T05:03:33.695Z",
+   "step": "2 화면 답 = 담당자 이관 · 접수 번호 T-2007 (응답 ticket T-2007 · 담당 owner)"
+  },
+  {
+   "at": "2026-11-06T05:03:37.233Z",
+   "step": "3 약사 이서준 로그인 (오늘 화면)"
+  },
+  {
+   "at": "2026-11-06T05:03:38.868Z",
+   "step": "4 약사 접수 목록에 T-2007 — API 행 있음 (담당 owner) · 화면 줄 1"
+  },
+  {
+   "at": "2026-11-06T05:03:39.166Z",
+   "step": "5 인수인계 화면 — 열린 건 자동 첨부에 T-2007 있음"
+  },
+  {
+   "at": "2026-11-06T05:03:39.599Z",
+   "step": "6 인계 남김 (id 8, 열린 건 84개)"
+  },
+  {
+   "at": "2026-11-06T05:03:43.534Z",
+   "step": "7 다른 태블릿 · 약국장 정민재 로그인 → 지난 근무 인계 보임 (true)"
+  },
+  {
+   "at": "2026-11-06T05:03:44.488Z",
+   "step": "8 확인했어요 → 카드 0개"
+  },
+  {
+   "at": "2026-11-06T05:03:46.039Z",
+   "step": "9 다시 접속 → 카드 2개"
+  }
+ ],
+ "admin_ticket": {
+  "ticket_id": "T-2007",
+  "key": "web-57627855",
+  "title": "마감 차액은 얼마까지 승인 없이 처리해요?",
+  "requester": "김하늘",
+  "category": "closing",
+  "priority": "normal",
+  "assignee": "owner",
+  "status": "접수됨",
+  "created_at": "2026-11-06T05:03:33.410064+00:00"
+ },
+ "done": {
+  "id": 8,
+  "by": "이서준",
+  "note": "5교시 인수인계 시연 05:03Z — 마감 차액 건 약국장 확인 부탁",
+  "at": "2026-11-06T05:03:39.417222+00:00",
+  "done_at": "2026-11-06T05:03:43.766116+00:00",
+  "done_by": "정민재",
+  "open_count": 84
+ }
+}
