@@ -1,0 +1,30 @@
+{
+ "at": "2026-11-06T06:17:34+0000",
+ "rows": [
+  {
+   "case": "남의 문의 (X-User 김하늘 · user=윤서아)",
+   "expect": 403,
+   "status": 403,
+   "pass": true,
+   "items": null,
+   "detail": null
+  },
+  {
+   "case": "본인 문의 (X-User 김하늘 · user=김하늘)",
+   "expect": 200,
+   "status": 200,
+   "pass": true,
+   "items": 39,
+   "detail": null
+  },
+  {
+   "case": "X-User 없음 (user=김하늘)",
+   "expect": 403,
+   "status": 403,
+   "pass": true,
+   "items": null,
+   "detail": null
+  }
+ ],
+ "passed": 3
+}

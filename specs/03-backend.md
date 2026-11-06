@@ -134,7 +134,7 @@ cd ~/aio-p4-3rd-team-pharm/api && uv run --python 3.12 --with fastapi --with htt
 | --- | --- | --- | --- |
 | `GET /health` | 모두 | — | `{"status":"ok","store":"memory"|"postgres"}` |
 | `POST /api/ask` | 화면 `/` | 머리글 `X-Entry-Code`, 본문 `{user, question, attempt?, context?}` | 계약 응답 그대로 (n8n `team3-support` 호출, `request_id`는 API가 만듦). n8n이 멈추면 `route: 담당자 이관`, `reason: brain_down` |
-| `GET /api/my-requests?user=` | 화면 `/my` | `X-Entry-Code` | `{"items": [{request_id, question, route, ticket, created_at}]}` 그 사용자 것만 |
+| `GET /api/my-requests?user=` | 화면 `/my` | `X-Entry-Code`, `X-User` (로그인한 이름을 `encodeURIComponent` 한 값 — `user`와 다르면 403, 약사 · 약국장은 남의 것도 봄, #73) | `{"items": [{request_id, question, route, ticket, created_at}]}` 그 사용자 것만 |
 | `GET /api/admin/tickets?status=` | 화면 `/admin` | `X-Entry-Code`, `X-User` (이름을 `encodeURIComponent` 한 값, 약사 · 약국장만, 아니면 403) | `{"items": [{ticket_id, key, title, requester, category, priority, status, created_at}]}` |
 | `PATCH /api/admin/tickets/{id}` | 화면 `/admin` | `{status?, note?}` | 바뀐 티켓 |
 | `GET /api/admin/alerts` | 화면 `/admin` | 약사 · 약국장 | `{"items": [...]}` 회수 공표 · 긴급 알림 — data-api `GET /alerts`를 최신순 50건으로 변환 (3초 캐시, data-api가 답하지 않으면 마지막 성공값) |

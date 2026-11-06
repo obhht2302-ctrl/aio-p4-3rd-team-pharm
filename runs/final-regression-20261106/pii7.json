@@ -1,0 +1,71 @@
+{
+ "at": "2026-11-06T06:39:19+0000",
+ "n8n": {
+  "support_executions": 1530,
+  "with_raw_contact": 1500,
+  "latest_with_raw": [
+   {
+    "id": 3314,
+    "at": "2026-11-06 06:37:48.118",
+    "phones": 1,
+    "mails": 0
+   },
+   {
+    "id": 3311,
+    "at": "2026-11-06 06:37:45.642",
+    "phones": 1,
+    "mails": 1
+   },
+   {
+    "id": 3308,
+    "at": "2026-11-06 06:37:40.641",
+    "phones": 1,
+    "mails": 1
+   },
+   {
+    "id": 3303,
+    "at": "2026-11-06 06:33:23.058",
+    "phones": 1,
+    "mails": 1
+   },
+   {
+    "id": 3302,
+    "at": "2026-11-06 06:32:49.102",
+    "phones": 1,
+    "mails": 1
+   }
+  ],
+  "since_reg_start": 316
+ },
+ "n8n_errors_executions": [
+  {
+   "id": 3315,
+   "at": "2026-11-06 06:37:48.289",
+   "status": "success"
+  },
+  {
+   "id": 341,
+   "at": "2026-11-05 05:49:25.012",
+   "status": "success"
+  },
+  {
+   "id": 323,
+   "at": "2026-11-05 05:46:58.924",
+   "status": "success"
+  }
+ ],
+ "data_api_logs": {
+  "GET /logs?limit=5": [
+   0,
+   "RemoteDisconnected('Remote end closed connection without response')"
+  ],
+  "GET /logs?source=live": [
+   0,
+   "RemoteDisconnected('Remote end closed connection without response')"
+  ],
+  "POST /logs/query": [
+   0,
+   "RemoteDisconnected('Remote end closed connection without response')"
+  ]
+ }
+}

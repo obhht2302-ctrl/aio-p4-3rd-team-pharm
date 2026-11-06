@@ -1,0 +1,153 @@
+{
+ "before_n8n": [
+  {
+   "id": "team3Alert000001",
+   "name": "team3-alert",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "team3Errors00001",
+   "name": "team3-errors",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "w519410824e637fb",
+   "name": "team3-handoff",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "wb727780a1f3771e",
+   "name": "team3-index",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "w1a97b3fa088327d",
+   "name": "team3-search",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "we5b2f4a8b26f94b",
+   "name": "team3-support",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "team3Ticket00001",
+   "name": "team3-ticket",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  }
+ ],
+ "push": {
+  "exit": 0,
+  "tail": [
+   "✔ pushed 'team3-support' (id we5b2f4a8b26f94b)",
+   "   POST http://localhost:5678/webhook/team3-support"
+  ]
+ },
+ "pushed_n8n": [
+  {
+   "id": "team3Alert000001",
+   "name": "team3-alert",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "team3Errors00001",
+   "name": "team3-errors",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "w519410824e637fb",
+   "name": "team3-handoff",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "wb727780a1f3771e",
+   "name": "team3-index",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "w1a97b3fa088327d",
+   "name": "team3-search",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  },
+  {
+   "id": "we5b2f4a8b26f94b",
+   "name": "team3-support",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": true
+  },
+  {
+   "id": "team3Ticket00001",
+   "name": "team3-ticket",
+   "active": true,
+   "errorWorkflow": "team3Errors00001",
+   "errtest_left": false
+  }
+ ],
+ "before": {
+  "at": "06:33:22",
+  "alerts_count": 0,
+  "alerts_last": [],
+  "dlq_size": 0,
+  "dlq_last": [],
+  "screen_alerts_status": 200,
+  "screen_alerts_top": []
+ },
+ "call": {
+  "at": "06:33:28",
+  "request_id": "d81f-errtest-063322",
+  "status": 200,
+  "seconds": 5.67,
+  "body": {
+   "message": null,
+   "route": "담당자 이관",
+   "reason": "no_evidence",
+   "ticket": {
+    "ticket_id": "T-2001",
+    "priority": "normal",
+    "duplicate": false,
+    "assignee": "owner"
+   },
+   "code": null
+  }
+ },
+ "after": {
+  "at": "06:33:38",
+  "alerts_count": 0,
+  "alerts_last": [],
+  "dlq_size": 0,
+  "dlq_last": [],
+  "screen_alerts_status": 200,
+  "screen_alerts_top": []
+ },
+ "verdict": {
+  "http_500": false,
+  "alert_added": false,
+  "dlq_added": false,
+  "critical_in_last": false
+ }
+}
