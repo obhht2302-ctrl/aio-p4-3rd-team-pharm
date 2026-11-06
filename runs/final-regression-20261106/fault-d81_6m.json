@@ -1,0 +1,963 @@
+{
+ "prefix": "d81-6m-062938-",
+ "started": "2026-11-06T06:29:38+0000",
+ "steps": [
+  {
+   "name": "t47",
+   "at": "06:29:38",
+   "reset": {
+    "cmd": "tools/flow.py ops --reset",
+    "exit": 0,
+    "tail": [
+     "✔ live run logs, added FAQ, created tickets, DLQ and alerts emptied, fault switch all ok"
+    ]
+   },
+   "call": {
+    "tag": "t47",
+    "at": "06:29:38",
+    "status": 200,
+    "seconds": 1.466,
+    "request": {
+     "request_id": "d81-6m-062938-t47",
+     "user": "한기철",
+     "question": "약국 몇 시까지 해요?",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "no_evidence",
+    "ticket": {
+     "ticket_id": "T-2001",
+     "priority": "normal",
+     "duplicate": false,
+     "assignee": "owner"
+    },
+    "answer": "담당자에게 확인을 요청했어요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 1295
+    }
+   }
+  },
+  {
+   "name": "wf04",
+   "at": "06:29:39",
+   "reset": {
+    "cmd": "tools/flow.py ops --reset",
+    "exit": 0,
+    "tail": [
+     "✔ live run logs, added FAQ, created tickets, DLQ and alerts emptied, fault switch all ok"
+    ]
+   },
+   "fault_on": {
+    "cmd": "tools/flow.py fault tickets error",
+    "exit": 0,
+    "tail": [
+     "✔ fault switch: {\"faq\": \"ok\", \"tickets\": \"error\", \"prompts\": \"ok\", \"usage\": \"ok\", \"dlq\": \"ok\", \"slow_seconds\": 8.0}"
+    ]
+   },
+   "call": {
+    "tag": "wf04",
+    "at": "06:29:40",
+    "status": 200,
+    "seconds": 1.777,
+    "request": {
+     "request_id": "d81-6m-062938-wf04",
+     "user": "김하늘",
+     "question": "매장 공유기가 죽어서 카드 단말기가 안 돼요",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "tickets_down",
+    "ticket": null,
+    "answer": "담당자에게 넘기는 중 접수 시스템이 응답하지 않았어요. 요청은 보관해 두었고 확인되는 대로 연락드려요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 1625
+    }
+   },
+   "after_wf04": {
+    "tickets_created": 0,
+    "tickets_for_keys": [],
+    "dlq_size": 1,
+    "dlq_items": [
+     {
+      "dlq_id": "D-1",
+      "attempts": 1,
+      "parked": false,
+      "item": {
+       "id": "d81-6m-062938-wf04",
+       "type": "other",
+       "priority": "normal",
+       "reason": "tickets_down",
+       "severity": "high"
+      },
+      "at": 1793946581.742854
+     }
+    ],
+    "alerts_count": 1,
+    "alerts": [
+     {
+      "workflow": "team3-handoff",
+      "node": "Handoff",
+      "severity": "high",
+      "reason": "tickets_down",
+      "message": "[other] owner에게 이관",
+      "ticket_id": "",
+      "at": 1793946581.7497888
+     }
+    ],
+    "pg_for_keys": [],
+    "fault": {
+     "faq": "ok",
+     "tickets": "error",
+     "prompts": "ok",
+     "usage": "ok",
+     "dlq": "ok",
+     "slow_seconds": 8.0
+    }
+   },
+   "call_recall": {
+    "tag": "wf04-recall",
+    "at": "06:29:43",
+    "status": 200,
+    "seconds": 4.669,
+    "request": {
+     "request_id": "d81-6m-062938-wf04-recall",
+     "user": "김하늘",
+     "question": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "tickets_down",
+    "ticket": null,
+    "answer": "담당자에게 넘기는 중 접수 시스템이 응답하지 않았어요. 요청은 보관해 두었고 확인되는 대로 연락드려요.",
+    "sources": [
+     "recall-first-response"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 4501
+    }
+   },
+   "after_recall": {
+    "tickets_created": 0,
+    "tickets_for_keys": [],
+    "dlq_size": 2,
+    "dlq_items": [
+     {
+      "dlq_id": "D-1",
+      "attempts": 1,
+      "parked": false,
+      "item": {
+       "id": "d81-6m-062938-wf04",
+       "type": "other",
+       "priority": "normal",
+       "reason": "tickets_down",
+       "severity": "high"
+      },
+      "at": 1793946581.742854
+     },
+     {
+      "dlq_id": "D-2",
+      "attempts": 1,
+      "parked": false,
+      "item": {
+       "id": "d81-6m-062938-wf04-recall",
+       "type": "recall",
+       "priority": "high",
+       "reason": "tickets_down",
+       "severity": "high"
+      },
+      "at": 1793946588.4078941
+     }
+    ],
+    "alerts_count": 2,
+    "alerts": [
+     {
+      "workflow": "team3-handoff",
+      "node": "Handoff",
+      "severity": "high",
+      "reason": "tickets_down",
+      "message": "[other] owner에게 이관",
+      "ticket_id": "",
+      "at": 1793946581.7497888
+     },
+     {
+      "workflow": "team3-handoff",
+      "node": "Handoff",
+      "severity": "high",
+      "reason": "tickets_down",
+      "message": "[recall] pharmacist에게 이관",
+      "ticket_id": "",
+      "at": 1793946588.4173791
+     }
+    ],
+    "pg_for_keys": [],
+    "fault": {
+     "faq": "ok",
+     "tickets": "error",
+     "prompts": "ok",
+     "usage": "ok",
+     "dlq": "ok",
+     "slow_seconds": 8.0
+    }
+   },
+   "fault_off": {
+    "cmd": "tools/flow.py fault tickets ok",
+    "exit": 0,
+    "tail": [
+     "✔ fault switch: {\"faq\": \"ok\", \"tickets\": \"ok\", \"prompts\": \"ok\", \"usage\": \"ok\", \"dlq\": \"ok\", \"slow_seconds\": 8.0}"
+    ]
+   },
+   "fault_after": {
+    "faq": "ok",
+    "tickets": "ok",
+    "prompts": "ok",
+    "usage": "ok",
+    "dlq": "ok",
+    "slow_seconds": 8.0
+   }
+  },
+  {
+   "name": "wf09",
+   "at": "06:29:50",
+   "reset": {
+    "cmd": "tools/flow.py ops --reset",
+    "exit": 0,
+    "tail": [
+     "✔ live run logs, added FAQ, created tickets, DLQ and alerts emptied, fault switch all ok"
+    ]
+   },
+   "n1": {
+    "tag": "wf09-1",
+    "at": "06:29:50",
+    "status": 200,
+    "seconds": 1.423,
+    "request": {
+     "request_id": "d81-6m-062938-wf09",
+     "user": "윤서아",
+     "question": "직원 휴게실 정수기가 고장 났어요",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "no_evidence",
+    "ticket": {
+     "ticket_id": "T-2001",
+     "priority": "normal",
+     "duplicate": false,
+     "assignee": "owner"
+    },
+    "answer": "담당자에게 확인을 요청했어요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 1262
+    }
+   },
+   "n2": {
+    "tag": "wf09-2",
+    "at": "06:29:52",
+    "status": 200,
+    "seconds": 0.184,
+    "request": {
+     "request_id": "d81-6m-062938-wf09",
+     "user": "윤서아",
+     "question": "직원 휴게실 정수기가 고장 났어요",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "no_evidence",
+    "ticket": {
+     "ticket_id": "T-2001",
+     "priority": "normal",
+     "duplicate": true,
+     "assignee": "owner"
+    },
+    "answer": "담당자에게 확인을 요청했어요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 1262
+    }
+   },
+   "h1": {
+    "tag": "wf09h-1",
+    "at": "06:29:52",
+    "status": 200,
+    "seconds": 3.256,
+    "request": {
+     "request_id": "d81-6m-062938-wf09h",
+     "user": "김하늘",
+     "question": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "urgent",
+    "ticket": {
+     "ticket_id": "T-2002",
+     "priority": "high",
+     "duplicate": false,
+     "assignee": "pharmacist"
+    },
+    "answer": "회수 대상인 OTC-03 시럽은 진열대에서 따로 빼서 \"회수 — 판매 금지\" 표시를 붙인 상자에 보관하고, 개수와 제조번호, 뺀 시각과 사람을 기록해 주세요. 이후 보유량을 회수의무자에게 알리고 회수확인서를 작성하는 일은 약사가 처리합니다[1].",
+    "sources": [
+     "recall-first-response"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 3111
+    }
+   },
+   "h2": {
+    "tag": "wf09h-2",
+    "at": "06:29:55",
+    "status": 200,
+    "seconds": 0.166,
+    "request": {
+     "request_id": "d81-6m-062938-wf09h",
+     "user": "김하늘",
+     "question": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "urgent",
+    "ticket": {
+     "ticket_id": "T-2002",
+     "priority": "high",
+     "duplicate": true,
+     "assignee": "pharmacist"
+    },
+    "answer": "회수 대상인 OTC-03 시럽은 진열대에서 따로 빼서 \"회수 — 판매 금지\" 표시를 붙인 상자에 보관하고, 개수와 제조번호, 뺀 시각과 사람을 기록해 주세요. 이후 보유량을 회수의무자에게 알리고 회수확인서를 작성하는 일은 약사가 처리합니다[1].",
+    "sources": [
+     "recall-first-response"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 3111
+    }
+   },
+   "store": {
+    "tickets_created": 2,
+    "tickets_for_keys": [
+     {
+      "ticket_id": "T-2001",
+      "key": "d81-6m-062938-wf09",
+      "title": "직원 휴게실 정수기가 고장 났어요",
+      "requester": "윤서아",
+      "category": "other",
+      "priority": "normal"
+     },
+     {
+      "ticket_id": "T-2002",
+      "key": "d81-6m-062938-wf09h",
+      "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+      "requester": "김하늘",
+      "category": "recall",
+      "priority": "high"
+     }
+    ],
+    "dlq_size": 0,
+    "dlq_items": [],
+    "alerts_count": 1,
+    "alerts": [
+     {
+      "workflow": "team3-handoff",
+      "node": "Handoff",
+      "severity": "high",
+      "reason": "urgent",
+      "message": "[recall] pharmacist에게 이관",
+      "ticket_id": "T-2002",
+      "at": 1793946595.5980968
+     }
+    ],
+    "pg_for_keys": [
+     {
+      "ticket_id": "T-2002",
+      "key": "d81-6m-062938-wf09h",
+      "category": "recall",
+      "priority": "high",
+      "assignee": "pharmacist",
+      "status": "접수됨"
+     },
+     {
+      "ticket_id": "T-2001",
+      "key": "d81-6m-062938-wf09",
+      "category": "other",
+      "priority": "normal",
+      "assignee": "owner",
+      "status": "접수됨"
+     }
+    ],
+    "fault": {
+     "faq": "ok",
+     "tickets": "ok",
+     "prompts": "ok",
+     "usage": "ok",
+     "dlq": "ok",
+     "slow_seconds": 8.0
+    }
+   }
+  },
+  {
+   "name": "wf10",
+   "at": "06:29:57",
+   "reset": {
+    "cmd": "tools/flow.py ops --reset",
+    "exit": 0,
+    "tail": [
+     "✔ live run logs, added FAQ, created tickets, DLQ and alerts emptied, fault switch all ok"
+    ]
+   },
+   "llm_down": {
+    "cmd": "tools/flow.py llm down",
+    "exit": 0,
+    "tail": [
+     "✔ OpenAI credential: broken key (drill). Restore with: uv run tools/flow.py llm up"
+    ]
+   },
+   "call": {
+    "tag": "wf10",
+    "at": "06:30:03",
+    "status": 200,
+    "seconds": 0.708,
+    "request": {
+     "request_id": "d81-6m-062938-wf10",
+     "user": "김하늘",
+     "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "llm_down",
+    "ticket": {
+     "ticket_id": "T-2001",
+     "priority": "normal",
+     "duplicate": false,
+     "assignee": "owner"
+    },
+    "answer": "담당자에게 확인을 요청했어요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 518
+    }
+   },
+   "call_risk": {
+    "tag": "wf10-risk",
+    "at": "06:30:03",
+    "status": 200,
+    "seconds": 0.765,
+    "request": {
+     "request_id": "d81-6m-062938-wf10-risk",
+     "user": "한기철",
+     "question": "숨이 차고 가슴이 아파요",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "llm_down",
+    "ticket": {
+     "ticket_id": "T-2002",
+     "priority": "high",
+     "duplicate": false,
+     "assignee": "pharmacist"
+    },
+    "answer": "담당자에게 확인을 요청했어요.\nAI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 538
+    }
+   },
+   "call_recall": {
+    "tag": "wf10-recall",
+    "at": "06:30:04",
+    "status": 200,
+    "seconds": 0.682,
+    "request": {
+     "request_id": "d81-6m-062938-wf10-recall",
+     "user": "김하늘",
+     "question": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+     "attempt": 1
+    },
+    "route": "담당자 이관",
+    "reason": "llm_down",
+    "ticket": {
+     "ticket_id": "T-2003",
+     "priority": "high",
+     "duplicate": false,
+     "assignee": "pharmacist"
+    },
+    "answer": "담당자에게 확인을 요청했어요.",
+    "sources": [],
+    "agents": [
+     "triage",
+     "handoff"
+    ],
+    "timings": {
+     "total_ms": 497
+    }
+   },
+   "store": {
+    "tickets_created": 3,
+    "tickets_for_keys": [
+     {
+      "ticket_id": "T-2001",
+      "key": "d81-6m-062938-wf10",
+      "title": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "requester": "김하늘",
+      "category": "closing",
+      "priority": "normal"
+     },
+     {
+      "ticket_id": "T-2002",
+      "key": "d81-6m-062938-wf10-risk",
+      "title": "숨이 차고 가슴이 아파요",
+      "requester": "한기철",
+      "category": "senior",
+      "priority": "high"
+     },
+     {
+      "ticket_id": "T-2003",
+      "key": "d81-6m-062938-wf10-recall",
+      "title": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요.",
+      "requester": "김하늘",
+      "category": "recall",
+      "priority": "high"
+     }
+    ],
+    "dlq_size": 0,
+    "dlq_items": [],
+    "alerts_count": 2,
+    "alerts": [
+     {
+      "workflow": "team3-handoff",
+      "node": "Handoff",
+      "severity": "high",
+      "reason": "urgent",
+      "message": "[senior] pharmacist에게 이관",
+      "ticket_id": "T-2002",
+      "at": 1793946604.5445762
+     },
+     {
+      "workflow": "team3-handoff",
+      "node": "Handoff",
+      "severity": "high",
+      "reason": "urgent",
+      "message": "[recall] pharmacist에게 이관",
+      "ticket_id": "T-2003",
+      "at": 1793946605.279663
+     }
+    ],
+    "pg_for_keys": [
+     {
+      "ticket_id": "T-2002",
+      "key": "d81-6m-062938-wf10-risk",
+      "category": "senior",
+      "priority": "high",
+      "assignee": "pharmacist",
+      "status": "접수됨"
+     },
+     {
+      "ticket_id": "T-2003",
+      "key": "d81-6m-062938-wf10-recall",
+      "category": "recall",
+      "priority": "high",
+      "assignee": "pharmacist",
+      "status": "접수됨"
+     },
+     {
+      "ticket_id": "T-2001",
+      "key": "d81-6m-062938-wf10",
+      "category": "closing",
+      "priority": "normal",
+      "assignee": "owner",
+      "status": "접수됨"
+     }
+    ],
+    "fault": {
+     "faq": "ok",
+     "tickets": "ok",
+     "prompts": "ok",
+     "usage": "ok",
+     "dlq": "ok",
+     "slow_seconds": 8.0
+    }
+   },
+   "llm_up": {
+    "cmd": "tools/flow.py llm up",
+    "exit": 0,
+    "tail": [
+     "✔ OpenAI credential: real key from infra/.env restored"
+    ]
+   },
+   "control": {
+    "tag": "wf10-after",
+    "at": "06:30:11",
+    "status": 200,
+    "seconds": 3.439,
+    "request": {
+     "request_id": "d81-6m-062938-wf10-after",
+     "user": "김하늘",
+     "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+     "attempt": 1
+    },
+    "route": "자동 답변",
+    "reason": "",
+    "ticket": null,
+    "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록해 약국장에게 넘겨요[1][2][3].",
+    "sources": [
+     "closing-checklist",
+     "closing-cash-mismatch",
+     "closing-cash-mismatch"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier"
+    ],
+    "timings": {
+     "total_ms": 3306
+    }
+   },
+   "ops_after": {
+    "cmd": "tools/flow.py ops",
+    "exit": 0,
+    "tail": [
+     "DLQ: 0 (parked 0)",
+     "alerts: 2",
+     "  [high] team3-handoff · urgent · Handoff · [senior] pharmacist에게 이관",
+     "  [high] team3-handoff · urgent · Handoff · [recall] pharmacist에게 이관"
+    ]
+   }
+  },
+  {
+   "name": "idle",
+   "at": "06:30:15",
+   "reset": {
+    "cmd": "tools/flow.py ops --reset",
+    "exit": 0,
+    "tail": [
+     "✔ live run logs, added FAQ, created tickets, DLQ and alerts emptied, fault switch all ok"
+    ]
+   },
+   "gap0": {
+    "tag": "idle0",
+    "at": "06:30:15",
+    "status": 200,
+    "seconds": 3.388,
+    "request": {
+     "request_id": "d81-6m-062938-idle0",
+     "user": "김하늘",
+     "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+     "attempt": 1
+    },
+    "route": "자동 답변",
+    "reason": "",
+    "ticket": null,
+    "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+    "sources": [
+     "closing-checklist",
+     "closing-cash-mismatch",
+     "closing-cash-mismatch"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier"
+    ],
+    "timings": {
+     "total_ms": 3210
+    }
+   },
+   "gap30": {
+    "tag": "idle30",
+    "at": "06:30:48",
+    "status": 200,
+    "seconds": 2.925,
+    "request": {
+     "request_id": "d81-6m-062938-idle30",
+     "user": "김하늘",
+     "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+     "attempt": 1
+    },
+    "route": "자동 답변",
+    "reason": "",
+    "ticket": null,
+    "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+    "sources": [
+     "closing-checklist",
+     "closing-cash-mismatch",
+     "closing-cash-mismatch"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier"
+    ],
+    "timings": {
+     "total_ms": 2793
+    }
+   },
+   "gap90": {
+    "tag": "idle90",
+    "at": "06:32:21",
+    "status": 200,
+    "seconds": 3.464,
+    "request": {
+     "request_id": "d81-6m-062938-idle90",
+     "user": "김하늘",
+     "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+     "attempt": 1
+    },
+    "route": "자동 답변",
+    "reason": "",
+    "ticket": null,
+    "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록해 약국장에게 넘겨요[1][2][3].",
+    "sources": [
+     "closing-checklist",
+     "closing-cash-mismatch",
+     "closing-cash-mismatch"
+    ],
+    "agents": [
+     "triage",
+     "retriever",
+     "writer",
+     "verifier"
+    ],
+    "timings": {
+     "total_ms": 3310
+    }
+   }
+  },
+  {
+   "name": "bench",
+   "at": "06:32:25",
+   "reset": {
+    "cmd": "tools/flow.py ops --reset",
+    "exit": 0,
+    "tail": [
+     "✔ live run logs, added FAQ, created tickets, DLQ and alerts emptied, fault switch all ok"
+    ]
+   },
+   "new_ids": [
+    {
+     "tag": "bnew1",
+     "at": "06:32:25",
+     "status": 200,
+     "seconds": 4.298,
+     "request": {
+      "request_id": "d81-6m-062938-bnew1",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1
+     },
+     "route": "자동 답변",
+     "reason": "",
+     "ticket": null,
+     "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록해 약국장에게 넘겨요[1][2][3].",
+     "sources": [
+      "closing-checklist",
+      "closing-cash-mismatch",
+      "closing-cash-mismatch"
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "timings": {
+      "total_ms": 4119
+     }
+    },
+    {
+     "tag": "bnew2",
+     "at": "06:32:29",
+     "status": 200,
+     "seconds": 3.889,
+     "request": {
+      "request_id": "d81-6m-062938-bnew2",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1
+     },
+     "route": "자동 답변",
+     "reason": "",
+     "ticket": null,
+     "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 문 닫은 뒤 처방 검수부터 카드, 현금 순서로 확인해요[1]. 만약 돈이 안 맞으면 준비금 빼기부터 다시 세고, 그",
+     "sources": [
+      "closing-checklist",
+      "closing-cash-mismatch",
+      "closing-cash-mismatch"
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "timings": {
+      "total_ms": 3704
+     }
+    },
+    {
+     "tag": "bnew3",
+     "at": "06:32:33",
+     "status": 200,
+     "seconds": 3.734,
+     "request": {
+      "request_id": "d81-6m-062938-bnew3",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1
+     },
+     "route": "자동 답변",
+     "reason": "",
+     "ticket": null,
+     "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+     "sources": [
+      "closing-checklist",
+      "closing-cash-mismatch",
+      "closing-cash-mismatch"
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "timings": {
+      "total_ms": 3597
+     }
+    },
+    {
+     "tag": "bnew4",
+     "at": "06:32:37",
+     "status": 200,
+     "seconds": 4.098,
+     "request": {
+      "request_id": "d81-6m-062938-bnew4",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1
+     },
+     "route": "자동 답변",
+     "reason": "",
+     "ticket": null,
+     "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+     "sources": [
+      "closing-checklist",
+      "closing-cash-mismatch",
+      "closing-cash-mismatch"
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "timings": {
+      "total_ms": 3947
+     }
+    },
+    {
+     "tag": "bnew5",
+     "at": "06:32:41",
+     "status": 200,
+     "seconds": 3.171,
+     "request": {
+      "request_id": "d81-6m-062938-bnew5",
+      "user": "김하늘",
+      "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+      "attempt": 1
+     },
+     "route": "자동 답변",
+     "reason": "",
+     "ticket": null,
+     "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록한 뒤 약국장에게 넘겨요[1][2][3].",
+     "sources": [
+      "closing-checklist",
+      "closing-cash-mismatch",
+      "closing-cash-mismatch"
+     ],
+     "agents": [
+      "triage",
+      "retriever",
+      "writer",
+      "verifier"
+     ],
+     "timings": {
+      "total_ms": 2933
+     }
+    }
+   ],
+   "same_id": {
+    "cmd": "tools/flow.py bench team3-support ~/reg_1106/fault/bench_req.json -n 5",
+    "exit": 0,
+    "tail": [
+     "✔ #4 · HTTP 200 · 0.12s · route=자동 답변",
+     "✔ #5 · HTTP 200 · 0.16s · route=자동 답변",
+     "p50 0.13s · p95 3.95s · max 3.95s · failures 0/5",
+     "report: runs/bench-team3-support-20261106-063249.json"
+    ]
+   },
+   "same_id_report": "runs/bench-team3-support-20261106-063249.json"
+  },
+  {
+   "name": "pg_legacy",
+   "at": "06:32:49",
+   "new_rows": 3,
+   "new_empty_assignee": 0,
+   "new_by_assignee": {
+    "owner": 1,
+    "pharmacist": 2
+   },
+   "old_rows": 81,
+   "old_empty_assignee_kept": 58
+  }
+ ],
+ "vm_commit": [
+  "3c9ca9b Merge pull request #77 from twlaude/dayoung/d81-design-doc"
+ ],
+ "finished": "2026-11-06T06:32:49+0000"
+}

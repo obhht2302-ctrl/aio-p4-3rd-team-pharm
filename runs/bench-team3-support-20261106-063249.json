@@ -1,0 +1,231 @@
+{
+  "webhook": "team3-support",
+  "request": {
+    "request_id": "d81-6m-062938-bsame",
+    "user": "김하늘",
+    "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+    "attempt": 1
+  },
+  "n": 5,
+  "p50": 0.134,
+  "p95": 3.949,
+  "max": 3.949,
+  "failures": 0,
+  "runs": [
+    {
+      "run": 1,
+      "status": 200,
+      "seconds": 3.949,
+      "response": {
+        "request_id": "d81-6m-062938-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 문 닫은 뒤 처방 검수, 카드, 현금 순서로 확인해요[1]. 만약 돈이 안 맞으면 준비금 빼기부터 다시 세고, 여러 대면 각 계산대별로 따로 맞추며, 그래도 안 맞으면 기록 후 약국장에게 넘겨요[2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.584
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3789
+        }
+      }
+    },
+    {
+      "run": 2,
+      "status": 200,
+      "seconds": 0.134,
+      "response": {
+        "request_id": "d81-6m-062938-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 문 닫은 뒤 처방 검수, 카드, 현금 순서로 확인해요[1]. 만약 돈이 안 맞으면 준비금 빼기부터 다시 세고, 여러 대면 각 계산대별로 따로 맞추며, 그래도 안 맞으면 기록 후 약국장에게 넘겨요[2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.584
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3789
+        }
+      }
+    },
+    {
+      "run": 3,
+      "status": 200,
+      "seconds": 0.128,
+      "response": {
+        "request_id": "d81-6m-062938-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 문 닫은 뒤 처방 검수, 카드, 현금 순서로 확인해요[1]. 만약 돈이 안 맞으면 준비금 빼기부터 다시 세고, 여러 대면 각 계산대별로 따로 맞추며, 그래도 안 맞으면 기록 후 약국장에게 넘겨요[2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.584
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3789
+        }
+      }
+    },
+    {
+      "run": 4,
+      "status": 200,
+      "seconds": 0.117,
+      "response": {
+        "request_id": "d81-6m-062938-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 문 닫은 뒤 처방 검수, 카드, 현금 순서로 확인해요[1]. 만약 돈이 안 맞으면 준비금 빼기부터 다시 세고, 여러 대면 각 계산대별로 따로 맞추며, 그래도 안 맞으면 기록 후 약국장에게 넘겨요[2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.584
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3789
+        }
+      }
+    },
+    {
+      "run": 5,
+      "status": 200,
+      "seconds": 0.162,
+      "response": {
+        "request_id": "d81-6m-062938-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 문 닫은 뒤 처방 검수, 카드, 현금 순서로 확인해요[1]. 만약 돈이 안 맞으면 준비금 빼기부터 다시 세고, 여러 대면 각 계산대별로 따로 맞추며, 그래도 안 맞으면 기록 후 약국장에게 넘겨요[2][3].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.591
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.584
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "3. 그래도 안 맞으면 — 기록하고 약국장에게 넘기기",
+            "score": 0.504
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3789
+        }
+      }
+    }
+  ]
+}
