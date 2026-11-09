@@ -1,6 +1,6 @@
 # 00-DESIGN · 창고형 약국 업무 도우미 — 전체 설계 (SSOT)
 
-> 3팀 단위 프로젝트 (80~82일차, 2026-11-05 목 · 06 금 · 09 월). 이 파일이 **계약 · 파일 · 이름의 유일한 기준**입니다. 역할 명세(`specs/0N-*.md`)는 이 파일을 가리키기만 하고 다시 정의하지 않습니다. 바꿀 때는 이 파일을 먼저 고치고(리드 승인) 명세 · 코드가 따라갑니다.
+> 3팀 단위 프로젝트 (80~82일차, 2026-11-05 목 · 06 금 · 09 월). 이 파일이 **계약 · 파일 · 이름의 유일한 기준**입니다. 바꿀 때는 이 파일을 먼저 고치고(리드 승인) 코드가 따라갑니다.
 > 근거: 샘 안내서 `Lecture/80-82-Project/student/00~11` · 템플릿 6개 · `AIO-P4-TIMELINE.md` (11/2 기준), 64~79일차 실습. data-api · `flow.py`는 샘 77일차 판 기준입니다.
 
 ## 0. 고정 vs 팀 결정
@@ -184,7 +184,7 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 | `senior-pain-joint` | senior | all | 열 · 통증 약 · 관절 소염진통제 · 어르신 주의 · 출처와 기준일 (성분 6개) | T-32 · T-33 |
 | `senior-safety-signals` | senior | all | 바로 약사 · 119 · 같이 먹어도 되나 묻기 전에 · AI 안내의 한계 | T-33 · T-34 |
 
-- 공공 API 주소 · 버전 (11/2 호출 확인)은 `specs/02-rag-full.md` 1절 표. 키는 저장소에 쓰지 않고, 팀원은 각자 같은 ID로 활용신청하거나 이미 만든 마크다운을 씁니다.
+- 공공 API 주소 · 버전 (11/2 호출 확인)은 RAG 설계서 1절 출처 칸. 키는 저장소에 쓰지 않고, 팀원은 각자 같은 ID로 활용신청하거나 이미 만든 마크다운을 씁니다.
 - 형식: `# 제목` + `## 절` 3~4개, 절당 150~400자, 한국어, 전부 가짜 (어르신 문서만 공공 약 정보 — e약은요 · DUR 파일 — 를 옮기고 문서마다 데이터 이름 · 기준일 · 라이선스, 원문 대조는 RAG 담당 검수 때). 근거 없는 숫자 금지 (마감 문서의 사실은 리드가 가진 약국 마감 조사 기준: 냉장고 온도 기록은 약국의 법 의무가 아니라 **우리 약국 규칙**, 청구 전송은 일일 마감이 아니라 **월간 업무**). 머리에 "검수 전 초안" 한 줄 — 검수하면 지움.
 - 꺼진 팩: `stockout-first-response` · `billing-explain`은 목차 초안만.
 
@@ -224,13 +224,13 @@ tools/packs.py selftest           → 고정 2개 + 나머지 조합 7개 전부
 
 ## 8. 역할 · 파일 · 산출물
 
-| 역할 | 사람 | 명세 | 파일 | 산출물 절 |
-| --- | --- | --- | --- | --- |
-| 리드 · 통합 + 시험 · 품질 | 태웅 | `specs/05-lead.md` · `specs/04-test-and-qa.md` | `00-DESIGN.md` · `AGENTS.md` · `packs/` · `tools/packs.py` · `workflows/team3-ticket.json` · `team3-alert.json` · `infra/` · `cases/common.json` 확인 · `requests/` · `runs/` · `docs/TOPIC.md` · `TEAM-CHARTER.md` · `daily/` | 헌장 · 데일리 · README · 설계서 1절 · 실행 결과서 (5절 화면은 해든) |
-| 오케스트레이션 (+ 화면 QA 같이) | 다영 | `specs/01-orchestration.md` | `workflows/team3-support.json` | 설계서 2~4절 |
-| RAG | 영민 | `specs/02-rag.md` | `packs/*/knowledge/` 검수, `workflows/team3-index.json` · `team3-search.json`, `docs/rag-eval/` | RAG 설계서 전부 |
-| 연동 · 안정성 + 뒷단 | 병훈 | `specs/03-backend.md` | `workflows/team3-handoff.json` · `team3-errors.json`, `api/` | 설계서 5~7절 |
-| 화면 | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | `specs/06-screen.md` | **`web/`**, `docs/qa/screen-qa.md` 반영 칸 | 실행 결과서 5절 화면 (캡처 · QA 반영) |
+| 역할 | 사람 | 파일 | 산출물 절 |
+| --- | --- | --- | --- |
+| 리드 · 통합 + 시험 · 품질 | 태웅 | `00-DESIGN.md` · `packs/` · `tools/packs.py` · `workflows/team3-ticket.json` · `team3-alert.json` · `infra/` · `cases/common.json` 확인 · `requests/` · `runs/` · `docs/TOPIC.md` · `TEAM-CHARTER.md` · `daily/` | 헌장 · 데일리 · README · 설계서 1절 · 실행 결과서 (5절 화면은 해든) |
+| 오케스트레이션 (+ 화면 QA 같이) | 다영 | `workflows/team3-support.json` | 설계서 2~4절 |
+| RAG | 영민 | `packs/*/knowledge/` 검수, `workflows/team3-index.json` · `team3-search.json`, `docs/rag-eval/` | RAG 설계서 전부 |
+| 연동 · 안정성 + 뒷단 | 병훈 | `workflows/team3-handoff.json` · `team3-errors.json`, `api/` | 설계서 5~7절 |
+| 화면 | 해든 (직접 하고, 막히면 태웅 · 다영이 도와줌) | **`web/`**, `docs/qa/screen-qa.md` 반영 칸 | 실행 결과서 5절 화면 (캡처 · QA 반영) |
 
 - 샘 덱대로면 5명 팀은 연동 담당이 `web/` · `api/`를 같이 맡지만, 우리는 `web/`을 해든이 따로 맡고 (시험 · 품질과 실행 결과서는 리드가 같이 맡음, 11/3), 다영 · 태웅이 써 보고 고칠 점을 내면(화면 QA) 해든이 반영합니다. 화면은 가산이라 문서 · 필수 WF가 밀리면 멈춥니다.
 

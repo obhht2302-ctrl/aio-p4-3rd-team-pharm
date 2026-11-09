@@ -1,7 +1,7 @@
 # 11/06 팀 VM 화면 점검 결과 (해든)
 
 - 대상: 팀 VM `aio-t3` (main 2146846, 실제 모드), 11/06 14:50~16:17 KST (질문지 점검은 15:53~16:16)
-- 기준: `docs/qa/screen-qa.md`, `docs/EXECUTION-RESULT.md`, `specs/06-screen.md`
+- 기준: `docs/qa/screen-qa.md`, `docs/EXECUTION-RESULT.md`, `web/README.md`
 - 지킨 것: 119 버튼 누름 0건, 담당자 이관은 2-c 1건(T-2004)만, n8n 워크플로 손대지 않음
 - 캡처: 해든 PC에 보관 (레포에는 올리지 않음)
 

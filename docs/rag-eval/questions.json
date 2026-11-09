@@ -1,5 +1,5 @@
 {
- "_note": "RAG 비교 실험 질문 세트 (specs/02-rag-full.md 4절). 시나리오 9개 + 시나리오에 없는 문서 3개를 겨냥한 질문 3개. out_of_scope = SCORE_MIN을 정할 때 쓰는 문서 밖 질문 (hit 계산에는 안 씀).",
+ "_note": "RAG 비교 실험 질문 세트 (RAG 설계서 2절 비교 실험). 시나리오 9개 + 시나리오에 없는 문서 3개를 겨냥한 질문 3개. out_of_scope = SCORE_MIN을 정할 때 쓰는 문서 밖 질문 (hit 계산에는 안 씀).",
  "questions": [
   {"id": "WF-01", "q": "마감 때 계산대 현금은 어떤 순서로 맞춰요?", "user_access": ["all"], "expect_doc": "closing-checklist"},
   {"id": "WF-05", "q": "마감 차액은 얼마까지 승인 없이 처리해요?", "user_access": ["all"], "expect_doc": "closing-cash-mismatch", "must_not": "mgr-owner-rules"},

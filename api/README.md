@@ -1,6 +1,6 @@
 # api · FastAPI 뒷단 (조합 C)
 
-경로와 모양은 [`../specs/03-backend.md`](../specs/03-backend.md) 3절, 예시 요청 · 응답은 [`../contracts/examples/api.json`](../contracts/examples/api.json) (시험도 이 파일을 씀).
+경로와 모양은 띄운 뒤 `http://localhost:8000/docs`(FastAPI 자동 문서), 예시 요청 · 응답은 [`../contracts/examples/api.json`](../contracts/examples/api.json) (시험도 이 파일을 씀).
 
 ```bash
 cd api

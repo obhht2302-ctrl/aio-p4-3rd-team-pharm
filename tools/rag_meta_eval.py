@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""팀 VM ~/ragx 안에서 실행 (VPS에서 측정하거나 키를 가져오지 않는다).
+"""팀 VM ~/ragx 안에서 실행 (키를 VM 밖으로 가져가지 않는다).
 
 사용법: cd ~/ragx && python3 rag_meta_eval.py validate input.json
         python3 rag_meta_eval.py compare input.json
@@ -12,7 +12,7 @@ access_levels), blind 25의 reference(id별 [doc, section, score] top-4).
 compare는 같은 before 입력으로 검증 23/25 이상을 통과한 뒤에만 실행한다.
 키는 VM ~/aio-p4-3rd-team-pharm/infra/.env의 OPENAI_API_KEY에서 메모리로만
 읽고 출력·저장하지 않는다. embeddings.json 캐시에는 글과 벡터만 저장한다.
-입력·출력·캐시는 VM 작업 폴더 안에 두고, stdout에는 [TEST] 진행 요약만 쓴다.
+입력·출력·캐시는 VM 작업 폴더 안에 두고, stdout에는 진행 요약만 쓴다.
 """
 import argparse, datetime, hashlib, json, math, re, sys, urllib.request
 from pathlib import Path
@@ -53,7 +53,7 @@ def embed(texts, cache):
             assert len(row["embedding"]) == 3072
             cache[missing[row["index"]]] = row["embedding"]
         save("embeddings.json", cache)
-        print(f"[TEST] embedded={len(missing)} tokens={data['usage']['prompt_tokens']}", flush=True)
+        print(f"embedded={len(missing)} tokens={data['usage']['prompt_tokens']}", flush=True)
     return [cache[t.replace("\n", " ")] for t in texts]
 
 
@@ -123,7 +123,7 @@ def main():
             checks.append({"id": row["id"], "order_equal": order, "max_score_delta": round(delta, 6), "matched": order and delta <= 0.005})
         validation = {"before_sha256": digest, "matched": sum(c["matched"] for c in checks), "n": 25, "checks": checks}
         save("validation.json", validation)
-        print(f"[TEST] replica_validation={validation['matched']}/25", flush=True)
+        print(f"replica_validation={validation['matched']}/25", flush=True)
         return 0 if validation["matched"] >= 23 else 1
     assert mode == "compare"
     validation = load("validation.json")
@@ -131,7 +131,7 @@ def main():
     result = {"at": datetime.datetime.now(datetime.timezone.utc).isoformat(), "validation": validation,
               **{phase: evaluate(data[phase], data["questions"], cache) for phase in ("before", "after")}}
     save("measurement.json", result)
-    print("[TEST] comparison_saved=measurement.json", flush=True)
+    print("comparison_saved=measurement.json", flush=True)
     return 0
 
 

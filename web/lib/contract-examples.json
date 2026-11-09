@@ -1,5 +1,5 @@
 {
- "_note": "FastAPI (specs/03-backend.md 3절). 화면 가짜 응답(web/lib/mock.ts)과 pytest 가 이 값을 쓴다. packs.py build 가 web/lib/contract-examples.json 으로 복사.",
+ "_note": "FastAPI (api/README.md). 화면 가짜 응답(web/lib/mock.ts)과 pytest 가 이 값을 쓴다. packs.py build 가 web/lib/contract-examples.json 으로 복사.",
  "headers": {
   "X-Entry-Code": "<입장 코드>",
   "X-User": "%EC%9D%B4%EC%84%9C%EC%A4%80",

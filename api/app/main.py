@@ -1,4 +1,4 @@
-"""3팀 약국 업무 도우미 API (조합 C 뒷단). 경로 · 모양 = specs/03-backend.md 3절, 예시 = contracts/examples/api.json."""
+"""3팀 약국 업무 도우미 API (조합 C 뒷단). 경로 · 모양 = /docs(FastAPI 자동 문서), 예시 = contracts/examples/api.json."""
 from __future__ import annotations
 
 import json
