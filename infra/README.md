@@ -9,15 +9,19 @@
 
 ## 노트북에서
 
+먼저 수업 실습용 n8n(2.42.6, `~/day65-n8n`)을 켜 둡니다. 화면의 질문은 FastAPI를 거쳐 n8n 웹훅으로 가고, compose는 그 n8n과 같은 도커 네트워크에 붙습니다.
+
 ```bash
 # 1) 우리 파일 만들기
 cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py build && python3 tools/packs.py check
-# 2) 팀 설정 (infra/.env, n8n Credential, data-api — 켜져 있던 샘 data-api는 스크립트가 멈춤). README '바로 실행' 2번
+# 2) 팀 설정 (infra/.env, n8n Credential, data-api — 켜져 있던 샘 data-api는 스크립트가 멈춤). 루트 README.md '바로 실행' 2번
 bash tools/setup.sh
 # 3) api까지 띄우기 (화면은 web/에서 npm run build 를 먼저 해야 out/ 이 생김)
 docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api
 curl -s localhost:8800/docs | head -c 300   # 우리 문서 10개가 나와야 함
 curl -s localhost:8000/health
+# 4) 화면까지: web/에서 npm run build 로 web/out/ 을 만든 뒤
+docker compose -f infra/compose.team3.yml --env-file infra/.env up -d web   # → http://localhost:3000
 ```
 
 - 샘 시나리오의 `before`(`/tickets-reset` · `/cache-clear` …)와 `flow.py fault`는 이 data-api에서도 그대로 됩니다.
