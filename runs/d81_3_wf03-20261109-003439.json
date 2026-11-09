@@ -1,0 +1,47 @@
+{
+  "cases": "d81_3_wf03.json",
+  "webhook": "team3-support",
+  "passed": 1,
+  "total": 1,
+  "results": [
+    {
+      "case": "WF-03 검색 결과 없음",
+      "webhook": "team3-support",
+      "run": 1,
+      "passed": true,
+      "problems": [],
+      "seconds": 1.6,
+      "status": 200,
+      "request": {
+        "request_id": "wf03",
+        "user": "윤서아",
+        "question": "직원 휴게실 정수기가 고장 났어요"
+      },
+      "response": {
+        "request_id": "wf03",
+        "route": "담당자 이관",
+        "answer": "약국장님께 확인을 요청했어요. 답이 오면 ‘내 문의’에서 볼 수 있어요.",
+        "sources": [],
+        "ticket": {
+          "ticket_id": "T-2001",
+          "priority": "normal",
+          "duplicate": false,
+          "assignee": "owner"
+        },
+        "agents": [
+          "triage",
+          "handoff"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "no_evidence",
+        "timings": {
+          "total_ms": 1438
+        }
+      }
+    }
+  ]
+}

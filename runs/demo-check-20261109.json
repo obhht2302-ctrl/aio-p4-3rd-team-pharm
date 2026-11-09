@@ -1,0 +1,256 @@
+{
+ "at": "2026-11-09 09:55:50",
+ "asks": [
+  {
+   "tag": "정상 답변",
+   "user": "김하늘",
+   "q": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+   "attempt": 1,
+   "status": 200,
+   "sec": 5.38,
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞춰요. 카드 단말기 마감 전표와도 비교하며, 계산대마다 따로 맞추고 안 맞으면 다시 세고 기록해 약국장에게 넘겨요[1][2][3].",
+   "sources": [
+    "closing-checklist",
+    "closing-cash-mismatch",
+    "closing-cash-mismatch"
+   ],
+   "ticket": null,
+   "request_id": "web-60a105b9"
+  },
+  {
+   "tag": "약사 이관 · 직원 긴급",
+   "user": "김하늘",
+   "q": "약품 냉장고 온도가 9도로 올라가 있어요",
+   "attempt": 1,
+   "status": 200,
+   "sec": 5.18,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "answer": "약품 냉장고 온도가 9도로 올라갔으면 온도와 시각을 적어서 바로 당일 책임 약사에게 알려야 해요. 약을 옮기거나 버리지 말고 즉시 보고하는 것이 첫 조치입니다[1][2]. 지금 바로 책임 약사에게 전달했어요.",
+   "sources": [
+    "closing-checklist",
+    "scope-and-escalation"
+   ],
+   "ticket": {
+    "ticket_id": "T-2001",
+    "priority": "high",
+    "duplicate": false,
+    "assignee": "pharmacist"
+   },
+   "request_id": "web-990dd390"
+  },
+  {
+   "tag": "약사 이관 · 손님 판단 1턴",
+   "user": "한기철",
+   "q": "혈압약이랑 관절약 같이 먹어도 돼요?",
+   "attempt": 1,
+   "status": 200,
+   "sec": 1.62,
+   "route": "보완 질문",
+   "reason": "",
+   "answer": "정확히 안내해 드리려면 약 이름, 지금 드시는 약을 말씀해 주시겠어요?\nAI가 공공 의약품 정보를 정리한 안내예요. 약을 드실지는 꼭 약사와 상의해 주세요.",
+   "sources": [],
+   "ticket": null,
+   "request_id": "web-8ea82249"
+  },
+  {
+   "tag": "약사 이관 · 손님 판단 2턴",
+   "user": "한기철",
+   "q": "혈압약이랑 관절약 같이 먹어도 돼요?",
+   "attempt": 2,
+   "status": 200,
+   "sec": 4.4,
+   "route": "담당자 이관",
+   "reason": "needs_person",
+   "answer": "혈압약과 소염진통제는 병용금기 목록에 없지만, 같이 먹어도 된다는 뜻은 아니에요. 암로디핀과 이부프로펜을 드신다고 하셨는데, 약사에게 확인해서 안내해 드리도록 넘겼어요[1][2].\nAI가 공공 의약품 정보를 정리한 안내예요. 약을 드실지는 꼭 약사와 상의해 주세요.",
+   "sources": [
+    "senior-pain-joint",
+    "senior-safety-signals"
+   ],
+   "ticket": {
+    "ticket_id": "T-2002",
+    "priority": "normal",
+    "duplicate": false,
+    "assignee": "pharmacist"
+   },
+   "request_id": "web-bbfc6366"
+  },
+  {
+   "tag": "약사 이관 · 손님 위험 신호",
+   "user": "최영순",
+   "q": "약 먹고 나서 숨이 차고 가슴이 아파요",
+   "attempt": 1,
+   "status": 200,
+   "sec": 3.91,
+   "route": "담당자 이관",
+   "reason": "risk_signal",
+   "answer": "숨이 차고 가슴이 아픈 증상은 긴급한 상황일 수 있어서 바로 약사에게 넘기겠습니다. 위급하면 119에 먼저 연락하는 것이 좋습니다[1].\nAI가 공공 의약품 정보를 정리한 안내예요. 약을 드실지는 꼭 약사와 상의해 주세요.",
+   "sources": [
+    "senior-safety-signals"
+   ],
+   "ticket": {
+    "ticket_id": "T-2003",
+    "priority": "high",
+    "duplicate": false,
+    "assignee": "pharmacist"
+   },
+   "request_id": "web-35f0f4a0"
+  },
+  {
+   "tag": "약국장 이관 · 손님 약국 이용",
+   "user": "최영순",
+   "q": "약국 일요일에도 문 열어요?",
+   "attempt": 1,
+   "status": 200,
+   "sec": 1.62,
+   "route": "담당자 이관",
+   "reason": "no_evidence",
+   "answer": "이 내용은 약국장님께 확인을 부탁드렸어요. 잠시만 기다려 주세요.",
+   "sources": [],
+   "ticket": {
+    "ticket_id": "T-2004",
+    "priority": "normal",
+    "duplicate": false,
+    "assignee": "owner"
+   },
+   "request_id": "web-658f9e9c"
+  },
+  {
+   "tag": "접수 조회",
+   "user": "김하늘",
+   "q": "R-1001 지금 어떻게 됐어요?",
+   "attempt": 1,
+   "status": 200,
+   "sec": 1.38,
+   "route": "자동 답변",
+   "reason": "",
+   "answer": "R-1001 접수 건은 지금 ‘약국장 확인 중’ 상태예요. 약국장이 11/5 오전에 정산표와 계산대 기록을 확인할 예정이에요.",
+   "sources": [],
+   "ticket": null,
+   "request_id": "web-cd86b5f8"
+  },
+  {
+   "tag": "WF-12 복합",
+   "user": "김하늘",
+   "q": "뉴스에 나온 OTC-03 시럽 회수요, 아직 진열돼 있어요. 제 마감 차액 건(R-1001)도 어떻게 됐나요?",
+   "attempt": 1,
+   "status": 200,
+   "sec": 4.39,
+   "route": "담당자 이관",
+   "reason": "urgent",
+   "answer": "OTC-03 시럽은 제조번호를 확인해서 진열대와 창고에서 바로 빼고, \"회수 — 판매 금지\" 표시를 붙인 상자에 따로 보관해야 해요. 개수와 제조번호, 뺀 시각, 뺀 사람을 기록하고 회수의무자에게 보유량을 알려야 합니다[1][2].\n참고로 R-1001 접수 건은 지금 ‘약국장 확인 중’ 상태예요. 약국장이 11/5 오전에 정산표와 계산대 기록을 확인할 예정이에요.",
+   "sources": [
+    "recall-first-response",
+    "recall-first-response"
+   ],
+   "ticket": {
+    "ticket_id": "T-2005",
+    "priority": "high",
+    "duplicate": false,
+    "assignee": "pharmacist"
+   },
+   "request_id": "web-fdbc53cc"
+  },
+  {
+   "tag": "손님 범위 밖",
+   "user": "한기철",
+   "q": "오늘 날씨 어때요?",
+   "attempt": 1,
+   "status": 200,
+   "sec": 1.31,
+   "route": "보완 질문",
+   "reason": "",
+   "answer": "이 화면은 약 정보와 약국 이용만 도와드려요. 드시는 약이나 몸 상태가 궁금하시면 말씀해 주세요.",
+   "sources": [],
+   "ticket": null,
+   "request_id": "web-77b60f65"
+  }
+ ],
+ "my_requests": {
+  "status_self": 200,
+  "status_other": 403,
+  "status_no_header": 403,
+  "found_today": [
+   "web-60a105b9",
+   "web-990dd390",
+   "web-cd86b5f8",
+   "web-fdbc53cc"
+  ],
+  "expected": [
+   "web-60a105b9",
+   "web-990dd390",
+   "web-cd86b5f8",
+   "web-fdbc53cc"
+  ]
+ },
+ "assignee_check": [
+  {
+   "tag": "약사 이관 · 직원 긴급",
+   "ticket_id": "T-2001",
+   "resp_assignee": "pharmacist",
+   "pg_assignee": "pharmacist",
+   "resp_priority": "high",
+   "pg_priority": "high",
+   "pg_key": "web-990dd390",
+   "request_id": "web-990dd390",
+   "alert_text": [
+    "[closing] pharmacist에게 이관"
+   ],
+   "match": true
+  },
+  {
+   "tag": "약사 이관 · 손님 판단 2턴",
+   "ticket_id": "T-2002",
+   "resp_assignee": "pharmacist",
+   "pg_assignee": "pharmacist",
+   "resp_priority": "normal",
+   "pg_priority": "normal",
+   "pg_key": "web-bbfc6366",
+   "request_id": "web-bbfc6366",
+   "alert_text": [],
+   "match": true
+  },
+  {
+   "tag": "약사 이관 · 손님 위험 신호",
+   "ticket_id": "T-2003",
+   "resp_assignee": "pharmacist",
+   "pg_assignee": "pharmacist",
+   "resp_priority": "high",
+   "pg_priority": "high",
+   "pg_key": "web-35f0f4a0",
+   "request_id": "web-35f0f4a0",
+   "alert_text": [
+    "[senior] pharmacist에게 이관"
+   ],
+   "match": true
+  },
+  {
+   "tag": "약국장 이관 · 손님 약국 이용",
+   "ticket_id": "T-2004",
+   "resp_assignee": "owner",
+   "pg_assignee": "owner",
+   "resp_priority": "normal",
+   "pg_priority": "normal",
+   "pg_key": "web-658f9e9c",
+   "request_id": "web-658f9e9c",
+   "alert_text": [],
+   "match": true
+  },
+  {
+   "tag": "WF-12 복합",
+   "ticket_id": "T-2005",
+   "resp_assignee": "pharmacist",
+   "pg_assignee": "pharmacist",
+   "resp_priority": "high",
+   "pg_priority": "high",
+   "pg_key": "web-fdbc53cc",
+   "request_id": "web-fdbc53cc",
+   "alert_text": [
+    "[recall] pharmacist에게 이관"
+   ],
+   "match": true
+  }
+ ]
+}
