@@ -10,7 +10,17 @@
 
 ## 설치와 실행
 
-Node.js 20.9 이상이 필요합니다. 이 폴더에서 실행하세요.
+Node.js 20.9 이상이 필요합니다. 이 폴더(`web/`)에서 실행하세요.
+
+맥 · 리눅스:
+
+```bash
+npm install
+[ -f .env.local ] || cp .env.example .env.local
+npm run dev -- --port 3100
+```
+
+윈도우 (PowerShell):
 
 ```powershell
 $env:npm_config_cache = (Join-Path (Get-Location) '.npm-cache')
@@ -21,7 +31,7 @@ npm run dev -- --port 3100
 
 브라우저에서 `http://localhost:3100`을 엽니다. 빌드를 확인할 때는 개발 서버를 `Ctrl+C`로 종료한 뒤 `npm run build`와 `npm run check`를 실행하세요.
 
-기본 캐시 권한 오류를 피하려고 프로젝트 내부 `.npm-cache/`를 사용합니다. 설치된 버전은 `package-lock.json`에 고정돼 있습니다. Motion, lucide-react, sonner, Pretendard, Tailwind CSS 4와 shadcn UI 부품을 사용합니다. 본문 글꼴 Pretendard는 `next/font/local`로 패키지의 WOFF2 파일을 불러옵니다. 제목 글꼴 고운돋움은 `next/font/google`이 빌드할 때 받아 앱 안에 넣으므로, 빌드하는 PC는 인터넷이 돼야 합니다 (실행 중 외부 요청은 없습니다).
+윈도우 명령은 사용자 npm 캐시 폴더의 권한 오류를 피하려고 프로젝트 안 `.npm-cache/`를 씁니다. 설치된 버전은 `package-lock.json`에 고정돼 있습니다. Motion, lucide-react, sonner, Pretendard, Tailwind CSS 4와 shadcn UI 부품을 사용합니다. 본문 글꼴 Pretendard는 `next/font/local`로 패키지의 WOFF2 파일을 불러옵니다. 제목 글꼴 고운돋움은 `next/font/google`이 빌드할 때 받아 앱 안에 넣으므로, 빌드하는 PC는 인터넷이 돼야 합니다 (실행 중 외부 요청은 없습니다).
 
 기본값은 계약 예시를 사용하는 연습 모드입니다 (하단에 "연습 모드" 표시는 이 빌드에서만 보입니다). 실제 API를 연결할 때는 `.env.local`에 다음을 설정하고 개발 서버를 다시 시작하세요.
 
@@ -30,7 +40,7 @@ NEXT_PUBLIC_API_MODE=real
 NEXT_PUBLIC_API_BASE=http://localhost:8000
 ```
 
-API는 기본으로 `http://localhost:3000`만 허용합니다. 화면을 3100번으로 켜면 API를 켤 때 `CORS_ORIGINS=http://localhost:3100`을 함께 지정하세요 (`infra/.env`를 쓰면 그 파일에). `NEXT_PUBLIC_*` 값은 빌드할 때 들어가므로, 바꾸면 다시 빌드합니다.
+API는 기본으로 `http://localhost:3000`(compose로 띄운 화면 주소)에서 오는 요청만 허용합니다. 개발 서버로 화면을 3100번에 켜면 API를 켤 때 `CORS_ORIGINS=http://localhost:3100`을 함께 지정하세요 (`infra/.env`를 쓰면 그 파일에). `NEXT_PUBLIC_*` 값은 빌드할 때 들어가므로, 바꾸면 다시 빌드합니다.
 
 `npm run build`의 결과는 `web/out/`에 생기고, `infra/compose.team3.yml`의 nginx가 이 폴더를 보여 줍니다.
 
@@ -42,7 +52,7 @@ API는 기본으로 `http://localhost:3000`만 허용합니다. 화면을 3100�
 
 ## 화면 점검
 
-개발 서버를 `npm run dev -- --port 3100`으로 켜고, 다른 PowerShell 창의 `web/`에서 다음을 실행합니다. 브라우저를 새 세션으로 열어 세 화면과 사용자 역할, 375px 너비를 점검합니다.
+개발 서버를 `npm run dev -- --port 3100`으로 켜고, 다른 터미널의 `web/`에서 다음을 실행합니다 (맥 · 리눅스는 첫 줄 없이). 브라우저를 새 세션으로 열어 세 화면과 사용자 역할, 375px 너비를 점검합니다.
 
 ```powershell
 $env:npm_config_cache = (Join-Path (Get-Location) '.npm-cache')
