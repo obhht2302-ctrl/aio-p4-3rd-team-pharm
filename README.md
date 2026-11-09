@@ -75,6 +75,7 @@ team3-handoff ── 1) 티켓 · 알림 · 실패 대기열(DLQ) 기록
 | [RAG 설계서](docs/RAG-ARCHITECTURE.md) | 문서 · 청킹 · 임베딩 · 인덱스, 블라인드 질문 측정 |
 | [실행 결과서](docs/EXECUTION-RESULT.md) | 시나리오별 시험 기록, 실행 로그, 실패 사례, 남은 결함 |
 | [데일리 80](docs/daily/DAY80.md) · [81](docs/daily/DAY81.md) · [82](docs/daily/DAY82.md) | 날마다 한 일 · 숫자 · 다음 할 일 |
+| [3종 문서 최종 대조 (11/9)](docs/qa/final-checklist-20261109.md) | 강사 체크리스트 항목마다 상태 · 근거 파일, 설정 값(모델 · top_k · SCORE_MIN · timeout) JSON 대조 |
 | [시험 기록 전체 목록](runs/README.md) | 무엇을 · 언제 · 몇 번 시험했고 결과가 어땠는지, 결과 파일 68개 위치 |
 | [전체 설계 기준](00-DESIGN.md) | 계약(요청 · 응답 모양) · 권한 · 데이터 · 시나리오 |
 
