@@ -1,0 +1,206 @@
+{
+  "webhook": "team3-support",
+  "request": {
+    "request_id": "d82-6m-003955-bsame",
+    "user": "김하늘",
+    "question": "마감 때 계산대 현금은 어떤 순서로 맞춰요?",
+    "attempt": 1
+  },
+  "n": 5,
+  "p50": 0.126,
+  "p95": 3.402,
+  "max": 3.402,
+  "failures": 0,
+  "runs": [
+    {
+      "run": 1,
+      "status": 200,
+      "seconds": 3.402,
+      "response": {
+        "request_id": "d82-6m-003955-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 만약 돈이 안 맞으면 권종별로 다시 세고 다른 사람에게도 확인받는 절차를 거쳐요[1][2].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.59
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.586
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3247
+        }
+      }
+    },
+    {
+      "run": 2,
+      "status": 200,
+      "seconds": 0.126,
+      "response": {
+        "request_id": "d82-6m-003955-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 만약 돈이 안 맞으면 권종별로 다시 세고 다른 사람에게도 확인받는 절차를 거쳐요[1][2].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.59
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.586
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3247
+        }
+      }
+    },
+    {
+      "run": 3,
+      "status": 200,
+      "seconds": 0.118,
+      "response": {
+        "request_id": "d82-6m-003955-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 만약 돈이 안 맞으면 권종별로 다시 세고 다른 사람에게도 확인받는 절차를 거쳐요[1][2].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.59
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.586
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3247
+        }
+      }
+    },
+    {
+      "run": 4,
+      "status": 200,
+      "seconds": 0.127,
+      "response": {
+        "request_id": "d82-6m-003955-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 만약 돈이 안 맞으면 권종별로 다시 세고 다른 사람에게도 확인받는 절차를 거쳐요[1][2].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.59
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.586
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3247
+        }
+      }
+    },
+    {
+      "run": 5,
+      "status": 200,
+      "seconds": 0.123,
+      "response": {
+        "request_id": "d82-6m-003955-bsame",
+        "route": "자동 답변",
+        "answer": "마감 때 계산대 현금은 먼저 준비금 10만 원을 빼고 남은 현금을 세어 포스 현금 합계와 맞추는 순서로 진행해요. 카드 단말기 마감 전표와 포스 카드 합계도 함께 맞추고, 만약 돈이 안 맞으면 권종별로 다시 세고 다른 사람에게도 확인받는 절차를 거쳐요[1][2].",
+        "sources": [
+          {
+            "doc": "closing-checklist",
+            "section": "2. 문 닫은 뒤 — 돈 맞추기 (처방 검수, 카드, 현금 순서)",
+            "score": 0.59
+          },
+          {
+            "doc": "closing-cash-mismatch",
+            "section": "1. 먼저 다시 세기",
+            "score": 0.586
+          }
+        ],
+        "ticket": null,
+        "agents": [
+          "triage",
+          "retriever",
+          "writer",
+          "verifier"
+        ],
+        "security": {
+          "blocked_by": "",
+          "reason": "",
+          "masked": 0
+        },
+        "reason": "",
+        "timings": {
+          "total_ms": 3247
+        }
+      }
+    }
+  ]
+}
