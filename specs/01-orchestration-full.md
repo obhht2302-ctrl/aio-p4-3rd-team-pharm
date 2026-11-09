@@ -109,7 +109,7 @@ uv run tools/flow.py test ~/aio-p4-3rd-team-pharm/cases/team.json -v
 | 14 | `Type policy` | code v2 | 아래 2.1 코드. `plan` 만들기 |
 | 15 | `Route by mode` | switch 3.2, `plan.route_key` | `deny` → 16 · `clarify` → 17 · `auto` / `evidence_handoff` → 18 · `handoff_only` → 22 · `record_status` → 19 |
 | 16 | `Deny` | set | `route: 권한 없음`, `reason: role_not_allowed` → 24 |
-| 17 | `Clarify` | code | `route: 보완 질문`, 답 = "더 알려 주세요: {missing 목록}" → 24 |
+| 17 | `Clarify` | code | `route: 보완 질문`, 답 = "정확히 안내해 드리려면 {missing 목록}을/를 알려 주세요." (손님은 "말씀해 주시겠어요?") → 24 |
 | 18 | `Search knowledge` | httpRequest `POST ={{ 'http://localhost:5678/webhook/team3-search' + ($('Support settings').first().json.SEARCH === 'real' ? '' : '-stub') }}` `{query, access_levels, top_k: 4, type}`, timeout 6000, neverError | 병렬 갈래 A. `stub`이면 가짜 웹훅 `team3-search-stub` |
 | 19 | `Get record` | httpRequest `GET http://data-api:8800/tickets/{{ plan.ticket_id || 'NONE' }}?requester={{ user }}`, timeout 4000, neverError + fullResponse | 병렬 갈래 B (번호 없으면 404 → 없음으로 침). `record_status`는 여기서 20b로 |
 | 20 | `Merge evidence` → `Build context` | merge v3 (`numberInputs: 2`) → code | 점수 내림차순, `SCORE_MIN` 미만 빼기, 같은 `doc+section` 빼기, 유형 `docs`를 앞으로, `[1] …` 번호 붙이기, 접수 상태 한 줄 (연락처는 묻을 때만) |
@@ -152,7 +152,7 @@ if (rule) Object.assign(plan, { mode: row.mode === 'handoff_only' ? 'handoff_onl
 if (rule && rule.ask_first && !v.context) { plan.clarify = true; plan.missing = rule.ask_first; }
 const missing = Array.isArray(t.missing) ? t.missing.filter(Boolean) : [];
 if (!rule && missing.length && plan.mode === 'auto') { plan.clarify = true; plan.missing = missing; }
-if (plan.mode === 'record_status' && !ticket_id) { plan.clarify = true; plan.missing = ['접수 번호 (R-로 시작)']; }
+if (plan.mode === 'record_status' && !ticket_id) { plan.clarify = true; plan.missing = ['R-로 시작하는 접수 번호']; }
 if (plan.clarify && v.attempt >= 3) { plan.clarify = false; plan.mode = 'handoff_only'; plan.reason = 'attempt_limit'; }
 if (row === POLICY.other && !plan.reason) plan.reason = 'no_evidence';
 plan.handoff = ['evidence_handoff', 'handoff_only'].includes(plan.mode);

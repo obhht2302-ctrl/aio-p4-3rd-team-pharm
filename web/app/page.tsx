@@ -64,14 +64,14 @@ function StaffAsk({ who }: { who: Who }) {
   return <Pager steps={["질문 쓰기", "답 보기"]} index={ask.page} onIndex={ask.setPage}>
     <div className="ask-write fit">
       <div className="ask-main">
-        <div className="ask-head"><h1>질문하기</h1><p>응대 중 확인이 필요한 내용을 입력하세요.</p></div>
+        <div className="ask-head"><h1>질문하기</h1><p>응대하다 확인이 필요한 내용을 적어 주세요.</p></div>
         <form className="ask-form" onSubmit={e => { e.preventDefault(); void ask.send(question); }}>
           <label htmlFor="question" className="field-label">질문</label>
           <Textarea id="question" aria-label="질문 내용" rows={2} maxLength={500} className="bg-white" value={question} onChange={e => ask.setQuestion(e.target.value)} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void ask.send(question); } }} />
           <p className="ask-reassure">작은 것도 괜찮아요. 처음엔 다들 물어보면서 배워요.</p>
           <div className="ask-form-foot"><span className="field-help">{question.length} / 500자 · Enter로 보내기</span><Button type="submit" className="primary-action" disabled={!question.trim() || loading}><Send size={16} /> {loading ? "보내는 중" : "보내기"}</Button></div>
         </form>
-        <p className="rail-note">AI가 매장 문서를 기준으로 안내합니다. 복약 판단은 약사에게 연결됩니다.</p>
+        <p className="rail-note">AI가 매장 문서를 기준으로 안내해요. 복약 판단이 필요하면 약사님께 연결해 드려요.</p>
       </div>
       {!!types.length && <aside className="ask-rail">
         <h3 className="rail-title">자주 찾는 문의 <small>누르면 바로 조회해요</small></h3>
@@ -91,9 +91,9 @@ function StaffAsk({ who }: { who: Who }) {
         {(answer || error) && <div className="answer-actions"><Button variant="outline" className="primary-action" onClick={ask.askAgain}>새 문의</Button></div>}
       </div>
       <aside className="answer-side">
-        {ask.recent.length === 0 ? <div className="recent-empty"><History size={20} /> 최근 문의가 없습니다.</div> :
+        {ask.recent.length === 0 ? <div className="recent-empty"><History size={20} /> 최근 문의가 없어요.</div> :
           <ScrollBox className="recent-list"><span>최근 문의</span>{ask.recent.map(item => <div key={item.request_id} className="recent-row"><RouteBadge route={item.route} /><span className="recent-q">{item.question}</span>{item.ticket && <b>{item.ticket.ticket_id}</b>}</div>)}</ScrollBox>}
-        <p className="recent-link"><ReceiptText size={14} /> 이전 문의는 <Link href="/my/">내 문의</Link>에서 확인할 수 있습니다.</p>
+        <p className="recent-link"><ReceiptText size={14} /> 이전 문의는 <Link href="/my/">내 문의</Link>에서 확인할 수 있어요.</p>
       </aside>
     </div>
   </Pager>;

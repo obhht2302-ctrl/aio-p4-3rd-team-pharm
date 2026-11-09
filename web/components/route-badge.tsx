@@ -14,16 +14,16 @@ const tones: Record<string, string> = {
 export const routeTone = (route: string) => tones[route] ?? "denied";
 export const routeLine: Record<string, string> = {
   "자동 답변": "매장 규정 기준 안내",
-  "보완 질문": "추가 정보가 필요합니다",
-  "담당자 이관": "담당자에게 전달했습니다",
-  "권한 없음": "열람 권한이 없습니다",
-  "차단": "처리할 수 없는 요청입니다",
+  "보완 질문": "조금 더 알려 주세요",
+  "담당자 이관": "담당자에게 전달했어요",
+  "권한 없음": "이 계정으로는 볼 수 없는 내용이에요",
+  "차단": "도와드리기 어려운 요청이에요",
 };
 export const seniorLine: Record<string, string> = {
   "자동 답변": "찾아 드렸어요",
   "보완 질문": "조금만 더 알려 주세요",
-  "담당자 이관": "약사에게 전해 드렸어요",
-  "권한 없음": "이 내용은 약사에게 여쭤봐 주세요",
+  "담당자 이관": "약사님께 전해 드렸어요",
+  "권한 없음": "이 내용은 약사님께 여쭤봐 주세요",
   "차단": "이 요청은 도와드리기 어려워요",
 };
 
@@ -35,6 +35,8 @@ export const handoffState = (answer: { route: string; ticket: unknown; reason?: 
 export const UNSENT_LINE = "아직 접수되지 않았어요";
 export const HELD_LINE = "요청은 보관됐어요 · 확인되는 대로 연락드려요";
 export const RETRY_NOTE = "잠시 후 다시 시도해 주세요.";
+// 어르신 화면 이관 문구는 실제 받은 사람(ticket.assignee)으로 — 약국장에게 간 건을 '약사님께'로 쓰지 않게.
+export const seniorHandoffLine = (ticket: unknown) => (ticket as { assignee?: string } | null)?.assignee === "owner" ? "약국장님께 전해 드렸어요" : seniorLine["담당자 이관"];
 
 export function RouteBadge({ route }: { route: string }) {
   return <motion.span className="inline-flex" initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.2 }}>

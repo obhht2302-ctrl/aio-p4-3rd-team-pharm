@@ -14,14 +14,14 @@ export async function api<T = unknown>(method: string, path: string, who: Who | 
       signal: AbortSignal.timeout(20000),
     });
   } catch {
-    throw new Error("지금 서버가 응답하지 않아요. 잠시 뒤 다시 해 주세요.");
+    throw new Error("지금 서버가 응답하지 않아요. 잠시 뒤에 다시 시도해 주세요.");
   }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const fallback = res.status === 401 ? "입장 코드가 맞지 않아요." :
+    const fallback = res.status === 401 ? "입장 코드가 맞지 않아요. 한 번 더 확인해 주세요." :
       res.status === 403 ? "이 화면을 볼 권한이 없어요." :
       res.status === 404 ? "요청한 내용을 찾지 못했어요." :
-      "지금 서버가 응답하지 않아요. 잠시 뒤 다시 해 주세요.";
+      "지금 서버가 응답하지 않아요. 잠시 뒤에 다시 시도해 주세요.";
     throw new Error(typeof data.error === "string" && data.error ? data.error : fallback);
   }
   return data as T;

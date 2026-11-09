@@ -47,11 +47,11 @@ export function useAsk(who: Who) {
     setPage(1);
     try {
       const result = await api<Answer>("POST", "/api/ask", who, { user: who.name, question: text.trim(), context: nextContext, attempt: nextAttempt });
-      if (!result.route) throw new Error("질문을 처리하지 못했어요. 내용을 줄여 다시 보내 주세요.");
+      if (!result.route) throw new Error("죄송해요, 질문을 처리하지 못했어요. 조금 짧게 줄여서 다시 보내 주세요.");
       setAnswer(result);
       setAttempt(nextAttempt);
       setContext("");
-    } catch (e) { setError(e instanceof Error ? e.message : "요청을 처리하지 못했어요."); }
+    } catch (e) { setError(e instanceof Error ? e.message : "죄송해요, 요청을 처리하지 못했어요. 잠시 뒤에 다시 시도해 주세요."); }
     finally { setLoading(false); }
   };
 
