@@ -23,8 +23,9 @@
 6. 분류 Agent (`Triage`) → `Type policy` (역할 · `handoff_rules` · 보완 질문 · 접수 번호)
 7. 처리 방식으로 분기 (`Route by mode`: 자동 답변 · 근거 + 이관 · 이관만 · 접수 조회 + 권한 없음 · 보완 질문)
 8. 병렬: 지식 검색 (`team3-search`, 권한별 메모리 키) + 접수 조회 (`requester = user`)
-9. 답변 Agent (`Writer`) → 검증 Agent (`Verifier`) + 금지 문장 검사 (`Check answer`)
+9. 답변 Agent (`Writer`) → 검증 Agent (`Verifier`) + 금지 문장 검사 (`Check answer`) — 아래에 접수 상태 줄이 따로 붙는 R-번호 건은 답 본문에서 그 문장을 뺀다(WF-12, 82일차 #85)
 10. 이관 (`team3-handoff`: data-api 티켓 · 알림 · DLQ 먼저 → 화면 · Slack · Jira 덧붙임)
+    - 고정 안내 문구(차단 · 권한 없음 · 보완 질문 · 근거 없음 · 이관 · 장애)는 묻는 사람(손님 `patient` / 직원)과 실제 받는 사람(`assignee` → 약사님 · 약국장님) · 긴급도로 고른다 (82일차 #85)
 11. 출력 필터 (연락처 가림) → 응답 조립 · 캐시 저장 · 실행 기록 (개인정보 없이) → Respond
 
 ## 3. 워크플로우 흐름도
