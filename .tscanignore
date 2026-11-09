@@ -1,0 +1,21 @@
+# tscan 무시 목록 (82일차 5교시 비밀 검사) — 진짜 비밀이 아니라고 하나씩 확인한 것만. 키 · 토큰 종류는 파일 통째로 무시하지 않는다.
+# 가짜 직원 · 손님 시드 연락처 (010-0000-xxxx · example.com) — 연락처 종류만 무시
+phone:data/*.json
+email:data/*.json
+phone:packs/*/*.json
+email:packs/*/*.json
+# 샘 공통 시나리오 · 시험의 가짜 연락처 (WF-06 · WF-07 '가려야 할 값')
+phone:cases/common.json
+email:cases/common.json
+phone:api/tests/test_api.py
+phone:docs/EXECUTION-RESULT.md
+email:docs/EXECUTION-RESULT.md
+# 81일차 WF-01 실행 기록 사본 — n8n 실행 기록 안 가짜 연락처 원문(결과서 4.2 잔여 위험 근거)
+phone:runs/trace-wf01-20261106-0959.json
+email:runs/trace-wf01-20261106-0959.json
+# flow.py llm down 시험용 일부러 틀린 키 (sk-invalid…) — 진짜 키는 infra/.env에서만 읽음
+tools/flow.py:1091
+tools/flow.py:1109
+# 화면 빌드 부산물 (git에 안 올라감)
+web/.next/*
+web/tsconfig.tsbuildinfo
