@@ -2,6 +2,13 @@
 
 > 샘 `templates/WORKFLOW-DESIGN-TEMPLATE.md` (원본 요구 KSM-REQ 4절 산출물 1)의 구조입니다. 노드 이름은 `workflows/*.json`의 실제 이름과 같아야 합니다. 담당: 1절 리드, 2~4절 오케스트레이션, 5~7절 연동 · 안정성.
 
+## 현재 상태 (11/9)
+
+- 기준: main = 팀 VM `4eebd3c`(11/9 11:1x VM `git log`) · 워크플로우 마지막 변경 `383c762`(머지 `0bff65d`, WF-12 근거 번호) — 그 뒤는 문서만 · VM n8n에 아래 3절 표의 워크플로우 7개 · 색인 `pharm_kb_v1` 38청크.
+- 최신 결과: 11/9 재확인 공통 20/20 × 3 · 팀 24/24 × 3 · 장애 3/3 × 3 · Error Workflow 실제 1회 — 이 문서의 분기 · 저장 · 오류 경로를 [실행 결과서](EXECUTION-RESULT.md) 1절 같은 시나리오 ID로 확인했습니다(3.1 · 3.2).
+- 남은 한계: HTTP 재시도는 티켓 생성만 · 4xx · 429는 VM에서 재현하지 않음 · 화면 사용자 이름은 운영 SSO 몫 · n8n 실행 기록 안 연락처 원문 → [결과서 4.2](EXECUTION-RESULT.md#42-남은-결함--잔여-위험-동결-전-7교시-최종-회귀-기준). 동시 요청 15 · 30건은 실패 0 (`runs/recheck-20261109.md` 끝 절).
+- 강사 체크리스트 대조: [docs/qa/final-checklist-20261109.md](qa/final-checklist-20261109.md)
+
 ## 1. 업무 시나리오
 
 가상 창고형 약국에서 계산대 직원이 마감 순서 · 회수 공표 · 접수 건을 묻거나, 어르신 손님이 약 정보를 물으면 질문하기 화면(또는 팀 웹훅)으로 들어옵니다. 워크플로우는 입력을 검사하고 분류한 뒤, 유형의 처리 방식에 따라 약국 문서를 검색해 근거와 함께 답하거나, 사람이 정할 일(회수 대상 확인 · 현금 차액 · 복약 판단 · 위험 신호)은 당일 책임 약사나 약국장에게 티켓으로 넘깁니다. 기록은 늘 data-api(티켓 · 알림 · DLQ)에 먼저 남고, 약사 화면 · Slack · Jira는 덧붙임입니다.
@@ -59,7 +66,7 @@ flowchart TD
 | --- | --- | --- | --- |
 | `team3-support.json` | `POST /webhook/team3-support` | 다영 | 47 |
 | `team3-index.json` · `team3-search.json` | `team3-index` · `team3-search` | 영민 | 15 · 13 |
-| `team3-handoff.json` · `team3-errors.json` | `team3-handoff` · Error Trigger (`team3Errors00001`) | 병훈 | 32 · 12 |
+| `team3-handoff.json` · `team3-errors.json` | `team3-handoff` · Error Trigger (`team3Errors00001`) | 병훈 | 31 · 11 |
 | `team3-ticket.json` · `team3-alert.json` | Execute Workflow (`team3Ticket00001` · `team3Alert000001`) | 태웅 | 7 · 7 |
 
 ## 4. 에이전트 역할 · 분기 · 병렬 · 루프
@@ -71,6 +78,9 @@ flowchart TD
 | 분류 (triage) | 유형 · 긴급도 · 모자란 정보 | 질문 · 보완 답 · 역할 | `{type, urgency, missing, ticket_id}` | 없음 | 답하지 않음 | `Triage` |
 | 답변 (writer) | 번호 붙은 발췌로만 답 | 질문 · 발췌 · 접수 상태 | 글 + `[n]` | 없음 | 발췌 밖 내용, 복용 판단, 약속 | `Writer` |
 | 검증 (verifier) | 근거 · 정책 확인 | 질문 · 답 · 발췌 | `{grounded, policy_ok, issues}` | 없음 | 답을 새로 쓰지 않음 | `Verifier` |
+
+- LLM이 판단하는 곳은 위 세 노드뿐입니다(모델 `gpt-4.1-mini` · temperature 0, `Triage model` · `Writer model` · `Verifier model`). `Injection rules` · `Type policy` · `Route by mode` · `Build context` · `Check answer`는 코드 · 규칙입니다.
+- 실패 조건: `Triage`가 오류를 내면 `Triage failed?` → `LLM down` → 이관(`llm_down`). `Check answer`는 `grounded` · `policy_ok`가 둘 다 true이고, 금지 문장 · (자동 답변일 때) 약속 문장이 없고, 인용 번호가 발췌 범위 안일 때만 통과시킵니다. 통과 못 하면 자동 답변 계획은 이관(`low_confidence`), 답이 비면 `llm_down`입니다.
 
 ### 4.2 구조
 
@@ -98,6 +108,8 @@ flowchart TD
 | `Check user` | data-api `GET /employees/<user>` → 약국 계정 · SSO | 연습용은 키 없음 → 운영은 `X-Api-Key` | 이름 | `role` · `access_levels` | timeout 3초, 재시도 없음 · 404 · 응답 없음 → 400 `unknown_user` |
 
 > 약사 화면 알림은 n8n이 FastAPI로 따로 보내지 않습니다. FastAPI `GET /api/admin/alerts`가 data-api `GET /alerts`를 읽어(3초 캐시, 실패 시 마지막 성공값) 보여 줍니다 (`00-DESIGN.md` 3.4절).
+
+본체(`team3-support.json`) HTTP timeout 실제 값: `Check user` 3초 · `Check cache` 2초 · `Search knowledge` 6초 · `Get record` 3초 · `Handoff` 8초 · `Save cache` 2초 · `Log request` 2초, 모두 재시도 없음.
 
 ## 6. 노드 간 페이로드 (연결선마다)
 
@@ -134,6 +146,8 @@ flowchart TD
 | 예상 못 한 오류 | Error Trigger (`team3Errors00001`) | `/alerts` critical + `/dlq` (+ real이면 Jira) | — | 알림 · DLQ | 팀 |
 
 Error Workflow: `team3-errors` (`team3Errors00001`) — push·게시 뒤 웹훅 500에서 2~3초 안에 실행되는지 확인 (`flow.py ops`). 모든 워크플로우 `settings.errorWorkflow`에 연결.
+
+- 단계별 확인 (11/9): 파일 = `workflows/team3-errors.json` · 설정 = JSON 7개 모두 `settings.errorWorkflow` = `team3Errors00001` · 배포 = VM n8n 목록에 `team3Errors00001` (`n8n list:workflow`) · 실제 자동 실행 = errors 실행 4137 (알림 0 → 1 · DLQ 0 → 1, `runs/recheck-20261109.md` Error Workflow 절).
 
 ## 8. 64~79일차에서 가져온 것
 
