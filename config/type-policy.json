@@ -189,7 +189,7 @@
      "reason": "needs_person"
     }
    ],
-   "notice": "AI가 공공 의약품 정보를 정리한 안내예요. 복용 판단은 약사와 상의하세요.",
+   "notice": "AI가 공공 의약품 정보를 정리한 안내예요. 약을 드실지는 꼭 약사와 상의해 주세요.",
    "docs": [
     "senior-cold-sleep-stomach",
     "senior-pain-joint",

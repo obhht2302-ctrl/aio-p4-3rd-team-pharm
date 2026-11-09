@@ -7,7 +7,7 @@ import { ArrowRight, Home, Mic, PhoneCall, Square, Volume2 } from "lucide-react"
 import { useAsk, useTypes } from "@/lib/use-ask";
 import type { Who } from "@/lib/session";
 import { EmergencyCall } from "@/components/call";
-import { HELD_LINE, RETRY_NOTE, RouteBadge, UNSENT_LINE, handoffState, routeTone, seniorLine } from "@/components/route-badge";
+import { HELD_LINE, RETRY_NOTE, RouteBadge, UNSENT_LINE, handoffState, routeTone, seniorHandoffLine, seniorLine } from "@/components/route-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -145,7 +145,7 @@ export function SeniorAsk({ who }: { who: Who }) {
         {voice.supported && <section className="senior-voice" aria-label="말로 물어보기">
           <button type="button" className={voice.listening ? "senior-mic on" : "senior-mic"} onClick={voice.listening ? voice.stop : voice.start} aria-pressed={voice.listening} disabled={loading}>
             <span className="senior-mic-icon">{voice.listening ? <Square /> : <Mic />}</span>
-            <span className="senior-mic-text"><b>{voice.listening ? "듣고 있어요" : voice.heard ? "다시 말하기" : "말로 물어보기"}</b><small>{voice.listening ? "말씀이 끝나면 저절로 멈춰요" : voice.heard ? "다르게 알아들었으면 다시 눌러 주세요" : "누르고 궁금한 것을 말씀하세요"}</small></span>
+            <span className="senior-mic-text"><b>{voice.listening ? "듣고 있어요" : voice.heard ? "다시 말하기" : "말로 물어보기"}</b><small>{voice.listening ? "말씀이 끝나면 저절로 멈춰요" : voice.heard ? "다르게 알아들었으면 다시 눌러 주세요" : "누르고 궁금한 것을 말씀해 주세요"}</small></span>
           </button>
           {voice.listening && <p className="senior-heard" aria-live="polite">{spoken || "말씀해 주세요…"}</p>}
           {voice.error && <p className="error-box" role="alert">{voice.error}</p>}
@@ -169,11 +169,11 @@ export function SeniorAsk({ who }: { who: Who }) {
         {error && <p className="error-box" role="alert">{error}</p>}
         {loading && <div className="loading-card" aria-live="polite"><p>약국 안내 문서에서 찾고 있어요. 잠시만 기다려 주세요.</p><Skeleton className="h-7 w-2/5" /><Skeleton className="h-6 w-full" /><Skeleton className="h-6 w-4/5" /></div>}
         {answer && urgent && <motion.section className="senior-danger" role="alert" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-          <div className="senior-danger-head"><span><PhoneCall /></span><div><b>지금 바로 연락해 주세요</b><p>걱정되는 내용이에요. 혼자 참지 마시고 도움을 받으세요.</p></div></div>
+          <div className="senior-danger-head"><span><PhoneCall /></span><div><b>지금 바로 연락해 주세요</b><p>걱정되는 증상이에요. 혼자 참지 마시고 바로 도움을 요청해 주세요.</p></div></div>
           <EmergencyCall ticketId={answer.ticket?.ticket_id} />
         </motion.section>}
         {answer && <motion.section key={answer.request_id ?? answer.answer} className="senior-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-          <div className={`senior-band band-${routeTone(answer.route)}`}><RouteBadge route={answer.route} /><b>{state === "unsent" ? UNSENT_LINE : state === "held" ? HELD_LINE : seniorLine[answer.route] ?? answer.route}</b></div>
+          <div className={`senior-band band-${routeTone(answer.route)}`}><RouteBadge route={answer.route} /><b>{state === "unsent" ? UNSENT_LINE : state === "held" ? HELD_LINE : answer.route === "담당자 이관" ? seniorHandoffLine(answer.ticket) : seniorLine[answer.route] ?? answer.route}</b></div>
           <p className="senior-answer">{answer.answer}</p>
           {state === "unsent" && <div className="retry-note senior-retry" role="status"><p>{RETRY_NOTE}</p><Button className="senior-button" disabled={loading} onClick={() => void ask.send(question)}>다시 묻기 <ArrowRight /></Button></div>}
           {answer.ticket && <div className="ticket-number senior-ticket"><p>담당자 접수 번호 <strong>{answer.ticket.ticket_id}</strong></p><p className="ticket-say">카운터에서 이 번호를 말씀해 주세요</p></div>}

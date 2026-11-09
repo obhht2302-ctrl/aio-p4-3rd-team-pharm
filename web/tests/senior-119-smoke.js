@@ -25,7 +25,7 @@ async (page) => {
   verify(await emergency.count() === 0, "보통 답에는 119 버튼 없음");
   await page.getByRole("button", { name: /다시 질문하기/ }).first().click();
   await page.getByRole("heading", { name: "무엇을 도와드릴까요?" }).waitFor();
-  // 티켓 없는 이관: '약사에게 전해 드렸어요'가 아니라 '아직 접수되지 않았어요' + 다시 묻기
+  // 티켓 없는 이관: '약사님께 전해 드렸어요'가 아니라 '아직 접수되지 않았어요' + 다시 묻기
   const band = page.locator(".senior-band b");
   await page.evaluate(() => sessionStorage.setItem("team3-mock-noticket", "1"));
   await page.locator("#senior-q").fill("무릎약 먹은 지 한 달 됐는데 이제 그만 먹어도 되겠죠?");
@@ -36,7 +36,7 @@ async (page) => {
   verify(retryHeight >= 48, `다시 묻기 버튼 48px 이상 (${retryHeight})`);
   await page.getByRole("button", { name: /다시 묻기/ }).click();
   await page.locator(".senior-ticket").waitFor();
-  verify((await band.innerText()).trim() === "약사에게 전해 드렸어요", "다시 묻기 → 접수 번호 + 전해 드렸어요");
+  verify((await band.innerText()).trim() === "약사님께 전해 드렸어요", "다시 묻기 → 접수 번호 + 전해 드렸어요");
   await page.getByRole("button", { name: /다시 질문하기/ }).first().click();
   await page.locator("#senior-q").fill("매장 공유기가 죽어서 카드 단말기가 안 돼요");
   await page.getByRole("button", { name: "물어보기", exact: true }).click();

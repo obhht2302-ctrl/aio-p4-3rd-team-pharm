@@ -55,7 +55,7 @@ async (page) => {
   await width("티켓 없는 이관 화면");
   await page.getByRole("button", { name: "다시 묻기" }).click();
   await page.locator(".ticket-number").waitFor({ state: "visible" });
-  verify((await band.innerText()).trim() === "담당자에게 전달했습니다" && await page.getByText("잠시 후 다시 시도해 주세요.").count() === 0, "다시 묻기 → 접수 번호 + 전달 문구");
+  verify((await band.innerText()).trim() === "담당자에게 전달했어요" && await page.getByText("잠시 후 다시 시도해 주세요.").count() === 0, "다시 묻기 → 접수 번호 + 전달 문구");
   await page.getByRole("button", { name: "새 문의" }).click();
   await page.getByRole("textbox", { name: "질문 내용" }).fill("매장 공유기가 죽어서 카드 단말기가 안 돼요");
   await page.getByRole("button", { name: "보내기", exact: true }).click();
