@@ -1,6 +1,6 @@
 // 5교시 피드백 4 — 최신 화면 → /api/ask → n8n → 티켓 → FastAPI PG → 약사 화면 → 인수인계 → 다음 접속 (VM 실제 모드, 헤드리스)
 // BASE · CODE는 env로만 받음 (파일 · 출력에 안 씀)
-const { chromium } = require("/root/tmp/p4_day80/.npm-cache/_npx/31e32ef8478fbf80/node_modules/playwright-core");
+const { chromium } = require("playwright-core");
 const fs = require("fs");
 const BASE = process.env.BASE, CODE = process.env.CODE, OUT = process.argv[2];
 const Q = "마감 차액은 얼마까지 승인 없이 처리해요?";

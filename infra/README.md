@@ -12,7 +12,7 @@
 ```bash
 # 1) 우리 파일 만들기
 cd ~/aio-p4-3rd-team-pharm && python3 tools/packs.py build && python3 tools/packs.py check
-# 2) 팀 설정 (infra/.env, n8n Credential, data-api — 켜져 있던 샘 data-api는 스크립트가 멈춤). README '시작 전 준비' 4번
+# 2) 팀 설정 (infra/.env, n8n Credential, data-api — 켜져 있던 샘 data-api는 스크립트가 멈춤). README '바로 실행' 2번
 bash tools/setup.sh
 # 3) api까지 띄우기 (화면은 web/에서 npm run build 를 먼저 해야 out/ 이 생김)
 docker compose -f infra/compose.team3.yml --env-file infra/.env up -d data-api api
@@ -22,7 +22,7 @@ curl -s localhost:8000/health
 
 - 샘 시나리오의 `before`(`/tickets-reset` · `/cache-clear` …)와 `flow.py fault`는 이 data-api에서도 그대로 됩니다.
 - 문서 · 데이터를 고치면 `packs.py build` 뒤 `docker compose ... restart data-api` (파일을 그대로 읽어서 보통은 재시작 없이도 반영).
-- 팀 VM 배포 순서는 `specs/05-lead.md` 4절 (주소 · 비밀번호는 여기에 쓰지 않음).
+- 팀 VM 배포 순서는 아래 '팀 VM' 절 (주소 · 비밀번호는 여기에 쓰지 않음).
 
 ## 팀 VM (리드)
 

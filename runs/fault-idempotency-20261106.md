@@ -2,7 +2,7 @@
 
 > **고치기 전 = VM `25cc7c0` 실측 + node 시뮬(아래) · 고친 뒤 = VM `b93a749`** (= main `c579b94` #68 · #73 · #74 · #75 + #76 문서). 스크립트 VM `~/d81_6m.sh` · `~/d81_6m.py`.
 
-- 확인자: 문태웅(리드, CC 6교시 탭) · VM 커밋 `b93a749 Merge pull request #76 from twlaude/haeden/d81-screen-doc` (전 `25cc7c0 Merge pull request #66 from twlaude/byunghoon/d81-assignee-store`) · **팀 VM 연습 모드**(Slack · Jira 안 감) → 끝나고 실제 모드 복귀
+- 확인자: 문태웅(리드) · VM 커밋 `b93a749 Merge pull request #76 from twlaude/haeden/d81-screen-doc` (전 `25cc7c0 Merge pull request #66 from twlaude/byunghoon/d81-assignee-store`) · **팀 VM 연습 모드**(Slack · Jira 안 감) → 끝나고 실제 모드 복귀
 - 시각(VM UTC): 06:05:04 start / 06:05:04 before_practice / 06:06:58 practice / 06:08:22 deployed / 06:08:22 cold / 06:11:43 driver_done / 06:11:48 real · 단계 exit: before practice exit=0 · before wf10 exit=0 · practice exit=0 · driver exit=0 · real exit=0
 - request_id 정책: 단계마다 `ops --reset` + `/cache-clear` 뒤 새 ID `d81-6m-060829-<칸>` — 멱등 시험(WF-09)만 같은 ID 2번. 캐시 · 중복 재사용은 신규 업무 시험으로 안 셈
 

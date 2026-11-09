@@ -1,5 +1,5 @@
-// 어제(11/5 17:19) 확인 안 한 인계 #7만 약사 화면에서 '확인했어요' (형 14:11 OK)
-const { chromium } = require("/root/tmp/p4_day80/.npm-cache/_npx/31e32ef8478fbf80/node_modules/playwright-core");
+// 어제(11/5 17:19) 확인 안 한 인계 #7만 약사 화면에서 '확인했어요' (태웅 14:11 OK)
+const { chromium } = require("playwright-core");
 const BASE = process.env.BASE, CODE = process.env.CODE, OUT = process.argv[2];
 (async () => {
   const b = await chromium.launch({ channel: "chrome", args: ["--no-sandbox"] });

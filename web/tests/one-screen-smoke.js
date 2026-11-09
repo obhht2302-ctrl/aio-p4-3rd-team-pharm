@@ -1,10 +1,10 @@
 // 한 화면 시험 (태블릿 앱): 창 7개 × 모든 화면 · 단계에서 바깥 세로 스크롤 · 가로 넘침 · 겹침 · 잘림 · 어색한 줄바꿈 · 아래 빈 공간을 숫자로 잽니다.
 // 태블릿 · 폰은 hasTouch(태블릿 틀 꺼짐), PC는 마우스(틀 켜짐). 목록 · 긴 답은 그 상자 안 스크롤만 허용. 어르신은 글씨 18 · 20 · 22px.
-// 캡처: SHOTS 폴더(기본 /root/tmp/p4_screen_app/shots). 실패가 하나라도 있으면 목록과 함께 멈춥니다.
+// 캡처: SHOTS 폴더(기본 실행 폴더의 shots). 실패가 하나라도 있으면 목록과 함께 멈춥니다.
 async (page) => {
   const origin = new URL(page.url()).origin;
   const browser = page.context().browser();
-  const SHOTS = "/root/tmp/p4_screen_app/shots";
+  const SHOTS = "shots";
   const VIEWPORTS = [
     { name: "tab-1024x768", width: 1024, height: 768, touch: true },
     { name: "tab-1180x820", width: 1180, height: 820, touch: true },
