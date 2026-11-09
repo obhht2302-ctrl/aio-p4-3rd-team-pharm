@@ -4,7 +4,7 @@
 
 ## 현재 상태 (11/9)
 
-- 기준: main = 팀 VM `4eebd3c` · 원본 `knowledge/` 10개(마지막 변경 `63c5f9f`, 11/5) → 로컬 `##` 절 38개(11/9 셈) = VM 색인 38청크 · owner 3 · all 35(11/6 `runs/deploy1-20261106.md`). 11/9 VM 청크 수는 직접 세지 않았고, 그 뒤 `knowledge/` 변경은 없습니다.
+- 기준: main = 팀 VM (11:1x 대조 때 `4eebd3c`, 그 뒤 문서만 — 최종 제출 커밋은 [DAY82](daily/DAY82.md) 5교시 칸) · 원본 `knowledge/` 10개(마지막 변경 `63c5f9f`, 11/5) → 로컬 `##` 절 38개(11/9 셈) = VM 색인 38청크 · owner 3 · all 35(11/6 `runs/deploy1-20261106.md`). 11/9 VM 청크 수는 직접 세지 않았고, 그 뒤 `knowledge/` 변경은 없습니다.
 - 설정 = JSON 값: `text-embedding-3-large`(`team3-index` · `team3-search` `Embeddings`) · `top_k` 4 · `SCORE_MIN` 0.37(`team3-support` `Support settings`) · 메모리 키 `pharm_kb_v1_all` / `_owner`.
 - 최신 결과: 11/9 블라인드 25문항 × 3 — 정답 문서 4위 안 21/21 · 회수 긴급 15/15 · 판단 2턴째 약사 18/18 (`runs/recheck-20261109.md`).
 - 남은 한계: 메모리 저장소라 재시작마다 재색인 · 정상/문서 밖 점수 간격 0.012(블라인드에선 겹침, 3절) · 검색 장애 처리는 설정만 있고 실측 없음 · 색인 버전 확인은 미구현(5절). 대조 기록: [docs/qa/final-checklist-20261109.md](qa/final-checklist-20261109.md)
